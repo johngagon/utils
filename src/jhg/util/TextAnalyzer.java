@@ -1,10 +1,5 @@
 package jhg.util;
 
-import static java.lang.System.out;
-import static java.nio.file.Files.readAllBytes;
-import static java.nio.file.Paths.get;
-
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,67 +13,111 @@ import java.util.regex.Pattern;
  */
 
 public class TextAnalyzer {
-
+	private static Pattern numberPattern;
+	
 	private Pattern pattern;
 	private String content;
 	
 	private Set<String> vocab;
 	private Set<String> unreadable;
+	private Set<String> archaic;
+	private Dictionary dictionary;
+	private int numberCount;
+	private int properCount;
 	
-	private String[] archaicList = {"thou","thee"};
+	static{
+		numberPattern = Pattern.compile("\\d*");
+	}
 	
-	public TextAnalyzer(Pattern _p) {
-		this.pattern = _p;
+	public TextAnalyzer() {
+		this.pattern = Pattern.compile("[\\w']+");		
+		
+		
 		this.vocab = new TreeSet<String>();
 		this.unreadable = new TreeSet<String>();
+		this.archaic = new TreeSet<String>();
+		this.dictionary = new Dictionary();
+		this.dictionary.load("data/dictionary.txt");
+		this.dictionary.load("data/uncommon_dictionary.txt");
+		this.dictionary.load("data/archaic_dictionary.txt");
+		numberCount = 0;
+		properCount = 0;
 	}
+	
+	
 	public void read(String _content){
 		this.content = _content;
 	}
+	private static boolean isNumber(String s){
+		Matcher nm = numberPattern.matcher(s);
+		return nm.matches() || s.endsWith("th");
+	}
+	private static boolean isProper(String s){
+		return Character.isUpperCase(s.charAt(0));
+	}
+	private static String trimPossessive(String s){
+		return s;//TODO impl
+	}
+	
 	public void analyze(){
-		out.println("Analyzing.");
+		Log.println("Analyzing.");
 		
 		Matcher m = pattern.matcher(content);
 		String word = "";
 		while ( m.find() ) {
 			word = content.substring(m.start(),m.end());
-			//use another regex on the word. if it's a number, put in numbers, 
+			word = TextUtil.truncPossessive(word);
+			if(isNumber(word)){
+				numberCount++;
+			}else if(isProper(word)){
+				properCount++;
+			}else{
+				if(dictionary.contains(word)){
+					vocab.add(word);
+				}else{
+					archaic.add(word);
+				}
+			}
+			
+	
+			
 			//if it's a proper name, put in proper names.
 			//anything not in a spelling dictionary is either archaic or bad scan - have to add words to special dictionary for archaic.
-			vocab.add(word);
+			
 		}
-		out.println("Analzyed.");
+		Log.println("Analzyed.");
 	}
 	
 	public static void main(String[] args){
-		String wordRegex = "[\\w']+";
-		Pattern p = Pattern.compile(wordRegex);
-
-		TextAnalyzer ta = new TextAnalyzer(p);
+		TextAnalyzer ta = new TextAnalyzer();
 		//https://archive.org/stream/winthropsjourna05hosmgoog/winthropsjourna05hosmgoog_djvu.txt
 		String fileName = "data/document.txt";
-		String content = "not read";
-		
-		try {
-			content = new String(readAllBytes(get("data/document.txt")));
-			ta.read(content);
-			ta.analyze();
-			Set<String> vocab = ta.vocab;
-			Set<String> unreadable = ta.unreadable;
-			out.println("Vocab count:"+vocab.size());
-			out.println("Unreadable count:"+unreadable.size());
-			for(String v:vocab){
-				out.println(v);
-			}
-			
-			//for(String u:unreadable){
-			//	out.println(u);
-			//}			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		String content = new TextFile(fileName).getText();
+
+		ta.read(content);
+		ta.analyze();
+		Set<String> vocab = ta.vocab;
+		//Set<String> unreadable = ta.unreadable;
+		Set<String> archaic = ta.archaic;
+		Log.println("Vocab count:"+vocab.size());
+		Log.println("Unrecognized count:"+archaic.size());
+		Log.divider(80,"-");
+		Log.println("VOCAB");
+		Log.divider(80,"-");
+		for(String v:vocab){
+			Log.println(v);
 		}
-		//out.println(content);
+		Log.divider(80,"=");
+		Log.println("UNRECOGNIZED");
+		Log.divider(80,"-");
+		
+		for(String a:archaic){
+			Log.println(a);
+		}
+		
+		/*
+		 * Next: extract the quotes, do a list compare, print diffs
+		 */
 	}
 
 }
