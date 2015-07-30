@@ -21,6 +21,7 @@ public class TextAnalyzer {
 	private Set<String> vocab;
 	private Set<String> unreadable;
 	private Set<String> archaic;
+	private Set<String> difference;
 	private Dictionary dictionary;
 	private int numberCount;
 	private int properCount;
@@ -40,6 +41,7 @@ public class TextAnalyzer {
 		this.dictionary.load("data/dictionary.txt");
 		this.dictionary.load("data/uncommon_dictionary.txt");
 		this.dictionary.load("data/archaic_dictionary.txt");
+		this.dictionary.load("data/names.txt");
 		numberCount = 0;
 		properCount = 0;
 	}
@@ -59,6 +61,7 @@ public class TextAnalyzer {
 		return s;//TODO impl
 	}
 	
+
 	public void analyze(){
 		Log.println("Analyzing.");
 		
@@ -102,21 +105,42 @@ public class TextAnalyzer {
 		Log.println("Vocab count:"+vocab.size());
 		Log.println("Unrecognized count:"+archaic.size());
 		Log.divider(80,"-");
-		Log.println("VOCAB");
-		Log.divider(80,"-");
+		//Log.println("VOCAB");
+		//Log.divider(80,"-");
 		for(String v:vocab){
-			Log.println(v);
+			//Log.println(v);
 		}
-		Log.divider(80,"=");
-		Log.println("UNRECOGNIZED");
-		Log.divider(80,"-");
+		//Log.divider(80,"=");
+		//Log.println("UNRECOGNIZED");
+		//Log.divider(80,"-");
 		
 		for(String a:archaic){
-			Log.println(a);
+			//Log.println(a);
 		}
 		
+		TextFile ch1 = new TextFile("data/book_ch01.txt");
+		String ch1txt = ch1.getText();
+		
+		QuoteExtractor qe = new QuoteExtractor();
+		qe.setText(ch1txt);
+		qe.extractWords();
+		Set<String> quotes = qe.results();
+
+		Log.println("Quoted words:"+quotes.size());
+		Log.divider(80,"=");
+		quotes.removeAll(vocab);
+		
+		Log.println("May be too modern a vocabulary word");
+		for(String q:quotes){
+			Log.println(q);
+		}
+	
 		/*
-		 * Next: extract the quotes, do a list compare, print diffs
+		 * Now, have it show which line.
+		 * 
+		 * 
+		 * x Next: extract the quotes, do a list compare, print diffs
+		 * x B section in uncommon dictionary.
 		 */
 	}
 

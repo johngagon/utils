@@ -3,19 +3,22 @@ package jhg.util;
 import java.util.*;
 import java.util.regex.*;
 
-public class QuoteExtractor {
 
+public class QuoteExtractor {
+	private Pattern pattern;
+	
 	private String input;
-	private List<String> output;
+	private Set<String> output;
 	
 	public QuoteExtractor() {
 		input = "";
-		output = new ArrayList<String>();
+		output = new TreeSet<String>();
+		this.pattern = Pattern.compile("[\\w']+");	
 	}
 	public void setText(String text){
 		this.input = text;
 	}
-	
+	/*
 	public void extract(){
 		String regex = "\"([^\"]*)\"";
 		Pattern pat = Pattern.compile(regex);
@@ -25,8 +28,46 @@ public class QuoteExtractor {
 		}		
 		
 	}
+	*/
+	public void extractWords(){
+		String regex = "\"([^\"]*)\"";
+		StringBuffer buff = new StringBuffer();
+		Pattern pat = Pattern.compile(regex);
+		Matcher m = pat.matcher(input);
+		while(m.find()) {
+		    buff.append(m.group(1));
+		}
+		String quoteText = buff.toString();
+		
+		Matcher mq = pattern.matcher(quoteText);
+		String word = "";
+		while ( mq.find() ) {
+			word = quoteText.substring(mq.start(),mq.end());
+			//word = TextUtil.truncPossessive(word);
+			output.add(word.toLowerCase().trim());
+			
 	
-	public List<String> results(){
+			
+			//if it's a proper name, put in proper names.
+			//anything not in a spelling dictionary is either archaic or bad scan - have to add words to special dictionary for archaic.
+			
+		}		
+		
+		/*
+		String regex = "\"([^\"]*)\"";
+		Pattern pat = Pattern.compile(regex);
+		Matcher m = pat.matcher(input);
+		while(m.find()) {
+		    String quote = m.group(1);
+		    String[] words = quote.split(" ");
+		    for(String w:words){
+		    	output.add(w);
+		    }
+		}	
+		*/		
+	}
+	
+	public Set<String> results(){
 		return output;
 	}
 	
@@ -42,8 +83,8 @@ public class QuoteExtractor {
 		
 		QuoteExtractor qe = new QuoteExtractor();
 		qe.setText(testString);
-		qe.extract();
-		List<String> actual = qe.results();
+		qe.extractWords();
+		Set<String> actual = qe.results();
 		for(String s:actual){
 			Log.quoteln(s);
 		}
