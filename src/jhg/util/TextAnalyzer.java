@@ -41,7 +41,7 @@ public class TextAnalyzer {
 		this.dictionary.load("data/dictionary.txt");
 		this.dictionary.load("data/uncommon_dictionary.txt");
 		this.dictionary.load("data/archaic_dictionary.txt");
-		this.dictionary.load("data/names.txt");
+		//this.dictionary.load("data/names.txt");
 		numberCount = 0;
 		properCount = 0;
 	}
@@ -57,10 +57,13 @@ public class TextAnalyzer {
 	private static boolean isProper(String s){
 		return Character.isUpperCase(s.charAt(0));
 	}
-	private static String trimPossessive(String s){
-		return s;//TODO impl
-	}
 	
+
+	private static void updateVocab(Set<String> vocab, String fileName){
+		Dictionary vocabDic = new Dictionary();
+		vocabDic.load(fileName);
+		vocab.addAll(vocabDic.wordList());
+	}
 
 	public void analyze(){
 		Log.println("Analyzing.");
@@ -100,6 +103,7 @@ public class TextAnalyzer {
 		ta.read(content);
 		ta.analyze();
 		Set<String> vocab = ta.vocab;
+		TextAnalyzer.updateVocab(vocab,"data/names.txt");
 		//Set<String> unreadable = ta.unreadable;
 		Set<String> archaic = ta.archaic;
 		Log.println("Vocab count:"+vocab.size());
@@ -129,8 +133,9 @@ public class TextAnalyzer {
 		Log.println("Quoted words:"+quotes.size());
 		Log.divider(80,"=");
 		quotes.removeAll(vocab);
-		
-		Log.println("May be too modern a vocabulary word");
+		Log.println("Quoted words:"+quotes.size()+" after removal of known vocab");
+		Log.println("May be too modern a vocabulary word:");
+		Log.divider(80,"=");
 		for(String q:quotes){
 			Log.println(q);
 		}

@@ -34,8 +34,11 @@ public class QuoteExtractor {
 		StringBuffer buff = new StringBuffer();
 		Pattern pat = Pattern.compile(regex);
 		Matcher m = pat.matcher(input);
+		String q = "";
 		while(m.find()) {
-		    buff.append(m.group(1));
+			q = m.group(1);
+			Log.println("QUOTE:'"+q+"'");
+		    buff.append(q);
 		}
 		String quoteText = buff.toString();
 		

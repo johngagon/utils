@@ -5,3 +5,11 @@ thomas
 george
 carr
 abigail
+anne
+asmodeus
+bridget
+constance
+hepsibah
+judith
+magdalene
+mary
