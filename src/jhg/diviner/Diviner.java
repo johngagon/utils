@@ -17,10 +17,10 @@ public class Diviner {
 	//singular
 	private static String[] titles = {"king","queen","prince","knight","duke","duchess","baron","baroness"};
 	private static String[] occupations = {"doctor","banker","ruler","judge","criminal","professor","bishop","policeman","fireman"};
-	private static String[] tools = {"wand","hammer","scepter"};
+	private static String[] tools = {"wand","hammer","scepter","measuring rod"};
 	private static String[] bodypart = {"hand","mouth","eyes","head","feet","face","legs","arms"};//symbolic
 	private static String[] disasters = {"volcano","earthquake","whirlwind"};
-	private static String[] clothing = {"cloak"};
+	private static String[] food = {"potato","pie","fruit","melon","cheese","butter","beef","milk","nuts"};
 	private static String[] generalThings = {"country","time","place","reason","person","thing","start","end","plants","animals","money","supply"};
 	private static String[] countries = {"Africa","England","France","Italian"};
 	private static String[] cities = {"London","Brussels","Rome","Geneva","Madrid","New York"};
@@ -34,14 +34,14 @@ public class Diviner {
 	private static String[] buildings = {"church","school","court","office","park","theatre","stadium","bank","hospital","police station","fire station"};
 	private static String[] symbolic_animals = {"lion","elephant","tiger","turtle","snake","eagle","bear"};
 	private static String[] surnames = {"Smith","Jones","Williams","Taylor","Brown","Davies","Evans","Wilson","Thomas","Johnson"};
-	private static String[][] nouns = {titles,occupations,tools,bodypart,disasters,clothing,generalThings,countries,cities,dirs,times,emotions,positions,relation,abstractions,basics,buildings,symbolic_animals,surnames};
+	private static String[][] nouns = {titles,occupations,tools,bodypart,disasters,food,generalThings,countries,cities,dirs,times,emotions,positions,relation,abstractions,basics,buildings,symbolic_animals,surnames};
 	//pluaral
 	private static String[] lesser = {"servants","nurses","slaves"};
 	private static String[] family = {"children","ancestors","posterity"};
 	private static String[] farm_animals = {"horses","cows","sheep","hogs"};
 	
 	private static String[] bodypartsP = {"hands","mouths","eyes","heads","feet","faces","legs","arms"};
-	private static String[] clothingP = {"cloaks"};
+	private static String[] clothingP = {"cloaks","shirts","pants","vests","hats","shoes","coats","gloves"};
 	private static String[] generalThingsP = {"countries","times","places","reasons","people","things","way","advice","actions","thoughts","feelings","words","numbers"};
 	private static String[] timesP = {"seconds","minutes","hours","days","weeks","months","seasons","years","decades","centuries","millenias"};
 	private static String[][] nounp = {lesser,family,farm_animals,bodypartsP,clothingP,generalThingsP,timesP};
@@ -89,7 +89,7 @@ public class Diviner {
 	
 	private static String[][] speechies = {pron,preps,prepsT,prepsP,articles,must,adverbsLy};
 	
-	private static String[][][] words = {nouns,nounp,adjectives,verbs,speechies};
+	private static String[][][] words = {nouns,nounp,verbs,adjectives,verbs,speechies};
 
 	private static String template = "%1$s %2$s %3$s %4$s %5$s ";
 	
