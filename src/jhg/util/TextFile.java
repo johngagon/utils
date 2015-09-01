@@ -2,9 +2,11 @@ package jhg.util;
 
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
-import java.io.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+
 
 
 public class TextFile {
@@ -24,6 +26,17 @@ public class TextFile {
 
 	public String[] getLines(){
 		return content.split("\n");
+	}
+	public Set<String> getWords(){
+		Set<String> strings = new TreeSet<String>();
+		Pattern pattern = Pattern.compile("[\\w']+");	
+		Matcher m = pattern.matcher(content);
+		String word = "";
+		while ( m.find() ) {
+			word = content.substring(m.start(),m.end());
+			strings.add(word);
+		}
+		return strings;
 	}
 	
 	public static void main(String[] args){
