@@ -16,6 +16,7 @@ public class Dictionary {
 		for(String s:wordStrings){
 			words.add(s.trim());
 		}
+		Log.println("Added "+wordList.length()+" words to dictionary.  Dictionary at "+words.size()+" words.");
 	}
 	
 	public Set<String> wordList(){

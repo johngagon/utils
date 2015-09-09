@@ -41,6 +41,7 @@ public class TextAnalyzer {
 		this.dictionary.load("data/dictionary.txt");
 		this.dictionary.load("data/uncommon_dictionary.txt");
 		this.dictionary.load("data/archaic_dictionary.txt");
+		
 		//this.dictionary.load("data/names.txt");
 		numberCount = 0;
 		properCount = 0;
@@ -95,20 +96,41 @@ public class TextAnalyzer {
 	}
 	
 	public static void main(String[] args){
+		
+		/*
+		 * 1. Load the dictionaries: dictionary.txt, uncommon_dictionary.txt and archaic_dictionary.txt
+		 */
 		TextAnalyzer ta = new TextAnalyzer();
+		
+		/*
+		 * 2. Read the historical text used as a base and push the word list.
+		 */
 		//https://archive.org/stream/winthropsjourna05hosmgoog/winthropsjourna05hosmgoog_djvu.txt
 		String fileName = "data/document.txt";
 		String content = new TextFile(fileName).getText();
 
 		ta.read(content);
+		
+		/*
+		 * 3. Go through the source document and analyze if the word is in the dictionary.
+		 * If yes, put it in the vocabulary
+		 * If not, put it in the archaic list.
+		 */
 		ta.analyze();
 		Set<String> vocab = ta.vocab;
+		
+		/*
+		 * 4. add  names that I use to the approved vocab.
+		 */
 		TextAnalyzer.updateVocab(vocab,"data/names.txt");
+		TextAnalyzer.updateVocab(vocab,"data/approved_words.txt");
 		//Set<String> unreadable = ta.unreadable;
+		
 		Set<String> archaic = ta.archaic;
 		Log.println("Vocab count:"+vocab.size());
 		Log.println("Unrecognized count:"+archaic.size());
 		Log.divider(80,"-");
+		
 		//Log.println("VOCAB");
 		//Log.divider(80,"-");
 		for(String v:vocab){
@@ -118,10 +140,17 @@ public class TextAnalyzer {
 		//Log.println("UNRECOGNIZED");
 		//Log.divider(80,"-");
 		
+		/*
+		 * Print out the list of words in the archaic list.
+		 
 		for(String a:archaic){
-			//Log.println(a);
+			Log.println(a);
 		}
+		*/
 		
+		/*
+		 * 5. Read my quotes
+		 */
 		TextFile ch1 = new TextFile("data/book_ch01.txt");
 		String ch1txt = ch1.getText();
 		
@@ -129,15 +158,23 @@ public class TextAnalyzer {
 		qe.setText(ch1txt);
 		qe.extractWords();
 		Set<String> quotes = qe.results();
-
-		Log.println("Quoted words:"+quotes.size());
+		
+		/*
+		 * 6. Count the words in the quotes.
+		 */
 		Log.divider(80,"=");
+		Log.println("Quoted word count:"+quotes.size());
+		Log.divider(80,"=");
+		
+		/*
+		 * 7. The words which were not found in colonial vocabulary.
+		 */
 		quotes.removeAll(vocab);
 		Log.println("Quoted words:"+quotes.size()+" after removal of known vocab");
-		Log.println("May be too modern a vocabulary word:");
-		Log.divider(80,"=");
+		Log.println("May be too modern a vocabulary word:\n");
+		//Log.divider(80,"=");
 		for(String q:quotes){
-			Log.println(q);
+			Log.println("'"+q+"'");
 		}
 	
 		/*
@@ -147,6 +184,8 @@ public class TextAnalyzer {
 		 * x Next: extract the quotes, do a list compare, print diffs
 		 * x B section in uncommon dictionary.
 		 */
+		Log.divider(80,"=");
+		Log.println("Finished.");
 	}
 
 }
