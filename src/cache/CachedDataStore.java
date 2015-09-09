@@ -27,11 +27,7 @@ public class CachedDataStore {
 	public List<Table> getTables(){
 		return this.tables;
 	}
-	private static String pct(long l1, long l2){
-		double x = l1/l2;
-		String pattern = "{0,number,#.##%}";
-		return MessageFormat.format(pattern, x);
-	}
+
 	public String report(){
 		return "Cache ( "+size+" / "+limit+" ) remaining: "+(limit-size)+" "+pct(size,limit);
 	}
@@ -141,13 +137,65 @@ public class CachedDataStore {
 	public void setTables(List<Table> tables2) {
 		this.tables = tables2;
 	}
+
 	
-	private static void reportProgress(int rowIndex, int tableCount, int i) {
-		//if(100%i!=0){			throw new IllegalArgumentException("Valid values for i are: 1,2,4,5,10,20,25,50,100");		}
-		int factor = (int)(100/i);
-		int topCount = tableCount - (tableCount%factor);
-		if(topCount%factor==rowIndex){
-			pct((long)rowIndex,(long)topCount);
+	public static String pct(long l1, long l2){
+		double x = l1/l2;
+		String pattern = "{0,number,#.##%}";
+		return MessageFormat.format(pattern, x);
+	}	
+	
+	/**
+	 * Returns a progress value if the rowIndex hits a milestone based on the increment and total count given.
+	 * 
+	 * @param index    The current row, check and see if need to report.
+	 * @param totalCount  Any positive value, the 100/increment should be less than this value.
+	 * @param increment   Valid values: 1,2,4,5,10,20,25,50,100
+	 * @return  -1 if not at increment, a multiple of increment i if progress milestone hit.
+	 */
+	public static int reportProgress(int index, int totalCount, int increment) {
+		int[] valid = {1,2,4,5,10,20,25,50,100};
+		boolean found = false;
+		for(int v:valid){
+			if(increment==v){
+				found=true;break;
+			}
+		}
+		if(!found){
+			throw new IllegalArgumentException("Valid values for i are: 1,2,4,5,10,20,25,50,100");
+		}
+		
+		//Log.print("-increment(original):"+increment);
+		int factor = (int)(100/increment);                          
+		while(factor>totalCount){
+			switch(increment){
+				case 1: increment=2;break;
+				case 2: increment=4;break;
+				case 4: increment=5;break;
+				case 5: increment=10;break;
+				case 10: increment=20;break;
+				case 20: increment=25;break;
+				case 25: increment=50;break;
+				case 50: increment=100;break;
+				
+			}
+			factor = (int)(100/increment);
+		}
+		int topCount = totalCount - (totalCount%factor);
+		
+		int countFactor = (int)topCount/factor;
+		/*
+		Log.print(" -increment:"+increment);
+		Log.print(" -Factor:"+factor);
+		Log.print(" -Top count:"+topCount);
+		Log.print(" -Count factor:"+countFactor);
+		Log.println(" -RowIndex:"+rowIndex);
+		*/
+		int pct = -1;
+		if(index%countFactor==0 && !(index>topCount)){   //   when rowCount is 5,10,15 or 20
+			
+			pct = (100*index)/topCount;
+			//Log.println(pct+"%");
 		}
 		
 		/*
@@ -156,13 +204,23 @@ public class CachedDataStore {
 		 * case 2         
 		 * case 17        25                        tableCount%(100/i)  17%4 = 1.  topCount = tableCount-1 = 16 
 		 *                                          4   (if topCount%(100/i)==rowIndex) message =  pct(rowIndex/topCount)
+		 *                                          
 		 * case 50
 		 */
+		return pct;
 	}
+	
 	public static void main(String[] args){
-		for(int i=1;i<=17;i++){
-			reportProgress(i,17,25);
+		int topCount = 3423;
+		int milestone = 5;
+		Log.println("Starting");
+		for(int i=1;i<=topCount;i++){
+			int progress=reportProgress(i,topCount,milestone);
+			if(progress!=-1){
+				Log.println(progress+"%");
+			}
 		}
+		Log.println("Finished");
 	}
 	
 }
