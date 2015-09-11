@@ -3,17 +3,55 @@ package cache;
 import java.sql.ResultSet;
 import java.util.*;
 
+import jhg.util.Log;
+
 
 public class CacheTest {
 
-	private static String[] tableList = {"valuequest_modifier_long_desc","valuequest_mdc","valuequest_vq_carrier"
-		,"valuequest_drg","valuequest_market_zip_code","valuequest_market_cost_model_glance"
-		,"valuequest_market","valuequest_cpt_modifier","valuequest_cpt"
-		,"valuequest_member_summary","valuequest_market_benchmark","valuequest_market_cost_model_four_bucket"
-		,"valuequest_market_mdc","valuequest_market_cost_model","valuequest_market_drg"
-		,"valuequest_market_cpt","valuequest_market_cpt_modifier"};
+	/*
+	 * Name files based on year-id-table  or year-id-carrier-table
+	 * 
+	 * Cache the plain files for uploads used the most
+	 * 	and carrier files for uploads *and* carriers used the most.
+	 * 
+	 * Write file to disk, place in cache when requested as read.
+	 * 
+	 *  alternately use state codes (already have enum for it), more even.
+	 *  
+	 *  
+	 */
+	
+	
+	private static String[] tableList = {
+		"valuequest_modifier_long_desc"
+		,"valuequest_mdc"
+		,"valuequest_vq_carrier"
+		,"valuequest_drg"
+		,"valuequest_cpt_modifier"
+		,"valuequest_cpt"};
+	
+	private static String[] carrierDividedTableList = {
+		"valuequest_market_zip_code"
+		,"valuequest_market_cost_model_glance"
+		,"valuequest_market"                             //move this above if using state code and not carrier. 
+		,"valuequest_member_summary"
+		,"valuequest_market_benchmark"
+		,"valuequest_market_cost_model_four_bucket"
+		,"valuequest_market_mdc"
+		,"valuequest_market_cost_model"
+		,"valuequest_market_drg"
+		,"valuequest_market_cpt"
+		,"valuequest_market_cpt_modifier"};
+	
+	 
+	private static String[] carriers = {};
+	
 	private static Map<String,String[]> indexes = new Hashtable<String,String[]>();
 	
+	/**
+	 * Main.
+	 * @param args
+	 */
 	public static void main(String[] args){
 		/*
 		 * Years: 2012-2, 2013-1, 2013-2
@@ -69,19 +107,21 @@ public class CacheTest {
 		List<Table> tables = Table.from(tableList,indexes);
 		
 		CachedDataStore cds = new CachedDataStore(limit); //create one for year and upload.
+		//FIXME make sure limit is < heap by so much.
+		//FIXME write to disk
 		
 		DBReader db = new DBReader();
 		//DBReader db = new DBReader(connection data);//
 		
-		db.connect();
-		
-		
-		if(db.isConnected()){
+		for(Table table:tables){
+			db.connect();
+			
+			if(db.isConnected()){
 			
 			//List<Table> tables = cds.getTables();// db.configure(tableList);
 			
-			for(Table table:tables){
-				//System.out.println(table);
+			
+				
 				
 				//use a predictable ordering and index.
 				
@@ -89,21 +129,29 @@ public class CacheTest {
 				//we'll order by the pk fields and get a consistent ordering and use an index.
 				
 				//db.query("select count(*) from "+table+" where cq_year = '"+year+"' and upload = '"+upload+"' order by "+table.getIndexesAsCommaString());
-				db.query("select count(*) from "+table.getName()+" where cq_year = '"+year+"' and upload = '"+upload+"' order by "+table.getIndexesAsCommaString());
+				Log.println("");
+				Log.println(new Date().toString());
+				db.query("select count(*) from "+table.getName()+" where cq_year = '"+year+"' and upload = '"+upload+"' ");
 				
 				if(db.haveResult()){
 					ResultSet rs = db.getResult();
 					cds.setTableCount(table,db.getResult());
+					db.closeRs();
 				}
 						
 				db.query("select * from "+table.getName()+" where cq_year = '"+year+"' and upload = '"+upload+"' order by "+table.getIndexesAsCommaString());
 				if(db.haveResult()){  //order by the indexed field
-					cds.load(table,db.getResult());
+					ResultSet rs = db.getResult();
+					cds.load(table,rs);
+					db.closeRs();
+					
 				}
 				
-			}
-		}
-		db.close();
+			}//if db connected
+			db.close();
+			
+		}//for tables
+		
 		
 		cds.setTables(tables);
 		
@@ -232,7 +280,61 @@ valuequest_data market_benchmark		PRIMARY KEY(st_code, benchmark_type, benefit_c
 			valuequest_data	market_drg			PRIMARY KEY(drg_code)
 			valuequest_data	market_mdc			PRIMARY KEY(mdc_code)
 			valuequest_data	market_cpt_modifier		PRIMARY KEY(cpt_code, modifier);
+
 		
+CA	1963609
+PA	1167485
+TX	1081505
+NY	964265
+AL	894007
+FL	839506
+IL	767137
+MN	599649
+TN	521297
+NJ	501722
+MI	489738
+GA	472121
+NE	463897
+NC	452211
+IA	451236
+VA	430395
+MA	422964
+OH	418008
+MO	412050
+MD	407020
+WA	372315
+IN	343471
+CT	327537
+KY	297195
+WV	285363
+OK	275148
+AZ	272873
+KS	262951
+WI	253553
+MS	246229
+ID	237404
+AR	234559
+LA	232898
+ME	205579
+SC	185821
+CO	166088
+NM	163085
+WY	126656
+MT	125677
+NH	123547
+OR	122622
+ND	122506
+RI	92970
+SD	85145
+UT	74968
+VT	66958
+DC	62798
+NV	60669
+AK	54841
+DE	51725
+HI	23118
+PR	12683
+VI	11592		
 
  *   
  */

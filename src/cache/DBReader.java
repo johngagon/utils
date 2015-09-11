@@ -58,6 +58,21 @@ public class DBReader {
 			e.printStackTrace();
 		}
 	}
+	public void closeRs(){
+		try{
+			if(rs!=null){
+				Statement stmt = rs.getStatement();
+				if(stmt!=null){
+					stmt.close();
+				}
+				rs.close();
+				rs = null;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
 	public void close(){
 		try{
 			if(conn!=null){

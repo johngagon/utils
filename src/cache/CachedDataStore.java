@@ -7,6 +7,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.io.*;
 
+
 import jhg.util.Log;
 
 public class CachedDataStore {
@@ -29,7 +30,9 @@ public class CachedDataStore {
 	}
 
 	public String report(){
-		return "Cache ( "+size+" / "+limit+" ) remaining: "+(limit-size)+" "+pct(size,limit);
+		long freemem = Runtime.getRuntime().freeMemory();
+		long remaining = (limit-size);
+		return "Cache ( "+size+" / "+limit+" ) remaining: "+remaining+" "+pct(size,limit)+ " Free Heap:"+freemem+" Heap-remining:"+(freemem-remaining)+". ";
 	}
 	
 	public Long getLimit(){
@@ -81,25 +84,29 @@ public class CachedDataStore {
 			
 			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 				String fieldName = rsmd.getColumnName(i);
-				Log.println("   "+fieldName);
+				Log.print("   ,"+fieldName);
 			    Field f = new Field(fieldName);
 			    table.addField(f);
 			}
-			
+			Log.println("");
 			int rowIndex = 0;
 			int tableCount = table.getCount();
-			
-			Log.println("Results:");
+			final int FIVE_PCT = 5;
+			//Log.println("\nResults:");
 			while(rs.next()){
 				rowIndex++;
-				reportProgress(rowIndex,tableCount,5);//1,2,4,5,10,20,25,50 %
-				//report percentage progress
+				int progress = reportProgress(rowIndex,tableCount,FIVE_PCT);//1,2,4,5,10,20,25,50 %
+				if(progress!=-1){
+					Log.print(progress+"% ");
+				}
+				
 				List<Object> rowData = new ArrayList<Object>();
 			    for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 			        rowData.add(rs.getObject(i));
 			    }			
 				objectOut.writeObject(rowData);
 			}
+			Log.println("");
 			objectOut.close();
 			byte[] bytes = baos.toByteArray();			
 			long length = bytes.length;
@@ -114,7 +121,7 @@ public class CachedDataStore {
 				b.setBytes(bytes);
 				blocks.put(table,b);	
 				size += length;
-				Log.println("Added "+rowIndex+ " rows.");
+				Log.println("Added "+rowIndex+ " rows. Used:"+length+" bytes.");
 				Log.println(report());
 			}
 		}catch(CacheFullException|SQLException|IOException e){
@@ -140,9 +147,8 @@ public class CachedDataStore {
 
 	
 	public static String pct(long l1, long l2){
-		double x = l1/l2;
-		String pattern = "{0,number,#.##%}";
-		return MessageFormat.format(pattern, x);
+		long l3 = (long)(100*l1)/l2;
+		return l3+"%";
 	}	
 	
 	/**
