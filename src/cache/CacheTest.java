@@ -53,7 +53,8 @@ public class CacheTest {
 	 * @param args
 	 */
 	public static void main(String[] args){
-		/*
+		/* FIXME : use a concurrent hash map
+		 * 
 		 * Years: 2012-2, 2013-1, 2013-2
 		 */
 		System.out.println("Starting.");
