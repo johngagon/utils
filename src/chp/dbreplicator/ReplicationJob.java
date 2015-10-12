@@ -78,10 +78,10 @@ public class ReplicationJob {
 			String query = "select * from "+mapping.getSourceQual()+table;
 			remoteDatabase.query(query);
 			if(remoteDatabase.haveResult()){
-				ResultSet rs = remoteDatabase.getResult();
+				//ResultSet rs = remoteDatabase.getResult();
 				String insertQuery = createInsertQuery(table);
-				List<ColumnDefinition> defs = tableDefs.get(table);
-				int colcount = defs.size();
+				//List<ColumnDefinition> defs = tableDefs.get(table);
+				//int colcount = defs.size();
 				List<Object> data = null;
 				while((data = remoteDatabase.nextRow()) !=null){
 					localDatabase.executeUpdate(insertQuery,data);	
@@ -113,12 +113,6 @@ public class ReplicationJob {
 		remoteDatabase.close();
 		localDatabase.close();
 		Log.println("\nClosing database connections.");
-		
-		//for(String table:tables){
-		/*
-		 * Connect to remote and tally records with count queries using info from mapping.
-		 * Create the database local using mapping
-		 */
 		
 	}
 
