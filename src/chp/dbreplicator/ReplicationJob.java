@@ -94,6 +94,7 @@ public class ReplicationJob {
 			
 		}
 		Log.println("End data transfer.");
+		Log.println("Ended at "+new java.util.Date());
 		
 		Log.println("\n TEST");
 		for(String table:tables){
@@ -118,7 +119,7 @@ public class ReplicationJob {
 		 * Connect to remote and tally records with count queries using info from mapping.
 		 * Create the database local using mapping
 		 */
-		Log.println("Ended at "+new java.util.Date());
+		
 	}
 
 	private String createInsertQuery(String tableName){

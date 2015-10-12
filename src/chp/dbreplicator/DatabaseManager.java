@@ -135,7 +135,7 @@ public class DatabaseManager {
 					}else{	
 						first=false;
 					}					
-					String s = rs.getString(1);
+					String s = rs.getString(i);
 					Log.print(s);
 				}
 				Log.print("\n");
