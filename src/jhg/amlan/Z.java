@@ -1,0 +1,21 @@
+package jhg.amlan;
+
+public enum Z {
+	PERSON,
+	PEOPLE,
+	PERSONS,
+	PEOPLES,
+	PERSONSTHING,
+	PEOPLESTHING,
+	SELF,
+	SELVES,
+	THING,
+	THINGS,
+	IDEA,
+	ACT,
+	TIME,
+	PLACE,
+	GROUP,
+	WAY,
+	REASON
+}

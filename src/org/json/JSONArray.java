@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * A JSONArray is an ordered sequence of values. Its external text form is a
@@ -1127,4 +1129,16 @@ public class JSONArray implements Iterable<Object> {
             throw new JSONException(e);
         }
     }
+
+	@Override
+	public void forEach(Consumer<? super Object> arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Spliterator<Object> spliterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
