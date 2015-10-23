@@ -1,0 +1,8 @@
+ SELECT lpad((c.domestic_ultimate)::text, 9, '0'::text) AS domestic_ultimate_duns, a."group" AS carrier_group_code, sum(b.employees) AS employees
+   FROM companies.companies c
+   JOIN companies.branches b ON b.duns_number = c.duns_number
+   JOIN companies.branch_carriers r ON r.branch_duns_number = b.branch_duns_number
+   JOIN carriers.carriers a ON a.id = r.carrier
+   JOIN carriers.types t ON t.id = a.type
+  WHERE (t.name =  ANY (ARRAY['Consortium Member'::text, 'Non-Consortium BCBS'::text])) AND b.employees > 0 AND c.purchase_option = 'Base'::companies.purchase_option
+  GROUP BY lpad((c.domestic_ultimate)::text, 9, '0'::text), a."group";

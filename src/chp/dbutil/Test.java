@@ -1,10 +1,76 @@
 package chp.dbutil;
 
+import java.sql.*;
+import java.io.*;
+
+import chp.dbutil.ProgressReporter.Marker;
+
 public class Test {
 
 
 	
 	public static void main(String[] args){
+		
+		String[] tables = {"employer.company","employer.company_branch","employer.company_sic","employer.du_employee_counts"};//
+		String[] orders = {"duns_number asc","branch_duns asc","duns_number asc","domestic_ultimate_duns, carrier_group_code"}; 
+
+		
+		final String FDELIM = "|";
+		final String RDELIM = "~\n";
+			
+		
+		Log.println("Start");
+		DBReader rdbms = new DBReader(Database.PGDEVOLD);
+		rdbms.connect();
+		try{
+			int x = 0;
+			for(String table:tables){
+				String countsql = "select count(*) from "+table;
+				ResultSet rs = rdbms.query(countsql);
+				int rows = -1;
+				if(rdbms.haveResult()){
+					rows = rdbms.getCountResult();
+				}
+				rs.close();
+				
+				String sql = "select * from "+table+" order by "+orders[x];
+				String filename = "C:/data/"+table+".ddf";
+				rs = rdbms.query(sql);
+				FileWriter fw = new FileWriter(filename);
+				StringBuffer line = new StringBuffer();
+				int count = rs.getMetaData().getColumnCount();
+				
+				ProgressReporter pr = new ProgressReporter(rows,Marker.PERCENT);
+				Log.println("Records Count: "+rows+" , Columns Count: "+count);
+				int j = 0;
+				while(rs.next()){
+					line = new StringBuffer();
+					j++;
+
+					for(int i=1;i<=count;i++){
+						String val = rs.getString(i);
+						line.append(val);
+						if(i<count){
+							line.append(FDELIM);
+						}
+					}
+					pr.logProgress(j);
+					line.append(RDELIM);
+					
+					fw.append(line.toString());
+				}
+				rs.close();
+				Log.println("Wrote file: "+filename);
+				fw.close();
+				x++;
+			}//for
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		rdbms.close();
+		Log.println("End");
+		
 		/*
 		 * File test
 		 * 

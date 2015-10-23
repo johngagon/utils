@@ -10,6 +10,8 @@ public enum Database {
 	//PGPRODOLD
 	//PGPRODNEW
 	;
+	public final String PG = "postgresql";
+	public final String MS = "sqlserver";
 	private String host;
 	private String rdbms;
 	private String port;
@@ -30,14 +32,32 @@ public enum Database {
 		return this.driver;
 	}	
 	public String url(){
-		String connUrl = "jdbc"
+		String connUrl = "";
+		if(PG.equals(rdbms)){
+			connUrl = "jdbc"
+					+":"+rdbms+"://"
+					+host+":"
+					+port+"/"
+					+database;
+			
+		}else if(MS.equals(rdbms)){
+			connUrl = "jdbc"
 				+":"+rdbms+"://"
 				+host+":"
 				+port+";"
 				+"databaseName="+database+";"
 				+"user="+user+";"
 				+"password="+password;
+		}
 		return connUrl;
 	}
-
+	public String user(){
+		return this.user;
+	}
+	public String password(){
+		return this.password;
+	}
+	public String rdbms(){
+		return this.rdbms;
+	}
 }

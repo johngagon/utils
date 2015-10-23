@@ -68,7 +68,7 @@ public class ProgressReporter {
 	public void logProgress(int i){
 		int progress=this.reportProgress(i);
 		if(progress!=-1){
-			Log.println(progress+"%");
+			Log.println(progress+"% :"+i+"/"+this.totalCount);
 		}			
 	}
 

@@ -3,6 +3,8 @@ package chp.dbutil;
 
 import java.sql.*;
 
+import chp.dbreplicator.Log;
+
 
 public class DBReader {
 	
@@ -36,6 +38,13 @@ public class DBReader {
 		
 	}
 	public void connect(){
+		if(database.PG.equals(database.rdbms())){
+			connectPG();
+		}else{
+			connectMS();
+		}
+	}
+	private void connectMS(){
 		try{
 			Class.forName(database.driver());
 			System.out.println("Connecting with URL:'"+database.url()+"'");
@@ -44,6 +53,17 @@ public class DBReader {
 			e.printStackTrace();
 		}
 	}
+	private void connectPG() {
+		//"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV"
+		// jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV
+		try{
+			Class.forName(database.driver());
+			Log.println("Connecting with URL:'"+database.url()+"'");
+			conn = DriverManager.getConnection(database.url(),database.user(),database.password());
+		}catch(Exception e){
+			e.printStackTrace();
+		}		
+	}	
 	public void closeRs(){
 		try{
 			if(rs!=null){
@@ -70,7 +90,7 @@ public class DBReader {
 	}
 	
 	public ResultSet query(String sql){
-		System.out.println("SQL:"+sql);
+		Log.println("SQL:"+sql);
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
@@ -119,7 +139,17 @@ public class DBReader {
 		System.out.println("Finished.");
 	}
 	
-	
+	public int getCountResult(){
+		int val = -1;
+		try{
+			if(rs.next()){
+				val = rs.getInt(1);
+			} 
+		}catch(Exception e){
+			Log.println(e.getMessage());
+		}
+		return val;
+	}	
 	
 	
 	
@@ -136,6 +166,7 @@ public class DBReader {
 		db.close();
 		System.out.println("Finished.");		
 	}
+
 	
 	/*
 	public List<Table> configure(String[] tableList) {
