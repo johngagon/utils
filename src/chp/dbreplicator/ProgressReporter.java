@@ -1,5 +1,7 @@
 package chp.dbreplicator;
 
+import java.util.*;
+
 import jhg.util.Log;
 
 public class ProgressReporter {
@@ -25,18 +27,44 @@ public class ProgressReporter {
 		}
 		
 	}
+	private int counter;
 	private int increment;
 	private int totalCount;
+	private int progress;
+	private List<ProgressListener> listeners;
 	
 	public ProgressReporter(int totalWork, Marker marker){
 		this.totalCount = totalWork;
 		this.increment = marker.value;
-		 
+		this.counter = 0; 
+		this.listeners = new ArrayList<ProgressListener>();
+		this.listeners.add(new SimpleProgressListener());
+		this.progress = -1;
 	}
+	
 	public int getTotalCount(){
 		return totalCount;
 	}
-	public int reportProgress(int index) {
+	public void report(){
+		counter++;
+		logProgress(counter);
+	}
+	public void completeWork(){
+		counter++;
+		reportProgress(counter);
+		if(progress!=-1){
+			notifyListeners();
+		}
+	}
+	
+	private void notifyListeners() {
+		for(ProgressListener pl:listeners){
+			pl.notify(progress, counter);
+		}
+	}
+
+
+	public void reportProgress(int index) {
 		int factor = (int)(100/increment);                          
 		while(factor>totalCount){
 			switch(increment){
@@ -63,10 +91,10 @@ public class ProgressReporter {
 			
 		}
 
-		return pct;		
+		this.progress = pct;		
 	}
+	
 	public void logProgress(int i){
-		int progress=this.reportProgress(i);
 		if(progress!=-1){
 			Log.println(progress+"%  i:"+i);
 		}			
@@ -74,39 +102,28 @@ public class ProgressReporter {
 
 	public static void main(String[] args){
 		ProgressReporter pr = new ProgressReporter(3423,Marker.TICKS);
+		pr.addListener(new SimpleProgressListener());
+		
 		Log.println("Starting");
 		for(int i=1;i<=pr.getTotalCount();i++){
-			pr.logProgress(i);
+			pr.completeWork();
+			//pr.logProgress(i);
 		}
 		Log.println("Finished");	
 	}
-	
-	private static void testReportProgress(){
-		ProgressReporter pr = new ProgressReporter(3423,Marker.TICKS);
-		Log.println("Starting");
-		for(int i=1;i<=pr.getTotalCount();i++){
-			int progress=pr.reportProgress(i);
-			if(progress!=-1){
-				Log.println(progress+"%");
-			}			
-		}
-		Log.println("Finished");			
+	int getProgress(){
+		return this.progress;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void addListener(ProgressListener progressListener) {
+		this.listeners.add(progressListener);
+	}
+	public void remListener(ProgressListener progressListener) {
+		this.listeners.remove(progressListener);
+	}
+	public List<ProgressListener> getListeners(){
+		return this.listeners;
+	}
 	
 	
 	

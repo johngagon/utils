@@ -9,13 +9,28 @@ import chp.dbreplicator.ProgressReporter.Marker;
 
 public class ReplicationJob {
 
-	private Map<Integer, String> jdbcTypes;
+	private static final int VARCHAR_DEFAULT = 255;
+	private static final int VARCHAR_LIMIT = 2000;
+	//private Map<Integer, String> jdbcTypes;
 	private DatabaseManager remoteDatabase, localDatabase;
 	private MappingTable mapping;
 	private int workCount;
 	private int progress;
 	private Map<String,List<ColumnDefinition>> tableDefs;
 	private ProgressReporter progrpt;
+	private String queryCreateAs;
+	private List<String> createdSchemas;
+	
+	public ReplicationJob(DatabaseManager _localDatabase, String _query) {
+		//this.remoteDatabase = _remoteDatabase;
+		this.localDatabase = _localDatabase;
+		this.queryCreateAs = _query;
+		this.workCount = 0;
+		this.progress = 0;
+		//this.jdbcTypes = this.getAllJdbcTypeNames();
+		this.tableDefs = new Hashtable<String,List<ColumnDefinition>>();
+		this.createdSchemas = new ArrayList<String>();
+	}
 	
 	public ReplicationJob(DatabaseManager _remoteDatabase,DatabaseManager _localDatabase, MappingTable _mapping) {
 		this.remoteDatabase = _remoteDatabase;
@@ -23,57 +38,82 @@ public class ReplicationJob {
 		this.mapping = _mapping;
 		this.workCount = 0;
 		this.progress = 0;
-		this.jdbcTypes = this.getAllJdbcTypeNames();
+		//this.jdbcTypes = this.getAllJdbcTypeNames();
 		this.tableDefs = new Hashtable<String,List<ColumnDefinition>>();
-		
+		this.createdSchemas = new ArrayList<String>();
 	}
-
+	
+	//subclass?
+	public void execCreateFromQueryJob(){
+		Log.line("Starting at "+new java.util.Date());
+		clean();
+		this.localDatabase.connect(); 
+		
+		if(!localDatabase.isConnected()){
+			Log.line("Local database not connected");
+			return;
+		}
+		localDatabase.execute(queryCreateAs);
+		
+		localDatabase.close();
+		Log.line("\nClosing database connections.");		
+	}
 	
 	public void exec(){
-		Log.println("Starting at "+new java.util.Date());
+		Log.line("Starting at "+new java.util.Date());
 		
 		clean();
 		
-		Log.println("Calculating work.");
+		
 		if(!calculateWork()){
 			return;
 		}
 		
 		
 		//Connect
+		Log.line("\n3. Connecting");
 		this.localDatabase.connect(); //should create the database
 		this.remoteDatabase.connect();
 		
 		
 		if(!localDatabase.isConnected()){
-			Log.println("Local database not connected");
+			Log.line("Local database not connected");
 			return;
 		}
 		if(!remoteDatabase.isConnected()){
-			Log.println("Remote database not connected");
+			Log.line("Remote database not connected");
 			return;
 		}
-		Log.println("");
 		
+		Log.line("\n4. Creating Tables.");
 		//Create local tables
 		String[] tables = mapping.getTableList();
 		for(String table:tables){
-			String query = "select top 1 * from "+mapping.getSourceQual()+table;
+			String query = "";
+			if(remoteDatabase.getDatabase().rdbms().equals(Rdbms.POSTGRESQL)){
+				query = "select * ";
+			}else{
+				query = "select top 1 * ";
+			}
+			query +=" from "+mapping.getSourceQual()+table;
+			if(remoteDatabase.getDatabase().rdbms().equals(Rdbms.POSTGRESQL)){
+				query += " limit 1";
+			}
 			remoteDatabase.query(query);
 			if(remoteDatabase.haveResult()){
 				ResultSet rs = remoteDatabase.getResult();
 				if(createLocalTable(table,rs)){
-					Log.println("Created table "+table);
+					Log.line("Created table "+table);
 				}else{
-					Log.println("Couldn't create table:"+table+" in local database.");
+					Log.line("Couldn't create table:"+table+" in local database.");
 				}
 				remoteDatabase.closeRs();
 			}
 		}
-		Log.println("Local tables created.\n");
+		Log.line("Local tables created.");
 		
 		
-		Log.println("Starting data transfer.");
+		Log.line("\n5. Starting data transfer.");
 		for(String table:tables){
 			String query = "select * from "+mapping.getSourceQual()+table;
 			remoteDatabase.query(query);
@@ -84,35 +124,25 @@ public class ReplicationJob {
 				//int colcount = defs.size();
 				List<Object> data = null;
 				while((data = remoteDatabase.nextRow()) !=null){
-					localDatabase.executeUpdate(insertQuery,data);	
+					if(!localDatabase.executeUpdate(insertQuery,data)){
+						break;//break while
+					}
 					progress++;
-					progrpt.logProgress(progress);	
+					progrpt.completeWork();	
 				}
 				remoteDatabase.closeRs();
 			}
 			testLocal(table);
 			
-		}
-		Log.println("End data transfer.");
-		Log.println("Ended at "+new java.util.Date());
+		}//for
+		Log.line("\nEnd data transfer.");
+		Log.line("Ended at "+new java.util.Date());
 		
-		Log.println("\n TEST");
-		for(String table:tables){
-			String query = "select top 5 * from "+table;
-			localDatabase.query(query);
-			Log.println("  TABLE:"+table);
-			Log.println("-----------------------  ");
-			if(localDatabase.haveResult()){
-				localDatabase.printResult();
-				localDatabase.closeRs();
-			}
-			Log.println("-----------------------  \n");
-		}		
-		//testResultsLocal();
+
 		
 		remoteDatabase.close();
 		localDatabase.close();
-		Log.println("\nClosing database connections.");
+		Log.line("\nClosing database connections.");
 		
 	}
 
@@ -126,7 +156,11 @@ public class ReplicationJob {
 			}else{	
 				first=false;
 			}
-			query+=def.getColName();
+			String colname = def.getColName();
+			if("group".equalsIgnoreCase(colname.trim().toLowerCase())){
+				colname = "\""+colname+"\"";
+			}
+			query+=colname;
 		}
 		query += ") VALUES (";
 		first = true;
@@ -140,7 +174,7 @@ public class ReplicationJob {
 		}
 		query += ")";
 
-		//Log.println("INSERT:"+query);
+		Log.line("INSERT:"+query);
 		return query;		
 	}
 	
@@ -157,27 +191,73 @@ public class ReplicationJob {
 		
 	}
 	
+	private void createLocalSchema(String schemaName){
+		if(!createdSchemas.contains(schemaName)){
+			String ddl = "CREATE SCHEMA "+schemaName;
+			Log.line("Created schema "+schemaName);
+			localDatabase.execute(ddl);
+			createdSchemas.add(schemaName);
+		}
+		return;
+	}
+	
 	private boolean createLocalTable(String tableName, ResultSet rs){
 		boolean rv = false;
+		String ddl = "";
+		if(localDatabase.doesTableExist(tableName)){
+			ddl = "DROP TABLE "+tableName;
+			localDatabase.execute(ddl);
+		}
 		List<ColumnDefinition> defs = remoteDatabase.getDefinition();
 		tableDefs.put(tableName, defs);
-		
-		String ddl = "CREATE TABLE "+tableName + "(";
+		if(tableName.contains(".")){
+			String schema = tableName.substring(0,tableName.indexOf("."));
+			if(!localDatabase.doesSchemaExist(schema)){
+				createLocalSchema(schema);
+			}
+		}
+		ddl = "CREATE CACHED TABLE "+tableName + "(";
 		boolean first = true;
+		boolean doPK = false;
 		for(ColumnDefinition def:defs){
+			String colname = def.getColName();
 			if(!first){
 				ddl +=",";
 			}else{
+				doPK = true;
 				first = false;
 			}
+			
+			if("group".equals(colname.toLowerCase())){
+				colname = "\""+colname+"\"";
+			}
 			//Log.println("  "+def.toString()+" type:"+jdbcTypes.get(def.getColType()));
-			ddl += def.getColName()+" "+getHsqlDataType(def.getColType());
-			if(def.getColLen()!=0 && def.hasLength() ){
-				ddl+= "("+def.getColLen()+")";
+			ddl += colname+" "+getHsqlDataType(def.getColType());
+			if(def.hasLength()){
+				int collength = def.getColLen();
+				if(collength>0 && collength<VARCHAR_LIMIT ){
+					ddl+= "("+collength+")";
+				}else{
+					if("description".equals(colname)){
+						ddl+= "("+VARCHAR_LIMIT+")";
+					}else{
+						ddl+= "("+VARCHAR_DEFAULT+")";
+					}
+				}
+			}
+			if(doPK){
+				if((!tableName.toUpperCase().contains("COMPANY_CARRIERS")) 
+						&& (!tableName.toUpperCase().contains("COMPANIES_BRANCH_CARRIERS"))
+						&& (!tableName.toUpperCase().contains("SIC"))
+						&& (!tableName.toUpperCase().contains("NAICS"))
+					){
+					ddl+=" PRIMARY KEY";
+				}
+				doPK=false;
 			}
 		}
 		ddl+=")";
-		//Log.println("DDL:"+ddl);
+		Log.line("DDL:"+ddl);
 		localDatabase.execute(ddl);
 		
 		rv = true;// testLocal(tableName);
@@ -215,13 +295,13 @@ public class ReplicationJob {
 			rv = true;
 			int count = localDatabase.getCountResult();
 			if(count!=-1){
-				Log.println("  PASS:"+testCreateSQL+" .. count: "+count);
+				Log.line("  PASS:"+testCreateSQL+" .. count: "+count);
 			}else{
-				Log.println("  FAIL:"+testCreateSQL+" .. count: "+count);
+				Log.line("  FAIL:"+testCreateSQL+" .. count: "+count);
 			}
 			localDatabase.closeRs();
 		}else{
-			Log.println("Did not get result.");
+			Log.line("Did not get result.");
 		}
 		
 		return rv;
@@ -229,7 +309,7 @@ public class ReplicationJob {
 
 	private void clean(){
 		//Clean (necessary for in memory?)
-		Log.println("Cleaning existing local database");
+		Log.line("\n1. Cleaning existing local database for:"+localDatabase.getDatabase().url());
 		
 		localDatabase.connect();
 		if(localDatabase.isConnected()){
@@ -237,11 +317,11 @@ public class ReplicationJob {
 			localDatabase.execute(sql);
 			localDatabase.close();
 		}
-		Log.println("\n");
+		Log.line("Cleaning done.\n");
 	}
 	
 	private boolean calculateWork() {
-		
+		Log.line("2. Calculating work.");
 		boolean rv = false;
 		this.remoteDatabase.connect();
 		if(remoteDatabase.isConnected()){
@@ -258,13 +338,14 @@ public class ReplicationJob {
 					}//if ... already prints error
 				}
 			}
-			Log.println("Row Count Total: "+workCount+"\n");
+			Log.line("Row Count Total: "+workCount);
 			progrpt = new ProgressReporter(workCount,Marker.TENTHS);
+			//progrpt.addListener(new SimpleProgressListener());
 			this.remoteDatabase.closeRs();
 			this.remoteDatabase.close();
 			rv = true;
 		}else{
-			Log.println("Could not connect to remote");
+			Log.line("Could not connect to remote");
 		}
 		return rv;
 	}
@@ -283,3 +364,18 @@ public class ReplicationJob {
 	}
 	
 }
+/*
+Log.println("\n TEST");
+for(String table:tables){
+	String query = "select top 5 * from "+table;
+	localDatabase.query(query);
+	Log.println("  TABLE:"+table);
+	Log.println("-----------------------  ");
+	if(localDatabase.haveResult()){
+		localDatabase.printResult();
+		localDatabase.closeRs();
+	}
+	Log.println("-----------------------  \n");
+}		
+*/
+//testResultsLocal();

@@ -5,21 +5,85 @@ import java.io.*;
 
 import chp.dbutil.ProgressReporter.Marker;
 
+@SuppressWarnings("unused")
 public class Test {
-
-
+	private static final String FDELIM = "|";
+	private static final String RDELIM = "~\n";
 	
 	public static void main(String[] args){
+		Log.println("Start");
+		readSQLServerCompanyBranch();
+		Log.println("End");
+	}
+	
+	private static void readSQLServerCompanyBranch(){
+		DBReader rdbms = new DBReader(Database.SQLPROD);
+		rdbms.connect();
+		try{		
+		
+			String sql = " SELECT right('000'+CAST(b.branch_duns_number as varchar(9)),9) AS branch_duns, " 
+				+"right('000'+CAST(b.duns_number as varchar(9)),9) AS duns_number, "
+				+"c.name AS company_name, " 
+				+"s.abbreviation AS state_abbreviation, " 
+				+"r.carrier AS carrier_code,  "
+				+"b.employees AS branch_employee_rollup_ch "
+				+"FROM app_etl.companies_branches b "
+				+"JOIN app_etl.companies_companies c ON c.duns_number = b.duns_number "
+				+"JOIN app_etl.companies_branch_carriers r ON r.branch_duns_number = b.branch_duns_number "
+				+"JOIN app_etl.companies_branch_locations l ON l.branch_duns_number = b.branch_duns_number "
+				+"JOIN app_etl.geography_building_blocks o ON o.id = l.building_block "
+				+"JOIN app_etl.geography_block_groups g ON g.id = o.block_group "
+				+"JOIN app_etl.geography_census_tracts t ON t.id = g.census_tract "
+				+"JOIN app_etl.geography_counties u ON u.id = t.county "
+				+"JOIN app_etl.geography_states s ON s.id = u.state "
+				+"WHERE NOT (EXISTS ( SELECT 1 "
+				+"FROM app_etl.companies_blue_plans x "
+				+"WHERE x.duns_number = c.duns_number)) AND NOT (EXISTS ( SELECT 1 "
+				+"FROM app_etl.companies_blue_competitors x "
+				+"WHERE x.duns_number = c.duns_number)) AND c.purchase_option = 'Base' "
+				+"ORDER BY branch_duns";
+			
+			String filename = "C:/data/SQL_company_branch.ddf";
+			ResultSet rs = rdbms.query(sql);
+			FileWriter fw = new FileWriter(filename);
+			StringBuffer line = new StringBuffer();
+			int count = rs.getMetaData().getColumnCount();
+			
+			while(rs.next()){
+				line = new StringBuffer();
+			
+
+				for(int i=1;i<=count;i++){
+					String val = rs.getString(i);
+					line.append(val);
+					if(i<count){
+						line.append(FDELIM);
+					}
+				}
+
+				line.append(RDELIM);
+				
+				fw.append(line.toString());
+			}
+			rs.close();
+			Log.println("Wrote file: "+filename);
+			fw.close();			
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			rdbms.close();
+		}
+	}
+	
+	
+	private static void readPostgres(){
 		
 		String[] tables = {"employer.company","employer.company_branch","employer.company_sic","employer.du_employee_counts"};//
 		String[] orders = {"duns_number asc","branch_duns asc","duns_number asc","domestic_ultimate_duns, carrier_group_code"}; 
 
 		
-		final String FDELIM = "|";
-		final String RDELIM = "~\n";
-			
-		
-		Log.println("Start");
 		DBReader rdbms = new DBReader(Database.PGDEVOLD);
 		rdbms.connect();
 		try{
@@ -67,9 +131,10 @@ public class Test {
 		}
 		catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			rdbms.close();
 		}
-		rdbms.close();
-		Log.println("End");
+		
 		
 		/*
 		 * File test

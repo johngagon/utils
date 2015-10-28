@@ -12,6 +12,7 @@ public enum Database {
 	;
 	public final String PG = "postgresql";
 	public final String MS = "sqlserver";
+	
 	private String host;
 	private String rdbms;
 	private String port;

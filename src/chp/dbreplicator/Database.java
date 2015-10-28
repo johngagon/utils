@@ -1,26 +1,31 @@
 package chp.dbreplicator;
 
 public enum Database {
-
-	LOCAL_CO("org.hsqldb.jdbc.JDBCDriver","jdbc:hsqldb:mem:company","foundation","f0vnd4t10n"),
-	LOCAL_ES("org.hsqldb.jdbc.JDBCDriver","jdbc:hsqldb:mem:employer_search","foundation","f0vnd4t10n"),
-	SQLPROD("com.microsoft.sqlserver.jdbc.SQLServerDriver","jdbc:sqlserver://sqlprod01.corp.chpinfo.com:1433;databaseName=IDSProd","app_etl","fact-H3d4x")
+	//"jdbc:hsqldb:file:
+	LFB(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:file:/hsqldat/company",													"foundation",	"f0vnd4t10n"),
+	LMC(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:mem:employer_search",											"foundation",	"f0vnd4t10n"),
+	DW( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://sqlprod01.corp.chpinfo.com:1433;databaseName=IDSProd",	"app_etl",		"fact-H3d4x"),
+	DM( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV",				"whs_viewer",	"whs_viewer")
 	;
+	
 	private String url;
 	private String user;
 	private String password;
 	private String driver;
-	private Database(String _driver, String _url, String _user, String _password){
+	private Rdbms rdbms;
+	private Database(Rdbms _rdbms, String _driver, String _url, String _user, String _password){
+		this.rdbms = _rdbms;
 		this.driver = _driver;
 		this.url = _url;
 		this.user = _user;
 		this.password = _password;
 	}
+	public Rdbms rdbms(){
+		return this.rdbms;
+	}	
+	
 	public String driver(){
 		return this.driver;
-	}	
-	public String url(){
-		return this.url;
 	}
 	public String user(){
 		return this.user;
@@ -28,5 +33,10 @@ public enum Database {
 	public String password(){
 		return this.password;
 	}
-
+	
+	public String url(){
+		return this.url;
+	}
 }
+//LFM(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:file:security",												"foundation",	"f0vnd4t10n"),
+//LME(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:file:employer",												"foundation",	"f0vnd4t10n"),

@@ -1,17 +1,24 @@
 package chp.dbreplicator;
 
-import java.util.*;
+
 
 public class MappingTable {
 
 	private String sourceQual;//, targetDatabase;
 	private String[] tableList;
 
+	
+	
 	public MappingTable(String _sourceQual, String[] _tableList) {  //,	String _targetDatabase
 		this.sourceQual = _sourceQual;
 		
 		this.tableList = _tableList;
 	}
+	public MappingTable(String[] _tableList) {  //,	String _targetDatabase
+		this.sourceQual = "";
+		this.tableList = _tableList;
+	}	
+	
 
 	public String getSourceQual() {
 		return sourceQual;

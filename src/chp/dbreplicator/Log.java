@@ -16,7 +16,24 @@ public class Log {
 		}
 		out.print("\n");
 	}
-	public static void println(String s){
+	public static void cr(){
+		out.println("");
+	}
+	public static void cr(int times){
+		for(int i=0;i<times;i++){
+			out.println("");
+		}
+	}
+	public static void hr(int length){
+		hr(length,"-");
+	}
+	public static void hr(int length,String c){
+		for(int i=0;i<length;i++){
+			print(c);
+		}
+		cr();
+	}
+	public static void line(String s){
 		out.println(s);
 	}
 	public static void print(String s){
@@ -34,6 +51,10 @@ public class Log {
 		}else{
 			out.println(fail);
 		}
+		/*
+		 * Other ideas: print tables in fixed width
+		 * indent
+		 */
 	}
 	
 
