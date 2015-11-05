@@ -46,16 +46,16 @@ public class Index {
 	}
 	public static void main(String[] args){
 		//test unique
-		Log.line("Start");
+		Log.pl("Start");
 		Index a = new Index("a","a","a");
-		Log.line("Created "+a);
+		Log.pl("Created "+a);
 		Index b = new Index("b","a","a");
-		Log.line("Created "+b);
+		Log.pl("Created "+b);
 		Index c = new Index("c","a","a");
-		Log.line("Created "+c);
+		Log.pl("Created "+c);
 		Index d = new Index("c","a","a");//error here
-		Log.line("Created "+d);		
-		Log.line("End");
+		Log.pl("Created "+d);		
+		Log.pl("End");
 	}
 
 }

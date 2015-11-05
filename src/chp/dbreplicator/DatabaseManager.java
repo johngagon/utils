@@ -15,7 +15,7 @@ public class DatabaseManager {
 			try{
 				rv = !conn.isClosed();
 			}catch(Exception e){
-				Log.line(e.getMessage());
+				Log.error(e);
 				rv = false;
 			}
 		}
@@ -37,7 +37,7 @@ public class DatabaseManager {
 				val = rs.getInt(1);
 			} 
 		}catch(Exception e){
-			Log.line(e.getMessage());
+			Log.error(e);
 		}
 		return val;
 	}
@@ -47,15 +47,53 @@ public class DatabaseManager {
 	}
 	
 	public void createReferenceTable(String tableName, String[] fields, String[] fielddeclarations, List<String[]> data){
+		
+		String ddl = "CREATE TABLE "+tableName+" (";
+		String insertQueryHead = "INSERT INTO "+tableName+" ( ";
+		String insertQueryTail = "(";
+		boolean first = true;
+		for(int i=0;i<fields.length;i++){
+			if(first){
+				first = false;
+			}else{
+				ddl+=",";
+				insertQueryHead+=",";
+				insertQueryTail+=",";
+			}
+			ddl += fields[i] + " " + fielddeclarations[i];
+			insertQueryHead += fields[i];
+			insertQueryTail +="?";
+		}
+		ddl += ")";
+		insertQueryHead +=")";
+		insertQueryTail +=")";
+		String insertQuery = insertQueryHead + " VALUES " + insertQueryTail;
 		/*
 		 * create table with fieldnames
 		 * looping list, insert into table (String[] loop fields) values( String[] loop data of List)
 		 * 
 		 */
+		try{
+			execute(ddl);
+			int x = 0;
+			for(String[] row:data){
+				x++;
+				List<Object> rowObj = new ArrayList<Object>();
+				for(String val:row){
+					rowObj.add(val);
+				}
+				executeUpdate(insertQuery,rowObj);
+			}		
+			Log.pl("Inserted "+x+" records into "+tableName+" .");
+		}catch(Exception e){
+			Log.error(e);
+		}
 	}
 	
+
+
 	public boolean doesSchemaExist(String schema){
-		Log.line("Checking if schema "+schema+" exists.");
+		Log.pl("Checking if schema "+schema+" exists.");
 		boolean rv = false;
 		try{
 			DatabaseMetaData md = conn.getMetaData();
@@ -63,16 +101,16 @@ public class DatabaseManager {
 			while (rs.next()) {
 				String found = rs.getString(1);
 				if(schema.equalsIgnoreCase(found)){
-					Log.line("Schema found: "+found);
+					Log.pl("Schema found: "+found);
 					rv = true;
 					break;
 				}
 			}
 			if(!rv){
-				Log.line("Schema not found: "+schema);
+				Log.err("Schema not found: "+schema);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		return rv;
 	}	
@@ -81,16 +119,16 @@ public class DatabaseManager {
 		
 		boolean rv = true;
 		List<String> tables = getTables(schema);
-		Log.line("Tables found:"+tables.size());
+		Log.pl("Tables found:"+tables.size());
 		for(String table:tables){
 			String sql = "GRANT ALL ON "+table+" TO "+user;
-			Log.line(sql);
+			Log.pl(sql);
 			try{
 				PreparedStatement stmt = conn.prepareStatement(sql);
 				stmt.execute();
 				
 			}catch(Exception e){
-				e.printStackTrace();
+				Log.error(e);
 				rv = false;
 				break;
 			}
@@ -108,35 +146,113 @@ public class DatabaseManager {
 				String catFound = rs.getString(1);
 				String schemaFound = rs.getString(2);
 				String tableFound = rs.getString(3);
-				Log.line("Get tables: found "+catFound+"."+schemaFound+"."+tableFound);
+				Log.pl("Get tables: found "+catFound+"."+schemaFound+"."+tableFound);
 				list.add(tableFound);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		return list;
 	}
 	
 	public void listAllTables(boolean includeSystem){
-		Log.line("\nListing tables.");
+		Log.pl("\nListing tables.");
 		try{
 			DatabaseMetaData md = conn.getMetaData();
 			ResultSet rs = md.getTables(null, null, null, null);
 			while (rs.next()) {
 				String schema = rs.getString(2);
+				String table = rs.getString(3);
 				if(     (  
 						   (!"INFORMATION_SCHEMA".equals(schema)) 
 						&& (!"SYSTEM_LOBS".equals(schema))
 						) 
 						|| includeSystem){
-					Log.line(rs.getString(2)+"."+rs.getString(3));
+					Log.pl(schema+"."+table);
+					listAllIndexes(table);
 				}
 			}
 			rs.close();
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}		
 	}
+
+	
+	public boolean tableNotEmpty(String _table){
+		boolean hasRecords = tableHasRecords(_table,0);
+		if(hasRecords){
+			Log.pl("Table "+_table+" not empty.");
+		}
+		return hasRecords;
+	}
+	public void dropTable(String _table) {
+		String sql = "DROP TABLE "+_table;
+		this.execute(sql);
+		Log.pl("  Dropped table: '"+_table+"'");
+	}	
+	
+	public void clearTable(String _table){
+		String sql = "DELETE FROM "+_table;
+		this.execute(sql);
+		Log.pl("  Deleted all records from "+_table);
+	}
+
+
+	
+	public void insertFromResult(int fieldCount,String insertSql, ProgressReporter pr){
+		if(this.haveResult()){
+			try{
+				Log.pl("Inserting records..fail sensitive");
+				int count = 0;
+				while(rs.next()){
+					count++;
+					List<Object> data = new ArrayList<Object>();
+					for(int i=1;i<=fieldCount;i++){
+						data.add(rs.getString(i));
+					}
+					boolean success = this.executeUpdate(insertSql, data);
+					if(!success){
+						Log.pl("Insert fail.");
+						break;
+					}
+					if(pr!=null){
+						pr.completeWork();
+					}
+				}
+				Log.pl("Inserted "+count+" records.");
+			
+			}catch(Exception e){
+				Log.error(e);
+			}	
+		}else{
+			Log.err("Error, must set result first.");
+		}
+	}
+	public boolean tableHasRecords(String _table, int recordMin) {
+		boolean rv = false;
+		String sql = "select count(*) from "+_table;
+		this.query(sql);
+		if(this.haveResult()){
+			int count = -1;
+			try {
+				if(rs.next()){
+					count = this.rs.getInt(1);
+					Log.pl("Found :"+count+" records on table: "+_table+" min:"+recordMin);
+				}else{
+					Log.pl("No count result found for table: "+_table);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				Log.error(e);
+			}
+			rv = count>=recordMin;
+			this.closeRs();
+		}else{
+			Log.pl("tableHasRecords('"+_table+"',"+recordMin+") no result.");
+		}
+		return rv;
+	}	
 	
 	public boolean doesTableExist(String table){
 		
@@ -148,44 +264,66 @@ public class DatabaseManager {
 			schema = names[0];
 			table = names[1];
 		}
-		Log.line("Checking if schema: "+schema+", table: "+table+" exists.");
+		Log.pl("Checking if schema: "+schema+", table: "+table+" exists.");
 		try{
 			DatabaseMetaData md = conn.getMetaData();
 			ResultSet rs = md.getTables(null, schema, table.toLowerCase(), null);
 			if (rs.next()) {
-				Log.line("Table found: "+rs.getString(3));
+				Log.pl("Table found: "+rs.getString(3));
 				rv = true;
 			}
 			rs.close();
 			rs = md.getTables(null, null, table.toUpperCase(), null);
 			if (rs.next()) {
-				Log.line("Table found: "+rs.getString(3));
+				Log.pl("Table found: "+rs.getString(3));
 				rv = true;
 			}
 			rs.close();
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		if(!rv){
-			Log.line("Table not found: "+table);
+			Log.pl("Table not found: "+table);
 		}
 		return rv;
 	}
+	private void listAllIndexes(String table){
+		Log.pl("  Listing indexes on table: '"+table+"'");
+		try{
+			DatabaseMetaData md = conn.getMetaData();
+			ResultSet rs = md.getIndexInfo(null,null,table,false,false);//.getTables(null, schema, table.toLowerCase(), null);
+	
+			while(rs.next()) {
+				String foundIndex = rs.getString(6);
+				Log.pl("   "+foundIndex);
+			}
+			rs.close();
+		}catch(Exception e){
+			e.printStackTrace();//Log.error(e);
+		}
+	}	
 	public boolean doesIndexExist(String index, String table) {
 		boolean rv = false;
 		//split if contains .
-		String schema = null;
+		//String schema = null;
 		int i = 0;
-		Log.line("Checking if index: "+index+" exists.");
+		String schema = null;
+		if(table.indexOf(".")!=-1){
+			String[] names = table.split("\\.");
+			schema = names[0];
+			table = names[1];
+		}		
+		Log.pl("Checking if index: "+index+" exists on "+schema+" - '"+table+"'");
 		try{
 			DatabaseMetaData md = conn.getMetaData();
 			ResultSet rs = md.getIndexInfo(null,null,table,false,false);//.getTables(null, schema, table.toLowerCase(), null);
 			
 			while(rs.next()) {
 				String foundIndex = rs.getString(6);
-				if(foundIndex.equalsIgnoreCase(index)){
-					Log.line("Index found: "+foundIndex);
+				boolean isFound = foundIndex.equalsIgnoreCase(index.toUpperCase()); 
+				if(isFound){
+					Log.pl("  Index found: "+foundIndex);
 					rv = true;
 					break;
 				}
@@ -194,11 +332,10 @@ public class DatabaseManager {
 			rs.close();
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			e.printStackTrace();//Log.error(e);
 		}
 		if(!rv){
-			Log.line("Index not found: "+index+" checked: "+i+" entries.");
-			
+			Log.pl("  Index not found: "+index+" checked: "+i+" entries.");
 		}
 		return rv;
 	}
@@ -207,9 +344,9 @@ public class DatabaseManager {
 	public void connect(){
 		try{
 			Class.forName(database.driver());
-			Log.line("Connecting with URL:'"+database.url()+"'");
+			Log.pl("Connecting with URL:'"+database.url()+"'");
 			conn = DriverManager.getConnection(database.url(),database.user(),database.password());
-			Log.line("Connected to:'"+database.url()+"'");
+			Log.pl("Connected to:'"+database.url()+"'");
 		}catch(Throwable t){
 			t.printStackTrace();
 		}
@@ -227,7 +364,7 @@ public class DatabaseManager {
 				rs = null;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	
@@ -236,9 +373,9 @@ public class DatabaseManager {
 			if(conn!=null){
 				conn.close();
 			}
-			Log.line("Closed connection. - "+database.url());
+			Log.pl("Closed connection. - "+database.url());
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 
@@ -252,20 +389,20 @@ public class DatabaseManager {
 				rv = true;
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		return rv;
 	}
 	
 	public void execute(String sql){
-		//Log.println("SQL:"+sql);
+		//Log.println("  Call to Execute SQL:"+sql);
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.execute();
-			Log.line("  Executed SQL :"+sql);
+			Log.pl("  Executed SQL :"+sql);
 		}catch(Exception e){
-			Log.line("  Exception SQL:"+sql);
-			e.printStackTrace();
+			Log.pl("  Exception SQL:"+sql);
+			Log.error(e);
 		}
 		
 	}	
@@ -273,18 +410,23 @@ public class DatabaseManager {
 		//Log.println("SQL:"+sql);
 		boolean rv = false;
 		Object datum = null;
+		int j = 0;
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			for(int i = 0;i<data.size();i++){
+				j = i+1;
 				datum = data.get(i);
-				stmt.setObject(i+1, datum);
+				stmt.setObject(j, datum);
 			}
 			stmt.executeUpdate();
 			rv = true;
+		}catch(SQLException sqle){
+			Log.print("SQL:"+sql);
+			Log.print("  Datum("+j+"):"+datum);
+			Log.cr();
+			Log.pl("SQLException:"+sqle.getMessage());
 		}catch(Exception e){
-			Log.line("SQL:"+sql);
-			Log.line("Datum:"+datum);
-			e.printStackTrace();
+			Log.exception(e);
 		}
 		return rv;
 	}
@@ -298,9 +440,10 @@ public class DatabaseManager {
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
-			Log.line("Executed query:"+sql);
+			Log.pl("Executed query:"+sql);
 		}catch(Exception e){
 			e.printStackTrace();
+			//Log.error(e);
 		}
 		return rs;
 	}
@@ -327,7 +470,7 @@ public class DatabaseManager {
 				
 			}	
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 
@@ -350,7 +493,7 @@ public class DatabaseManager {
 				defs.add(cd);
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		return defs;
 	}
@@ -363,12 +506,12 @@ public class DatabaseManager {
 			dbm.connect();
 			if(dbm.isConnected()){
 				if(dbm.test()){
-					Log.line("  PASS!");
+					Log.pl("  PASS!");
 				}else{
-					Log.line("  FAIL!");
+					Log.pl("  FAIL!");
 				}
 			}else{
-				Log.line("No connection was made for: "+db.name()+":"+db.url());
+				Log.pl("No connection was made for: "+db.name()+":"+db.url());
 			}
 			dbm.close();
 		}
@@ -385,10 +528,13 @@ public class DatabaseManager {
 				}
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Log.error(e);
 		}
 		return data;
 	}
+
+
+
 
 
 	

@@ -58,7 +58,7 @@ public class DBReader {
 		// jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV
 		try{
 			Class.forName(database.driver());
-			Log.line("Connecting with URL:'"+database.url()+"'");
+			Log.pl("Connecting with URL:'"+database.url()+"'");
 			conn = DriverManager.getConnection(database.url(),database.user(),database.password());
 		}catch(Exception e){
 			e.printStackTrace();
@@ -90,7 +90,7 @@ public class DBReader {
 	}
 	
 	public ResultSet query(String sql){
-		Log.line("SQL:"+sql);
+		Log.pl("SQL:"+sql);
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
@@ -146,7 +146,7 @@ public class DBReader {
 				val = rs.getInt(1);
 			} 
 		}catch(Exception e){
-			Log.line(e.getMessage());
+			Log.pl(e.getMessage());
 		}
 		return val;
 	}	
