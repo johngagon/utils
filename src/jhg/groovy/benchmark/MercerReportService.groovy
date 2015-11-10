@@ -1,6 +1,7 @@
 package jhg.groovy.benchmark
 
-import java.util.*;
+
+import java.text.*;
 
 class MercerReportService {
 
@@ -16,6 +17,18 @@ class MercerReportService {
 	
 	
 	def inFieldHeader
+	
+	static def formatPercent(def value){
+		def pctPattern = "###.#%"
+		def percentForm = new DecimalFormat(pctPattern)
+		def result
+		try{
+			result = percentForm.format(Double.valueOf(value))
+		}catch(Exception e){
+			result = value
+		}
+		result
+	}
 	
 	public MercerReportService() {
 		dataInput = []
@@ -36,13 +49,49 @@ class MercerReportService {
 		inFieldHeader = ['area','state','percent_enr','vendortoprint','ipelig','opelig','prelig','total_volume','inn_std_ip','inn_std_op','inn_std_pr','ic_percent_ip','ic_percent_op','ic_percent_pr','ic_percent_all_std','ic_percent_all_bob','ic_discount_e_ip','ic_discount_e_op','ic_discount_e_pr','ic_discount_e_std','ic_discount_e_std_rel','ic_discount_b_ip','ic_discount_b_op','ic_discount_b_pr','ic_discount_b_std','ic_discount_b_std_rel','overall_ip_discount','overall_op_discount','overall_pr_discount','overall_discount_std','overall_discount_std_rel','ip_per_diem','ip_alos','lab_disc','rad_disc']
 		readFile(dataInputRsc)
 		process()
+		processSummary()
 		debug()
 	}
 	
 	def debug(){
-		rptDetailInC.each{row->
-			println "${row}"
+		
+		rptSummaryTotal.each{ row->
+			println "${row.type} ${row.state} ${row.market} ${row.carrier} ${row.networkType} ${row.discountMeasure} ${row.total} "
+			println "${row.discount_1} ${row.discount_2} ${row.discount_3} ${row.discount_4} ${row.discount_5} ${row.discount_6} ${row.discount_7} ${row.discount_8} ${row.discount_9} ${row.discount_10} "
+			println "${row.xxx} ${row.xxx} ${row.xxx}"
 		}
+		/*
+
+		rec."discount_${i+1}" = rowRankList.get(i)?:''
+			totalRec.discountCarriersInMarket = row.discountCarriersInMarket
+			totalRec.discountNonBcbsAvg = row.nonBcbsAvg
+			totalRec.discountBlueAvgDiff = row.ttCompetAveDiff
+			totalRec.discountBlueBestDiff = row.ttDiffBestCompet
+		 */
+		//rptSummaryIP
+		//rptSummaryOP
+		//rptSummaryPR
+		
+		/*
+		println "\n\nIC -------------"
+		
+		rptDetailInC.each{row->
+			println "${row.state} ${row.market} ${row.carrierName} ${row.networkType} ${formatPercent(row.planDiscount)} ${formatPercent(row.compGroupAvg)} ${formatPercent(row.nonBcbsAvg)} "
+			println "             ${row.planClaims} ${row.marketClaims} ${formatPercent(row.planClaimsPct)}"
+			println "             ${formatPercent(row.planDiscountInpatient)} ${formatPercent(row.planDiscountOutpatient)} ${formatPercent(row.planDiscountProfessional)} ${formatPercent(row.compGroupAvgInpatient)} ${formatPercent(row.compGroupAvgOutpatient)} ${formatPercent(row.compGroupAvgProfessional)} ${formatPercent(row.nonBcbsAvgInpatient)} ${formatPercent(row.nonBcbsAvgOutpatient)} ${formatPercent(row.nonBcbsAvgProfessional)}"
+			println "             ${row.planClaimsInpatient} ${row.planClaimsOutpatient} ${row.planClaimsProfessional} ${row.marketClaimsInpatient} ${row.marketClaimsOutpatient} ${row.marketClaimsProfessional} ${formatPercent(row.planClaimsPctInpatient)} ${formatPercent(row.planClaimsPctOutpatient)} ${formatPercent(row.planClaimsPctProfessional)}"
+		}
+		
+
+		println "\n\nTotal-----------"
+		rptDetailAll.each{row->
+			println "${row.state} ${row.market} ${row.carrierName} ${row.networkType} ${formatPercent(row.planDiscount)} ${formatPercent(row.compGroupAvg)} ${formatPercent(row.nonBcbsAvg)} "
+			println "             ${row.planClaims} ${row.marketClaims} ${formatPercent(row.planClaimsPct)}"
+			println "             ${formatPercent(row.planDiscountInpatient)} ${formatPercent(row.planDiscountOutpatient)} ${formatPercent(row.planDiscountProfessional)} ${formatPercent(row.compGroupAvgInpatient)} ${formatPercent(row.compGroupAvgOutpatient)} ${formatPercent(row.compGroupAvgProfessional)} ${formatPercent(row.nonBcbsAvgInpatient)} ${formatPercent(row.nonBcbsAvgOutpatient)} ${formatPercent(row.nonBcbsAvgProfessional)}"
+			println "             ${row.planClaimsInpatient} ${row.planClaimsOutpatient} ${row.planClaimsProfessional} ${row.marketClaimsInpatient} ${row.marketClaimsOutpatient} ${row.marketClaimsProfessional} ${formatPercent(row.planClaimsPctInpatient)} ${formatPercent(row.planClaimsPctOutpatient)} ${formatPercent(row.planClaimsPctProfessional)}"
+		}
+		*/
+
 	}
 	
 	def readFile(def dataInputRsc){
@@ -79,7 +128,7 @@ class MercerReportService {
 	}
 	
 	def process(){
-		def totalRowCarrier = 'Market Total ($) or Average (%)'
+		def MARKET_TOTAL_OR_AVERAGE = 'Market Total ($) or Average (%)'
 		def blueCard = 'Blue Card'
 		def blinded = 'Blinded Carrier'
 		def dollarUnit = 1000;
@@ -91,7 +140,7 @@ class MercerReportService {
 			//println "${row}"
 			
 				
-			if(totalRowCarrier.equals(row.vendortoprint)){
+			if(MARKET_TOTAL_OR_AVERAGE.equals(row.vendortoprint)){
 				//row is totals row
 				def sum = 0.0
 				def grpCount = 0
@@ -161,6 +210,7 @@ class MercerReportService {
 				if(prDiscountRanks.size() >10){prDiscountRanks = prDiscountRanks.subList(0, 9)}
 				
 				groupRow.each { gr ->
+					//println "SUM: ${sum}, ${grpCount} ${sum/grpCount} "
 					gr.compGroupAvg = sum/grpCount
 					gr.nonBcbsAvg = nonBlueSum / nonBlueCount
 					gr.compGroupAvgInpatient = compGrpSumIP/grpCount
@@ -172,12 +222,12 @@ class MercerReportService {
 					
 					if(gr.isBlue){
 						
-						gr.marketClaims = row.total_volume * dollarUnit
+						gr.marketClaims = (row.total_volume as Long) * dollarUnit
 						gr.planClaimsPct = (gr.planClaims as Double) / (gr.marketClaims as Double)
 						
-						gr.marketClaimsInpatient = row.ipelig
-						gr.marketClaimsOutpatient = row.opelig
-						gr.marketClaimsProfessional = row.prelig
+						gr.marketClaimsInpatient = (row.ipelig as Long) * dollarUnit
+						gr.marketClaimsOutpatient = (row.opelig as Long) * dollarUnit
+						gr.marketClaimsProfessional = (row.prelig as Long) * dollarUnit
 						gr.planClaimsPctInpatient = gr.planClaimsInpatient / (gr.marketClaimsInpatient as Double)
 						gr.planClaimsPctOutpatient = gr.planClaimsOutpatient / (gr.marketClaimsOutpatient as Double) 
 						gr.planClaimsPctProfessional = gr.planClaimsProfessional / (gr.marketClaimsProfessional as Double)
@@ -201,13 +251,13 @@ class MercerReportService {
 						gr.prDiffBestCompet  = gr.planDiscountProfessional - topPrCompetitorDiscount
 						generalSummary <<gr
 					}
-					
+					groupRow = []
 					rptDetailInC << gr
 					
 				}
 				
+		
 				
-				allGroupRow = []
 				sum = 0.0
 				grpCount = 0
 				
@@ -281,18 +331,16 @@ class MercerReportService {
 					gr.nonBcbsAvgProfessional = nonBcbsSumPR/nonBlueCount
 					if(gr.isBlue){
 						
-						gr.marketClaims = row.total_volume * dollarUnit
-						gr.planClaimsPct = gr.planClaims / gr.marketClaims
+						gr.marketClaims = (row.total_volume as Long) * dollarUnit
+						gr.planClaimsPct = (gr.planClaims as Double) / (gr.marketClaims as Double)
 						
-						gr.marketClaimsInpatient = row.ipelig
-						gr.marketClaimsOutpatient = row.opelig
-						gr.marketClaimsProfessional = row.prelig
+						gr.marketClaimsInpatient = (row.ipelig as Long) * dollarUnit
+						gr.marketClaimsOutpatient = (row.opelig as Long) * dollarUnit
+						gr.marketClaimsProfessional = (row.prelig as Long) * dollarUnit
 						gr.planClaimsPctInpatient = gr.planClaimsInpatient / (gr.marketClaimsInpatient as Double)
 						gr.planClaimsPctOutpatient = gr.planClaimsOutpatient / (gr.marketClaimsOutpatient as Double) 
 						gr.planClaimsPctProfessional = gr.planClaimsProfessional / (gr.marketClaimsProfessional as Double)
-						
-						gr.discountCarriersInMarket = allGroupRow.size()
-						
+						gr.discountCarriersInMarket = groupRow.size()
 						gr.ttranks = totalDiscountRanks
 						gr.ipranks = ipDiscountRanks
 						gr.opranks = opDiscountRanks
@@ -302,7 +350,7 @@ class MercerReportService {
 						gr.ipBcbsRank = ipDiscountRanks.indexOf(gr.planDiscountInpatient) +1
 						gr.opBcbsRank = opDiscountRanks.indexOf(gr.planDiscountOutpatient) +1
 						gr.prBcbsRank = prDiscountRanks.indexOf(gr.planDiscountProfessional) +1
-						gr.ttCompetAveDiff = gr.planDiscount - gr.gr.nonBcbsAvg
+						gr.ttCompetAveDiff = gr.planDiscount - gr.nonBcbsAvg
 						gr.ipCompetAveDiff  = gr.planDiscountInpatient - gr.nonBcbsAvgInpatient
 						gr.opCompetAveDiff  = gr.planDiscountOutpatient - gr.nonBcbsAvgOutpatient
 						gr.prCompetAveDiff  = gr.planDiscountProfessional - gr.nonBcbsAvgProfessional
@@ -312,11 +360,11 @@ class MercerReportService {
 						gr.prDiffBestCompet  = gr.planDiscountProfessional - topPrCompetitorDiscount
 						generalSummary <<gr
 					}
-					
+					allGroupRow = []
 					rptDetailAll << gr
 					
 				}
-				allGroupRow = []
+				
 				
 				
 			}else{
@@ -352,17 +400,18 @@ class MercerReportService {
 				drall.planDiscountProfessional = row.overall_pr_discount as Double
 				
 				if(dric.isBlue){
+					//println "percent: ${row.ic_percent_all_std} ${(Integer.valueOf(row.total_volume) * dollarUnit)} ${(1.0/(row.ic_percent_all_std as Double))} ${((Integer.valueOf(row.total_volume) * dollarUnit) * (1.0/(row.ic_percent_all_std as Double))) as Long}"
 					dric.planClaims = Integer.valueOf(row.total_volume) * dollarUnit
-					drall.planClaims = (Integer.valueOf(row.total_volume) * dollarUnit) / (row.ic_percent_all_std as Double)
+					drall.planClaims = ((Integer.valueOf(row.total_volume) * dollarUnit) * (1.0/(row.ic_percent_all_std as Double))) as Long
 					
 					dric.planClaimsInpatient = Integer.valueOf(row.ipelig) * dollarUnit
-					drall.planClaimsInpatient = (Integer.valueOf(row.ipelig) * dollarUnit) / (row.ic_percent_ip as Double)
+					drall.planClaimsInpatient = ((Integer.valueOf(row.ipelig) * dollarUnit) * (1.0/(row.ic_percent_ip as Double))) as Long
 					
 					dric.planClaimsOutpatient = Integer.valueOf(row.opelig) * dollarUnit
-					drall.planClaimsOutpatient = (Integer.valueOf(row.opelig) * dollarUnit) / (row.ic_percent_op as Double)
+					drall.planClaimsOutpatient = ((Integer.valueOf(row.opelig) * dollarUnit) * (1.0/(row.ic_percent_op as Double))) as Long
 					
 					dric.planClaimsProfessional = Integer.valueOf(row.prelig) * dollarUnit
-					drall.planClaimsProfessional = (Integer.valueOf(row.prelig) * dollarUnit) / (row.ic_percent_pr as Double)
+					drall.planClaimsProfessional = ((Integer.valueOf(row.prelig) * dollarUnit) * (1.0/(row.ic_percent_pr as Double))) as Long
 				}
 				groupRow << dric
 				allGroupRow << drall
@@ -387,10 +436,12 @@ class MercerReportService {
 			processSubSummary(row,'Inpatient',ipRec)
 			processSubSummary(row,'Outpatient',opRec)
 			processSubSummary(row,'Professional',prRec)
+			
 			processRanks(row.ttranks,totalRec)
 			processRanks(row.ipranks,ipRec)
 			processRanks(row.opranks,opRec)
 			processRanks(row.prranks,prRec)
+			
 			totalRec.discountBlueRank = row.ttBcbsRank
 			ipRec.discountBlueRank    = row.ipBcbsRank
 			opRec.discountBlueRank    = row.opBcbsRank
@@ -411,7 +462,10 @@ class MercerReportService {
 			ipRec.discountBlueBestDiff    = row.ipDiffBestCompet
 			opRec.discountBlueBestDiff    = row.opDiffBestCompet
 			prRec.discountBlueBestDiff    = row.prDiffBestCompet
-			
+			rptSummaryTotal << totalRec
+			rptSummaryIP << ipRec
+			rptSummaryOP << opRec
+			rptSummaryPR << prRec
 		}
 		
 	}
@@ -427,7 +481,11 @@ class MercerReportService {
 	}
 	def processRanks(def rowRankList, def rec ){
 		for(int i=0;i<10;i++){
-			rec."discount_${i+1}" = rowRankList.get(i)?:''
+			if(i<rowRankList.size()){
+				rec."discount_${i+1}" = rowRankList.get(i)?:''
+			}else{
+				rec."discount_${i+1}" = ''
+			}
 		}
 	}
 	

@@ -36,73 +36,74 @@ public class Geomantic {
 
 	
 	private void generate(){
-		int pos = 1;
+		
 		Random r = new Random();
 		
 		//Mothers
 		for(int i=0;i<LIM_M;i++){
 			for(int j=0;j<LIM_M;j++){
 				mothers[i][j] = r.nextInt(2)+1;
-				pos++;
 			}
 		}
-		print(LIM_M,mothers,"Mothers",pos);
+		print(LIM_M,mothers,"Mothers",1);
 		
 		//Daughters
 		for(int i=0;i<LIM_M;i++){
 			for(int j=0;j<LIM_M;j++){
 				daughters[i][j] = mothers[j][i];
-				pos++;
 			}
+			
 		}
-		print(LIM_M,daughters,"Daughters",pos);
+		print(LIM_M,daughters,"Daughters",5);
 		
 		//Nieces
 		for(int i=0;i<LIM_M;i++){
 			
 			int v = mothers  [0][i]  +  mothers[1][i];
 			int w = 2-(v%2);
-			nieces[0][i] = w; pos++;
+			nieces[0][i] = w; 
 			
 			v     = mothers  [2][i]  +  mothers[3][i];
 			w     = 2-(v%2);
-			nieces[1][i] = w; pos++;
+			nieces[1][i] = w; 
 			
 			v     = daughters[0][i] + daughters[1][i];
 			w     = 2-(v%2);
-			nieces[2][i] = w; pos++;
+			nieces[2][i] = w; 
 			
 			v     = daughters[2][i] + daughters[3][i];
 			w     = 2-(v%2);
-			nieces[3][i] = w; pos++;
+			nieces[3][i] = w; 
 			
 		}
-		print(LIM_M,nieces,"Nieces",pos);
+		print(LIM_M,nieces,"Nieces",9);
 		
 		//Witnesses
 		for(int i=0;i<LIM_M;i++){
 			int v = nieces[0][i] + nieces[1][i];
-			int w = 2-(v%2); pos++;
+			int w = 2-(v%2); 
 			witnesses[0][i] = w;
 			v = nieces[2][i] + nieces[3][i];
-			w = 2-(v%2); pos++;
+			w = 2-(v%2); 
 			witnesses[1][i] = w;
 		} 
-		print(LIM_N,witnesses,"Witnesses",pos);
+		
+		print(LIM_N,witnesses,"Witnesses",13);
 		
 		//Judge
 		for(int i=0;i<LIM_M;i++){
 			int v = witnesses[0][i] + witnesses[1][i];
-			int w = 2-(v%2); pos++;
+			int w = 2-(v%2); 
 			judge[0][i] = w;
 		} 		
-		print(1,judge,"Judge",pos);
+		print(1,judge,"Judge",15);
 		
 	} 
 	
 	
 	private static void print(int I, Integer[][] m, String n, int pos){
-		System.out.println("\n"+n);
+		System.out.println("\n\n"+n.toUpperCase());
+		int x = pos;
 		for(int i=0;i<I;i++){
 			for(int j=0;j<LIM_M;j++){
 				String l = "";//"0:"+j+":";
@@ -110,12 +111,15 @@ public class Geomantic {
 				System.out.println(l+line);
 			}
 			Shape shape = interpret(m[i]);
-			System.out.println("Interpretation: "+shape.name()+"  "+interpretShape(shape));
+			System.out.println("Interpretation - \n\tPosition("+x+"): "+interpretPosition(x)+" \n\tShape: "+shape.name().toLowerCase()+" \n\tMeaning: "+interpretShape(shape));
+			x++;
 			System.out.println(" ");
 		}
 	}
 	
 	public static void main(String[] args){
+		String question = "Who moved my cheese?";// "Will I live in a home that's paid for within the next five years?";
+		System.out.println("Question:"+question);
 		Geomantic g = new Geomantic();
 		g.generate();
 	}
@@ -124,10 +128,26 @@ public class Geomantic {
 		return result;
 	}
 	private static String interpretPosition(int position){
-		//switch(position){
 		
-		//}
-		return "Position "+position+":";
+		switch(position){
+			case 1: return "Querent's Sun House ";
+			case 2: return "House of Money ";
+			case 3: return "House of Communication and Commutes ";
+			case 4: return "House of Home ";
+			case 5: return "House of Pleasures ";
+			case 6: return "House of Regular Doings ";
+			case 7: return "House of Partnerships oft including love ";
+			case 8: return "House of Intimacy ";
+			case 9: return "House of Awareness ";
+			case 10: return "House of Career and Position, Destiny ";
+			case 11: return "House of Wishes and Commradery ";
+			case 12: return "House of Karma and Secrets ";
+			case 13: return "Witness of the Past ";
+			case 14: return "Witness of the Future ";
+			case 15: return "Judge final answer ";
+			default: return "";
+		}
+		
 	}	
 	private static String interpretShape(Shape s){
 		
