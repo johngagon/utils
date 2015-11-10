@@ -89,10 +89,7 @@ public class QuoteExtractor {
 		return output;
 	}
 	
-	
-	
-	public static void main(String[] args){
-	
+	private static void test1(){
 		String testString = "The quick brown fox jumps over the lazy dog but \"Now is the time.\" for all good men to \"come to their party\". If you know what I mean.";
 		
 		//List<String> expected = new ArrayList<String>();
@@ -105,6 +102,21 @@ public class QuoteExtractor {
 		Set<String> actual = qe.results();
 		for(String s:actual){
 			Log.quoteln(s);
+		}
+		
+	}
+	
+	public static void main(String[] args){
+	
+		String testString = "The quick brown fox jumps over the lazy dog but \"Now is the time.\" for all good men to \"come to their party\". If you know what I mean.";
+		
+		String testString2 = "\"The quick brown fox jumps over the lazy dog.\" he said \"Now is the time. for all good men to come to their party. If you know what I mean.\"";
+		
+		//QuoteExtractor qe = new QuoteExtractor();
+		//qe.setText(testString);
+		List<String> quotes = QuoteExtractor.extractQuotedText(testString2);
+		for(String s: quotes){
+			Log.println(s);
 		}
 		
 	}

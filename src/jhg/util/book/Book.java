@@ -49,11 +49,12 @@ public class Book {
 					List<Sentence> sentences = p.getSentences();
 					for(Sentence e:sentences){
 						if(e.getDialogues().size()>0){
-							buff.append(e.getSentenceID()+"\n");
+							//buff.append(e.getSentenceID()+"\n");
 						}
 						List<Dialogue> dialogues = e.getDialogues();
 						for(Dialogue d:dialogues){
-							buff.append("  "+d.getText()+"\n");
+							//buff.append("  "+d.getText()+"\n");
+							buff.append(d.getText()+"\n");
 						}
 					}
 				}

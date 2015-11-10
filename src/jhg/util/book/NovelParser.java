@@ -17,6 +17,13 @@ public class NovelParser {
 		book = new Book(s);
 	}
 	
+	private String cleanParagraph(String s){
+		//clear double quotes
+		String rv = s.replaceAll("“", "\"");
+		rv = rv.replaceAll("”", "\"");
+		return rv;
+	}
+	
 	public void processChapter(int chapterNo, String title, String[] chapterText){
 		Log.println("\n\nProcessing Ch. "+chapterNo+" with "+chapterText.length+" paragraphs.");
 		Chapter c = new Chapter(chapterNo,title);
@@ -24,6 +31,7 @@ public class NovelParser {
 		int paranum = 0;
 		int qpara = chapterText.length;
 		for(String para : chapterText){
+			para = cleanParagraph(para);
 			//Log.println("PARA:"+para);
 			if(para.trim().contains("***") || paranum==(qpara-1) ){
 				Scene newScene = new Scene(c);
@@ -104,7 +112,7 @@ public class NovelParser {
 		np.printStats();
 		*/
 		
-		//FIXME broken np.writeDialogue("data/chapters/dialogue.txt");
+		np.writeDialogue("data/chapters/dialogue.txt");
 		
 		
 		/*
