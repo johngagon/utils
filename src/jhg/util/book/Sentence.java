@@ -4,10 +4,13 @@ import jhg.util.Log;
 
 public class Sentence {
 
+	private static final String DELIM="\t";
+	private static final String EOL = "";
 	public static enum Type{
 		NARRATIVE,
 		DIALOG,
-		DOCUMENT
+		DOCUMENT,
+		UNANALYZED
 	}
 	
 	private int sentenceNumber;
@@ -51,11 +54,15 @@ public class Sentence {
 		return this.paragraph.getScene().getChapter().getChapterNumber();
 	}
 	private String getSentenceID(){
-		return this.getChapterNumber()+":"+this.getSceneNumber()+":"+this.getParagraphNumber()+":"+this.getSentenceNumber();
+		return this.getChapterNumber()+DELIM+this.getSceneNumber()+DELIM+this.getParagraphNumber()+DELIM+this.getSentenceNumber();
 	}
 	public void debug() {
-		Log.println(getSentenceID()+":"+this.text);
+		Log.println(getSentenceID()+DELIM+this.text+DELIM+this.text.length()+EOL);
 		
+	}
+
+	public String writeData() {
+		return getSentenceID()+DELIM+this.text+DELIM+this.text.length()+"\n";
 	}
 	
 }

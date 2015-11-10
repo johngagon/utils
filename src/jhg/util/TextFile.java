@@ -39,7 +39,41 @@ public class TextFile {
 		return strings;
 	}
 	
+	public static boolean write(String filename, String data) {
+		BufferedWriter writer = null;
+		boolean rv = false;
+		try {
+			File file = new File(filename);
+			writer = new BufferedWriter(new FileWriter(file));
+			writer.write(data);
+			rv = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rv;
+	}
+		  
+	
 	public static void main(String[] args){
+		testWrite();
+	}
+	
+	public static void testWrite(){
+		String filename = "data/out.txt";
+		String data = "abc\ndef\nghi";
+		if(TextFile.write(filename,data)){
+			Log.print("Success.");
+		}
+	}
+	
+
+	public static void testRead(){
 		TextFile f = new TextFile("data/notes.txt");
 		//String content = f.getText();
 		String[] lines = f.getLines();
@@ -49,6 +83,6 @@ public class TextFile {
 			Log.print(i+":"+s);
 			i++;
 			
-		}
+		}		
 	}
 }

@@ -11,6 +11,7 @@ public class Chapter {
 	private List<Scene> scenes;
 
 	public Chapter(int i, String s) {
+		Log.println("  Creating Chapter "+i);
 		this.scenes = new ArrayList<Scene>();
 		this.chapterNumber = i;
 		this.title = s;
@@ -21,8 +22,8 @@ public class Chapter {
 	}
 
 	public void addScene(Scene scene) {
+		Log.println("    Adding scene "+scene.getSceneNumber());
 		this.scenes.add(scene);
-		
 	}
 	
 	public int getSceneCount(){
@@ -56,5 +57,13 @@ public class Chapter {
 			}
 		}
 		return longest;
+	}
+
+	public String writeData() {
+		StringBuffer buff = new StringBuffer();
+		for(Scene s:scenes){
+			buff.append(s.writeData());
+		}	
+		return buff.toString();
 	}
 }
