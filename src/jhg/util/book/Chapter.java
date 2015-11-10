@@ -66,4 +66,22 @@ public class Chapter {
 		}	
 		return buff.toString();
 	}
+
+	public int getParagraphCount() {
+		int total = 0;
+		List<Scene> scenes = getScenes();
+		for(Scene s:scenes){
+			total+=s.getParagraphCount();
+		}
+		return total;
+	}
+	
+	public int getSentenceCount(){
+		int total = 0;
+		List<Scene> scenes = getScenes();
+		for(Scene s:scenes){
+			total+=s.getSentenceCount();
+		}
+		return total;		
+	}
 }

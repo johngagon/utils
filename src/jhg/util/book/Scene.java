@@ -70,6 +70,18 @@ public class Scene {
 		}
 		return buff.toString();
 	}
+	
+	public int getParagraphCount(){
+		return this.paragraphs.size();
+	}
+	
+	public int getSentenceCount(){
+		int total = 0;
+		for(Paragraph p:paragraphs){
+			total += p.getSentences().size();
+		}
+		return total;
+	}
 
 	
 	

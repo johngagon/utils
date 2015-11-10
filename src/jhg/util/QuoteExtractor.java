@@ -29,6 +29,21 @@ public class QuoteExtractor {
 		
 	}
 	*/
+	public static List<String> extractQuotedText(String str){
+		List<String> quotes = new ArrayList<String>();
+		String regex = "\"([^\"]*)\"";
+		
+		Pattern pat = Pattern.compile(regex);
+		Matcher m = pat.matcher(str);
+		String q = "";
+		while(m.find()) {
+			q = m.group(1);
+			quotes.add(q);
+		}
+		return quotes;
+		
+	}
+	
 	public void extractWords(){
 		String regex = "\"([^\"]*)\"";
 		StringBuffer buff = new StringBuffer();

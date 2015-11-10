@@ -1,16 +1,33 @@
 package jhg.util.book;
 
-import jhg.util.book.Sentence.Type;
 
-public class Dialogue extends Sentence {
+
+public class Dialogue  {
 
 	/*
 	 * character
-	 * 
 	 */
 	
-	public Dialogue(int n, Paragraph p, Type t, String s) {
-		super(n,p,t,s);
+	private int number;
+	private Sentence sentence;
+	private String text;
+	
+	public Dialogue(int num, Sentence _sentence, String s) {
+		this.number = num;
+		this.sentence = _sentence;
+		this.text = s;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public Sentence getSentence() {
+		return sentence;
+	}
+
+	public String getText() {
+		return text;
 	}	
 	
 }

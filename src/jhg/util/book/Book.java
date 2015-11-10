@@ -39,6 +39,32 @@ public class Book {
 		return buff.toString();
 	}
 
+	public String getAllDialogue() {
+		StringBuffer buff = new StringBuffer();
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				List<Paragraph> paragraphs = s.getParagraphs();
+				for(Paragraph p:paragraphs){
+					List<Sentence> sentences = p.getSentences();
+					for(Sentence e:sentences){
+						if(e.getDialogues().size()>0){
+							buff.append(e.getSentenceID()+"\n");
+						}
+						List<Dialogue> dialogues = e.getDialogues();
+						for(Dialogue d:dialogues){
+							buff.append("  "+d.getText()+"\n");
+						}
+					}
+				}
+			}
+			
+		}
+		return buff.toString();
+	}
+
+	
+
 	public Sentence getLongestSentence(){
 		Sentence longest = null;
 		int currentLongest = 0;
@@ -51,5 +77,52 @@ public class Book {
 		}
 		return longest;
 	}	
+	public int getSceneCount(){
+		int total = 0;
+		for(Chapter c:chapters){
+			total += c.getSceneCount();
+		}
+		return total;
+	}
+	public int getParagraphCount(){
+		int total = 0;
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				total+=s.getParagraphCount();
+			}
+		}
+		return total;
+	}
+	public int getSentenceCount(){
+		int total = 0;
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				total+=s.getSentenceCount();
+			}
+		}
+		return total;
+		
+	}
+	
+	public void printStats(){
+		Log.println(                "Book ["+this.title+"] :: Chapters : "+chapters.size()+"  Scenes : "+getSceneCount()+"  Paragraphs : "+getParagraphCount()+"  Sentences : "+getSentenceCount()
+				);
+		for(Chapter c:chapters){
+			Log.println(            "    Chapter["+c.getChapterNumber()+"] :: Scenes : "+c.getSceneCount()+"  Paragraphs : "+c.getParagraphCount()+"  Sentences : "+c.getSentenceCount());
+			
+			List<Scene> scenes = c.getScenes();
+			for(Scene scene:scenes){
+				Log.println(        "        Scene["+scene.getSceneNumber()+"] :: Paragraphs : "+scene.getParagraphCount()+"  Sentences : "+scene.getSentenceCount());
+				
+				//for(Paragraph p:scene.getParagraphs()){
+				//	Log.println(    "            Paragraph["+p.getParaNumber()+"] :: Sentences : "+p.getSentences().size());	
+				//}
+			}
+			
+		}
+	}
 
+	
 }

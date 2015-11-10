@@ -48,17 +48,7 @@ public class NovelParser {
 		book.debug();
 	}
 	
-	public static void testParse(){
-		BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
-		String source = "This is a test. This is a T.L.A. test.  Now with a Dr. in it. \"Now with quotest in it,\" he said. ";
-		iterator.setText(source);
-		int start = iterator.first();
-		for (int end = iterator.next();
-		    end != BreakIterator.DONE;
-		    start = end, end = iterator.next()) {
-		  System.out.println("|"+source.substring(start,end)+"|");
-		}		
-	}
+
 	
 
 	private void writeData(String filename) {
@@ -67,9 +57,24 @@ public class NovelParser {
 		}else{
 			Log.println("\n\nBook write data failed.");
 		}
-	}	
+	}
+	
+	private void writeDialogue(String filename) {
+		if(TextFile.write(filename, book.getAllDialogue())){
+			Log.println("\n\nWrote dialogue out to "+filename);
+		}else{
+			Log.println("\n\nBook write dialogue failed.");
+		}
+	}
+
+	
 	public Sentence getLongestSentence(){
 		return book.getLongestSentence();
+	}
+	
+	public void printStats(){
+		Log.println("\n\n");
+		book.printStats();
 	}
 	
 	public static void main(String[] args){
@@ -86,14 +91,21 @@ public class NovelParser {
 		String fileName = "data/chapters/ch10.txt";
 		String[] content = new TextFile(fileName).getLines();
 		np.processChapter(10, ""+10, content);
-		//np.writeData("data/chapters/book.dat");
+		/*
+		Print to console.
+		np.debugBook();
+
+		Write data
+		np.writeData("data/chapters/book.dat");
 		
+		Get longest sentence
 		Log.println("\nLongest Sentence"+np.getLongestSentence().writeData());
 		
+		np.printStats();
+		*/
 		
-		//np.debugBook();
+		//FIXME broken np.writeDialogue("data/chapters/dialogue.txt");
 		
-
 		
 		/*
 		 * Novel parser = looks for "***" for scenes.
@@ -117,11 +129,26 @@ public class NovelParser {
 		 * !Compile - List paragraphs with sentence spacing.
 		 * !Generate - Produce a record list of sentences. allow marking some as document type. 
 		 *  
+		 *  Top longest sentences
 		 */
 		
 		Log.println("End");
 	}
-
+	
+	
+	
+	
+	public static void testParse(){
+		BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
+		String source = "This is a test. This is a T.L.A. test.  Now with a Dr. in it. \"Now with quotest in it,\" he said. ";
+		iterator.setText(source);
+		int start = iterator.first();
+		for (int end = iterator.next();
+		    end != BreakIterator.DONE;
+		    start = end, end = iterator.next()) {
+		  System.out.println("|"+source.substring(start,end)+"|");
+		}		
+	}
 
 }
 /* debugContent
