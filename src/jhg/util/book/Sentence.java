@@ -7,6 +7,7 @@ import jhg.util.QuoteExtractor;
 
 public class Sentence {
 
+	
 	private static final String DELIM="\t";
 	private static final String EOL = "";
 	public static enum Type{
@@ -16,6 +17,7 @@ public class Sentence {
 		UNANALYZED
 	}
 	
+	private List<Problem> problems;
 	private int sentenceNumber;
 	private Paragraph paragraph;
 	private String text;
@@ -28,9 +30,28 @@ public class Sentence {
 		this.paragraph = p;
 		this.type = t;
 		dialogues = new ArrayList<Dialogue>(); 
+		problems = new ArrayList<Problem>();
 		processDialogue();
+		checkForProblems();
+	}
+	private void checkForProblems(){
+		checkLength();
 		
 	}
+	private void checkLength(){
+		final int MAX_LENGTH = 150;
+		if(this.text.length()>MAX_LENGTH){
+			problems.add(new Problem(this,Issue.SENTENCE_TOO_LONG));
+		}		
+	}
+	private void checkDialogue(){
+		
+	}
+	
+	public List<Problem> getProblems(){
+		return this.problems;
+	}
+	
 	
 	public List<Dialogue> getDialogues(){
 		return this.dialogues;

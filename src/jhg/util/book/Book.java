@@ -38,7 +38,39 @@ public class Book {
 		}
 		return buff.toString();
 	}
-
+	
+	public List<Sentence> getAllSentences(){
+		List<Sentence> rv = new ArrayList<Sentence>();
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				List<Paragraph> paragraphs = s.getParagraphs();
+				for(Paragraph p:paragraphs){
+					List<Sentence> sentences = p.getSentences();
+					rv.addAll(sentences);
+				}		
+			}
+		}
+		return rv;
+	}
+	public List<Problem> getAllProblems(){
+		List<Problem> rv = new ArrayList<Problem>();
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				List<Paragraph> paragraphs = s.getParagraphs();
+				for(Paragraph p:paragraphs){
+					List<Sentence> sentences = p.getSentences();
+					for(Sentence se:sentences){
+						List<Problem> problems = se.getProblems();
+						rv.addAll(problems);
+					}
+				}		
+			}
+		}
+		return rv;		
+	}
+	
 	public String getAllDialogue() {
 		StringBuffer buff = new StringBuffer();
 		for(Chapter c:chapters){

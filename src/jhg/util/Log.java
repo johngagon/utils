@@ -6,6 +6,10 @@ import java.util.*;
 
 public class Log {
 
+	public static boolean STORE = true;
+	public static String filename = "data/log.txt";
+	private static StringBuffer buff = new StringBuffer();
+
 	public static void quoteln(String s){
 		out.println("'"+s+"'");
 	}
@@ -16,7 +20,14 @@ public class Log {
 		}
 		out.print("\n");
 	}
+	public static void flushToFile(){
+		TextFile.write(filename,buff.toString());		
+	}
 	public static void println(String s){
+		if(STORE){
+			buff.append(s);
+		}
+
 		out.println(s);
 	}
 	public static void print(String s){
