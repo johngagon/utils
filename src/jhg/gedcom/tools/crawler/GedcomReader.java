@@ -137,6 +137,7 @@ public class GedcomReader {
 		for(Famous f:famous){
 			printFamous(i,f);
 			i++;
+			//testpush
 		}
 	}
 
