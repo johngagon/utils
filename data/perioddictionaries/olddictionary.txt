@@ -1,3 +1,5 @@
+a
+an
 abandon
 abash
 abba
@@ -2361,7 +2363,12 @@ testament
 testification
 testimonies
 tetrarch
-theologie.
+the
+thee
+thy
+thou
+theologie
+theology
 theoricke
 throne
 throtle

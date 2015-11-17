@@ -96,7 +96,30 @@ public class Book {
 		return buff.toString();
 	}
 
-	
+	public List<String> getAllDialogueAsList() {
+		List<String> rv = new ArrayList<String>();
+		for(Chapter c:chapters){
+			List<Scene> scenes = c.getScenes();
+			for(Scene s:scenes){
+				List<Paragraph> paragraphs = s.getParagraphs();
+				for(Paragraph p:paragraphs){
+					List<Sentence> sentences = p.getSentences();
+					for(Sentence e:sentences){
+						if(e.getDialogues().size()>0){
+							//buff.append(e.getSentenceID()+"\n");
+						}
+						List<Dialogue> dialogues = e.getDialogues();
+						for(Dialogue d:dialogues){
+							//buff.append("  "+d.getText()+"\n");
+							rv.add(d.getText()+"\n");
+						}
+					}
+				}
+			}
+			
+		}
+		return rv;
+	}	
 
 	public Sentence getLongestSentence(){
 		Sentence longest = null;

@@ -38,9 +38,9 @@ public class TextAnalyzer {
 		this.unreadable = new TreeSet<String>();
 		this.archaic = new TreeSet<String>();
 		this.dictionary = new Dictionary();
-		this.dictionary.load("data/dictionary.txt");
-		this.dictionary.load("data/uncommon_dictionary.txt");
-		this.dictionary.load("data/archaic_dictionary.txt");
+		//this.dictionary.load("data/dictionary.txt");
+		//this.dictionary.load("data/uncommon_dictionary.txt");
+		//this.dictionary.load("data/archaic_dictionary.txt");
 		
 		//this.dictionary.load("data/names.txt");
 		numberCount = 0;
@@ -51,11 +51,11 @@ public class TextAnalyzer {
 	public void read(String _content){
 		this.content = _content;
 	}
-	private static boolean isNumber(String s){
+	public static boolean isNumber(String s){
 		Matcher nm = numberPattern.matcher(s);
 		return nm.matches() || s.endsWith("th");
 	}
-	private static boolean isProper(String s){
+	public static boolean isProper(String s){
 		return Character.isUpperCase(s.charAt(0));
 	}
 	
@@ -95,7 +95,144 @@ public class TextAnalyzer {
 		Log.println("Analzyed.");
 	}
 	
+	/**
+	 * Creates a dictonary from a sample text.
+	 * Truncates possessives and removes numbers and excludes proper names.
+	 * 
+	 * @param filenameIn
+	 * @param filenameOut
+	 */
+	public void createDictionaryFromText(String filenameIn, String filenameOut){
+		String content = new TextFile(filenameIn).getText();
+		Set<String> wordList = new TreeSet<String>();
+		Matcher m = pattern.matcher(content);
+		String word = "";
+		while ( m.find() ) {		
+			word = content.substring(m.start(),m.end());
+			word = TextUtil.truncPossessive(word);
+			if(	word.length()>0
+				&& word.length() < 50
+				&& (!isNumber(word))
+				&& (!isProper(word))				){
+				wordList.add(word);
+				
+			}
+		}
+		writeDictionaryFromWordList(filenameOut, wordList);
+	}
+	
+	public void createStandardizedDictionaryFromText(String filenameIn, Dictionary standardDictonary, 
+			String dictionaryFileOut, String unfamiliarWordsFile, String blatantExceptionFile){
+		String content = new TextFile(filenameIn).getText();
+		Set<String> wordList = new TreeSet<String>();
+		Set<String> unfamiliarList = new TreeSet<String>();
+		Set<String> blatantList = new TreeSet<String>();
+		
+		Pattern _pattern = Pattern.compile("[\\w']+");	
+		Matcher m = _pattern.matcher(content);
+		String word = "";
+		while ( m.find() ) {		
+			word = content.substring(m.start(),m.end());
+			word = TextUtil.truncPossessive(word);
+			if(	word.length()>0
+				&& word.length() < 50
+				&& (!isNumber(word))
+				&& (!isProper(word))				){
+				if(standardDictonary.contains(word)){
+					wordList.add(word);
+				}else{
+					unfamiliarList.add(word);
+				}
+				
+			}else{
+				blatantList.add(word);
+			}
+		}
+		writeDictionaryFromWordList(dictionaryFileOut, wordList);
+		writeDictionaryFromWordList(unfamiliarWordsFile, unfamiliarList);
+		writeDictionaryFromWordList(blatantExceptionFile, blatantList);
+	}
+
+
+	private void writeDictionaryFromWordList(String dictFilename, Set<String> wordList) {
+		StringBuffer buff = new StringBuffer();
+		for(String w:wordList){
+			buff.append(w+"\n");
+		}
+		TextFile.write(dictFilename,buff.toString());
+		Log.println("Wrote dictionary "+dictFilename);
+	}	
+	
+	
+	
+	public Set<String> unapproved(Dictionary gross, Dictionary approved){
+		/*
+		 * product the list of words in gross not in approved.
+		 */
+		Set<String> grossWords = new HashSet<String>(gross.wordList());
+		Set<String> approvedWords = approved.wordList();
+		grossWords.removeAll(approvedWords);
+		return grossWords; 
+		
+	}
+	
+	
+	
 	public static void main(String[] args){
+		String fileIn = "data/periodtext/winthrop.txt";
+		String dictionaryOut1 = "data/perioddictionaries/winthrop_vocab.txt";
+		
+		TextAnalyzer analyzer = new TextAnalyzer();
+		
+		analyzer.createDictionaryFromText(fileIn, dictionaryOut1);
+
+		Dictionary gross1 = new Dictionary();
+		gross1.load(dictionaryOut1);
+		
+		Dictionary approved = new Dictionary();
+		approved.load("data/dictionary.txt");
+		Set<String> winthropOddness = analyzer.unapproved(gross1,approved);
+		Log.println("Winthrop Dictionary exceptions.");
+		for(String s:winthropOddness){
+			Log.println(s);
+		}
+
+		/*
+		fileIn = "data/periodtext/duchess.txt";
+		String dictionaryOut2 = "data/perioddictionaries/duchess_vocab.txt";
+		analyzer.createDictionaryFromText(fileIn, dictionaryOut2);
+		*/
+		
+		
+	}
+
+	public static void test2(){
+		String fileIn = "data/periodtext/winthrop.txt";
+		String dictionaryOut1 = "data/perioddictionaries/winthrop_vocab.txt";
+		
+		TextAnalyzer analyzer = new TextAnalyzer();
+		
+		analyzer.createDictionaryFromText(fileIn, dictionaryOut1);
+
+		Dictionary gross1 = new Dictionary();
+		gross1.load(dictionaryOut1);
+		
+		Dictionary approved = new Dictionary();
+		approved.load("data/dictionary.txt");
+		Set<String> winthropOddness = analyzer.unapproved(gross1,approved);
+		Log.println("Winthrop Dictionary exceptions.");
+		for(String s:winthropOddness){
+			Log.println(s);
+		}
+
+		/*
+		fileIn = "data/periodtext/duchess.txt";
+		String dictionaryOut2 = "data/perioddictionaries/duchess_vocab.txt";
+		analyzer.createDictionaryFromText(fileIn, dictionaryOut2);
+		*/
+				
+	}
+	public static void test1(){
 		
 		/*
 		 * 1. Load the dictionaries: dictionary.txt, uncommon_dictionary.txt and archaic_dictionary.txt
@@ -185,9 +322,9 @@ public class TextAnalyzer {
 		 * x B section in uncommon dictionary.
 		 */
 		Log.divider(80,"=");
-		Log.println("Finished.");
+		Log.println("Finished.");		
 	}
-
+	
 }
 
 /*

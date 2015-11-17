@@ -4,11 +4,12 @@ import java.util.*;
 
 import jhg.util.Log;
 import jhg.util.QuoteExtractor;
+import jhg.util.Dictionary;
 
 public class Sentence {
 
 	
-	private static final String DELIM="\t";
+	public static String DELIM="\t";
 	private static final String EOL = "";
 	public static enum Type{
 		NARRATIVE,
@@ -36,16 +37,34 @@ public class Sentence {
 	}
 	private void checkForProblems(){
 		checkLength();
-		
+		checkDialogue();
 	}
 	private void checkLength(){
-		final int MAX_LENGTH = 150;
-		if(this.text.length()>MAX_LENGTH){
-			problems.add(new Problem(this,Issue.SENTENCE_TOO_LONG));
+		
+		if(this.text.length()>NovelParser.MAX_LENGTH){
+			String msg = " Length: "+this.text.length()+", Max: "+NovelParser.MAX_LENGTH+".";
+			problems.add(new Problem(this,Issue.SENTENCE_TOO_LONG,msg));
 		}		
 	}
+	
 	private void checkDialogue(){
-		
+		Dictionary dict = NovelParser.dictionary;
+		if(dict!=null){
+			for(Dialogue d:dialogues){
+				int dialogueId = d.getNumber();
+				String dtext = d.getText();
+				List<String> unknownWords = dict.findUnknownWords(dtext,true);//AsJoinedString
+				if(unknownWords.size()>0){
+					StringBuffer buff = new StringBuffer();
+					buff.append("Unknown Words:[");
+					for(String uw:unknownWords){
+						buff.append(uw+" ");
+					}
+					buff.append("]");
+					problems.add( new Problem(this,Issue.DIALOGUE_ANACHRONISM,dialogueId,buff.toString()) );
+				}
+			}
+		}
 	}
 	
 	public List<Problem> getProblems(){

@@ -1,6 +1,7 @@
 package jhg.util.book;
 
 
+import jhg.util.Dictionary;
 import jhg.util.Log;
 import jhg.util.TextFile;
 
@@ -13,8 +14,12 @@ public class NovelParser {
 	
 	private Book book;
 	
+	static Dictionary dictionary;
+	static int MAX_LENGTH = 200;
+	
 	public NovelParser(String s) {
 		book = new Book(s);
+		
 	}
 	
 	private String cleanParagraph(String s){
@@ -25,7 +30,7 @@ public class NovelParser {
 	}
 	
 	public void processChapter(int chapterNo, String title, String[] chapterText){
-		Log.println("\n\nProcessing Ch. "+chapterNo+" with "+chapterText.length+" paragraphs.");
+		Log.println("\nProcessing Ch. "+chapterNo+" with "+chapterText.length+" paragraphs.");
 		Chapter c = new Chapter(chapterNo,title);
 		List<String> sceneParagraphs = new ArrayList<String>();
 		int paranum = 0;
@@ -40,7 +45,6 @@ public class NovelParser {
 				c.addScene(newScene);
 			}else{
 				sceneParagraphs.add(para.trim());
-
 			}
 			
 			paranum++;
@@ -49,7 +53,7 @@ public class NovelParser {
 			 */
 		}
 		book.addChapter(c);
-		
+		Log.println(" ");
 	}
 
 	public void debugBook(){
@@ -80,14 +84,27 @@ public class NovelParser {
 		return book.getLongestSentence();
 	}
 	
+	public List<Problem> getAllProblems() {
+		return book.getAllProblems();
+	}
+	
+	
 	public void printStats(){
 		Log.println("\n\n");
 		book.printStats();
 	}
 	
+
+	
 	public static void main(String[] args){
 		Log.println("Start");
 		//testParse();
+		Dictionary d = new Dictionary();
+		String dictionaryFilename = "data/perioddictionaries/combined_dictionary.txt";//"data/perioddictionaries/olddictionary.txt";
+		d.load(dictionaryFilename);
+		NovelParser.dictionary = d;
+		NovelParser.MAX_LENGTH = 250;
+		Sentence.DELIM = "|";
 		
 		NovelParser np = new NovelParser("The Masks of Salem");
 		for(int i=1;i<=9;i++){
@@ -99,6 +116,23 @@ public class NovelParser {
 		String fileName = "data/chapters/ch10.txt";
 		String[] content = new TextFile(fileName).getLines();
 		np.processChapter(10, ""+10, content);
+		
+
+		
+		List<Problem> problems = np.getAllProblems();
+		int count=1;
+		for(Problem p:problems){
+			Log.println(count+":"+p.toDisplayString());
+			count++;
+		}
+		/*
+		 * take a sentence and see if there are any words there that the dictionary doesn't have.
+		 * Set<String> words = d.wordList(); 
+		 * 
+		 */
+		
+		
+		
 		/*
 		Print to console.
 		np.debugBook();
@@ -110,9 +144,11 @@ public class NovelParser {
 		Log.println("\nLongest Sentence"+np.getLongestSentence().writeData());
 		
 		np.printStats();
-		*/
 		
 		np.writeDialogue("data/chapters/dialogue.txt");
+		*/
+		
+		
 		
 		
 		/*
@@ -146,6 +182,7 @@ public class NovelParser {
 	
 	
 	
+
 	public static void testParse(){
 		BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);
 		String source = "This is a test. This is a T.L.A. test.  Now with a Dr. in it. \"Now with quotest in it,\" he said. ";
