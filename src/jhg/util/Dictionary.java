@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class Dictionary {
 
 	private Set<String> words;
-	
+	private String filename;
 	public Dictionary() {
 		this.words = new TreeSet<String>();
 	}
@@ -23,6 +23,7 @@ public class Dictionary {
 		for(String s:wordStrings){
 			words.add(s.trim());
 		}
+		this.filename = fileName;
 		Log.println("Added "+wordStrings.length+" words to dictionary.  Dictionary at "+words.size()+" words.");
 	}
 	
@@ -56,6 +57,11 @@ public class Dictionary {
 	private boolean isCapitalized(String textWord) {
 		return Character.isUpperCase(textWord.charAt(0));
 	}	
+	
+	public static void cleanUpDictionary(Dictionary inDictionary, String filenameOut){
+		Set<String> wordList = inDictionary.wordList();
+		writeDictionaryFromWordList(filenameOut, wordList);
+	}
 	
 	public static void createStandardizedDictionaryFromText(String filenameIn, Dictionary standardDictonary, 
 			String dictionaryFileOut, String unfamiliarWordsFile, String blatantExceptionFile){
