@@ -71,7 +71,8 @@ public class Card {
 	}	
 	
 	public static class Fives{
-		private static final int TOP = 24;
+		private static final int MAX = 5;
+		private static final int TOP = 14;
 		private final int rank;
 		private final Pentity suit;
 		private Fives(int num, Pentity suit){this.rank = num;this.suit = suit;}
@@ -80,7 +81,7 @@ public class Card {
 		private static final List<Fives> protoDeck = new ArrayList<Fives>();
 	    static {
 	    	protoDeck.add(new Fives(1,Pentity.PAWN));
-	    	for (int j=0;j<5;j++){
+	    	for (int j=0;j<MAX;j++){
 	    		Pentity suit = Pentity.values()[j];
 	        	for (int i = 1; i <= TOP; i++){protoDeck.add(new Fives(i,suit));}	}
 	        protoDeck.add(new Fives(2,Pentity.PAWN));
@@ -111,19 +112,21 @@ public class Card {
 	}	
 
 	public static class Sevens{
+		private static final int MAX = 7;
 		private static final int TOP = 10;
 		private final int rank;
-		private final Planet suit;
-		private Sevens(int num, Planet suit){this.rank = num;this.suit = suit;}
+		private final ClassicPlanet suit;
+		private Sevens(int num, ClassicPlanet suit){this.rank = num;this.suit = suit;}
 		public int getRank() {return rank;}
-		public Planet getSuit() {return suit;}
+		public ClassicPlanet getSuit() {return suit;}
 		private static final List<Sevens> protoDeck = new ArrayList<Sevens>();
 	    static {
-	    	protoDeck.add(new Sevens(1,Planet.EARTH));
-	    	for (int j=0;j<6;j++){
-	    		Planet suit = Planet.values()[j];
-	        	for (int i = 1; i <= TOP; i++){protoDeck.add(new Sevens(i,suit));}	}
-	        protoDeck.add(new Sevens(2,Planet.EARTH));
+	    	protoDeck.add(new Sevens(1,ClassicPlanet.EARTH));
+	    	for (int j=0;j<MAX;j++){
+	    		ClassicPlanet suit = ClassicPlanet.values()[j];
+	        	for (int i = 1; i <= TOP; i++){protoDeck.add(new Sevens(i,suit));}	
+	        }
+	        protoDeck.add(new Sevens(2,ClassicPlanet.EARTH));
 	    }
 	    public static List<Sevens> newDeck() {return new ArrayList<Sevens>(protoDeck);}	    
 	}		
@@ -135,6 +138,13 @@ public class Card {
 		private Eights(int num, Trigram suit){this.rank = num;this.suit = suit;}
 		public int getRank() {return rank;}
 		public Trigram getSuit() {return suit;}
+		public Planet getInverseSuit(){
+			Planet z = Planet.values()[rank-1];
+			return z;
+		}
+		public int getInverseRank(){
+			return suit.ordinal()+1;
+		}		
 		private static final List<Eights> protoDeck = new ArrayList<Eights>();
 	    static {
 	        for (Trigram suit : Trigram.values()){
@@ -175,7 +185,7 @@ public class Card {
 		sb.append("["+six.suit.getSym()+":"+six.rank+"] ");
 		sb.append("["+seven.suit.getSym()+":"+seven.rank+"] ");
 		sb.append("["+eight.suit.getSym()+":"+eight.rank+"] ");
-		
+		sb.append("["+eight.getInverseSuit().getSym()+":"+eight.getInverseRank()+"] ");//12s
 		sb.append("["+six.getInverseSuit().getSym()+":"+six.getInverseRank()+"] ");//12s
 		return sb.toString();
 	}

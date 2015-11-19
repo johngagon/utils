@@ -53,7 +53,7 @@ public class ShemhamphoraschCards {
 			//five
 			sb.append("["+Color.values()[twelve-1].getSym()+":"+six+"] ");
 			//trigram
-			sb.append("["+Planet.values()[ten-1].getSym()+":"+seven+"] ");
+			sb.append("["+ClassicPlanet.values()[ten-1].getSym()+":"+seven+"] ");
 			sb.append("["+Trigram.values()[nine-1].getSym()+":"+eight+"] ");
 			sb.append("["+Zodiac.values()[six-1].getSym()+":"+six+"] ");
 			Log.println(sb.toString());
