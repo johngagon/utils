@@ -99,16 +99,24 @@ public class Card {
 		private Fives(int num, Pentity suit){this.rank = num;this.suit = suit;}
 		public int getRank() {return rank;}
 		public Pentity getSuit() {return suit;}
-		public Fortnight getInverseSuit(){
-			Fortnight z = Fortnight.values()[rank-1];
-			return z;
+		public Fortnight getInverseSuit(){                  
+			if(suit.equals(Pentity.PAWN)){
+				return Fortnight.A15;
+			}else{
+				Fortnight z = Fortnight.values()[rank-1];   
+				return z;
+			}
 		}
 		public int getInverseRank(){
-			return suit.ordinal()+1;
+			if(suit.equals(Pentity.PAWN)){
+				return this.rank;
+			}else{
+				return suit.ordinal()+1;
+			}
 		}		
 		private static final List<Fives> protoDeck = new ArrayList<Fives>();
 	    static {
-	    	protoDeck.add(new Fives(1,Pentity.PAWN));
+	    	protoDeck.add(new Fives(1,Pentity.PAWN));                                
 	    	for (int j=0;j<MAX;j++){
 	    		Pentity suit = Pentity.values()[j];
 	        	for (int i = 1; i <= TOP; i++){protoDeck.add(new Fives(i,suit));}	}
@@ -147,12 +155,20 @@ public class Card {
 		private Sevens(int num, ClassicPlanet suit){this.rank = num;this.suit = suit;}
 		public int getRank() {return rank;}
 		public ClassicPlanet getSuit() {return suit;}
-		public Ogham getInverseSuit(){
-			Ogham z = Ogham.values()[rank-1];
-			return z;
+		public Ogham getInverseSuit(){                      //an inverse suit of say Sun:10 in 7s, is  Kappa:1 
+			if(suit.equals(ClassicPlanet.EARTH)){           //what about a joker like Earth 1 or 2?    Alpha:8, not 7., so the first and second suits get a higher number.
+				return Ogham.A11;							//but ideally, it translates into the joker on the other one.
+			}else{
+				Ogham z = Ogham.values()[rank-1];
+				return z;
+			}
 		}
 		public int getInverseRank(){
-			return suit.ordinal()+1;
+			if(suit.equals(ClassicPlanet.EARTH)){
+				return rank;
+			}else{
+				return suit.ordinal()+1;
+			}
 		}			
 		private static final List<Sevens> protoDeck = new ArrayList<Sevens>();
 	    static {

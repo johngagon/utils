@@ -14,7 +14,8 @@ public enum Fortnight {
 		A11, // ("\u260A"),
 		A12, // ("\u260B"),
 		A13, // ("\u260C"),
-		A14 // ("\u260D")
+		A14,
+		A15// ("\u260D")           Black phone
 	;
 	//private String sym;
 	private Fortnight(){}//String s){sym=s;}
