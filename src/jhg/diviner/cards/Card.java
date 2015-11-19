@@ -214,6 +214,7 @@ public class Card {
 	public String render(){
 		StringBuffer sb = new StringBuffer();
 		sb.append("["+rank+"] ");
+		
 		sb.append("["+two.suit.getSym()+":"+two.rank+"] ");
 		sb.append("["+three.suit.getSym()+":"+three.rank+"] ");
 		sb.append("["+four.suit.getSym()+":"+four.rank+"] ");
@@ -221,8 +222,9 @@ public class Card {
 		sb.append("["+six.suit.getSym()+":"+six.rank+"] ");
 		sb.append("["+seven.suit.getSym()+":"+seven.rank+"] ");
 		sb.append("["+eight.suit.getSym()+":"+eight.rank+"] ");
+		
 		sb.append("["+eight.getInverseSuit().getSym()+":"+eight.getInverseRank()+"] ");//9s
-		sb.append("["+seven.getInverseSuit().getSym()+":"+seven.getInverseRank()+"] ");//9s
+		sb.append("["+seven.getInverseSuit().getSym()+":"+seven.getInverseRank()+"] ");//10s
 		sb.append("["+six.getInverseSuit().getSym()+":"+six.getInverseRank()+"] ");//12s
 		sb.append("["+five.getInverseSuit().getSym()+":"+five.getInverseRank()+"] ");//14s   problematic
 		sb.append("["+four.getInverseSuit().getSym()+":"+four.getInverseRank()+"] ");//18s   problematic
@@ -284,6 +286,10 @@ public class Card {
 		//unicodeTest();
 	}
 }
+
+
+
+
 /*
 
 Doesn't print.
