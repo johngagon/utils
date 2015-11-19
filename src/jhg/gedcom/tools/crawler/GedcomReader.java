@@ -19,6 +19,7 @@ public class GedcomReader {
 	private static final DecimalFormat FORMAT = new DecimalFormat("#.#");
 	private static final String WAIT = "4500";//"14000";   //3275 * 9s x 3275 = 29,475s 491m or 8 hours  4.5s = 4h
 	private static final String NAME = " NAME ";
+	private static final int COMMON_THRESHOLD = 3;
 	private static final int offset = 6;
 	
 	private static boolean TEST = false;
@@ -27,7 +28,7 @@ public class GedcomReader {
 	private List<String> nameList;
 	private List<Famous> famous;
 	private List<String> testList;
-	
+	private List<String> tooCommonList;
 
 	public GedcomReader(){
 		nameList = new ArrayList<String>();
@@ -35,6 +36,7 @@ public class GedcomReader {
 		testList.add("Mary Bradbury");
 		testList.add("Johnathan White");
 		famous = new ArrayList<Famous>();
+		tooCommonList = new ArrayList<String>();
 	}
 	
 	public void add(String name){
@@ -110,8 +112,13 @@ public class GedcomReader {
 			    
 			}
 			if(f.linkCount()>0){
-				famous.add(f);
-				printFamous(num,f);
+				if(f.linkCount()>COMMON_THRESHOLD){
+					tooCommonList.add(name);
+					Log.println("COMMON:"+name);
+				}else{
+					famous.add(f);
+					printFamous(num,f);
+				}
 			}else{
 				Log.println("#"+num+":"+name);
 			}
@@ -152,6 +159,7 @@ public class GedcomReader {
 	
 	
 	public static void main(String[] args){
+		//next step: compare birthdates, eliminate single first name
 		try{
 			Log.STORE = true;
 			Log.filename = "data/famous.log";
