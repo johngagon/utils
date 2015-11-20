@@ -227,25 +227,29 @@ public class Card {
 	public Sevens getSeven(){return seven;}
 	public Eights getEight(){return eight;}
 	
+	private static String f(int num){
+		return String.format("%02d", num);
+	}
+	
 	public String render(){
 		StringBuffer sb = new StringBuffer();
-		sb.append("["+rank+"] ");
+		sb.append("["+f(rank)+"] ");
 		
-		sb.append("["+two.suit.getSym()+":"+two.rank+"] ");
-		sb.append("["+three.suit.getSym()+":"+three.rank+"] ");
-		sb.append("["+four.suit.getSym()+":"+four.rank+"] ");
-		sb.append("["+five.suit.getSym()+":"+five.rank+"] ");
-		sb.append("["+six.suit.getSym()+":"+six.rank+"] ");
-		sb.append("["+seven.suit.getSym()+":"+seven.rank+"] ");
-		sb.append("["+eight.suit.getSym()+":"+eight.rank+"] ");
+		sb.append("\t["+two.suit.getSym()+":"+f(two.rank)    +"] ");
+		sb.append("\t["+three.suit.getSym()+":"+f(three.rank)+"] ");
+		sb.append("\t["+four.suit.getSym()+":"+f(four.rank)  +"] ");
+		sb.append("\t["+five.suit.getSym()+":"+f(five.rank)  +"] ");
+		sb.append("\t["+six.suit.getSym()+":"+f(six.rank)    +"] ");
+		sb.append("\t["+seven.suit.getSym()+":"+f(seven.rank)+"] ");
+		sb.append("\t["+eight.suit.getSym()+":"+f(eight.rank)+"] ");
 		
-		sb.append("["+eight.getInverseSuit().getSym()+":"+eight.getInverseRank()+"] ");//9s
-		sb.append("["+seven.getInverseSuit().getSym()+":"+seven.getInverseRank()+"] ");//10s
-		sb.append("["+six.getInverseSuit().getSym()+":"+six.getInverseRank()+"] ");//12s
-		sb.append("["+five.getInverseSuit().getSym()+":"+five.getInverseRank()+"] ");//14s   problematic
-		sb.append("["+four.getInverseSuit().getSym()+":"+four.getInverseRank()+"] ");//18s   problematic
-		sb.append("["+three.getInverseSuit().getSym()+":"+three.getInverseRank()+"] ");//24s futhark
-		sb.append("["+two.getInverseSuit().getSym()+":"+two.getInverseRank()+"] ");//36s     bopo
+		sb.append("\t["+eight.getInverseSuit().getSym()+":"+f(eight.getInverseRank())+"] ");//9s
+		sb.append("\t["+seven.getInverseSuit().getSym()+":"+f(seven.getInverseRank())+"] ");//10s
+		sb.append("\t["+six.getInverseSuit().getSym()+":"+f(six.getInverseRank())    +"] ");//12s
+		sb.append("\t["+five.getInverseSuit().getSym()+":"+f(five.getInverseRank())  +"] ");//14s   problematic
+		sb.append("\t["+four.getInverseSuit().getSym()+":"+f(four.getInverseRank())  +"] ");//18s   problematic
+		sb.append("\t["+three.getInverseSuit().getSym()+":"+f(three.getInverseRank())+"] ");//24s futhark
+		sb.append("\t["+two.getInverseSuit().getSym()+":"+f(two.getInverseRank())    +"] ");//36s     bopo
 		/*
 		 * 14:
 		 * 18: 
@@ -297,7 +301,7 @@ public class Card {
 	}
 
 	public static void main(String[] args){
-
+		//Log.println("num:"+f(9));
 		printCards();
 		//unicodeTest();
 	}
