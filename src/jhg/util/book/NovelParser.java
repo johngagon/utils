@@ -88,6 +88,14 @@ public class NovelParser {
 		return book.getAllProblems();
 	}
 	
+
+	private void printExceptionWordList() {
+		Set<String> exceptionWords = book.getAllExceptionWords();
+		Log.println("\n\nException Words:");
+		for(String s:exceptionWords){
+			Log.println(s);
+		}
+	}	
 	
 	public void printStats(){
 		Log.println("\n\n");
@@ -125,6 +133,7 @@ public class NovelParser {
 			Log.println(count+":"+p.toDisplayString());
 			count++;
 		}
+		
 		/*
 		 * take a sentence and see if there are any words there that the dictionary doesn't have.
 		 * Set<String> words = d.wordList(); 
@@ -175,13 +184,16 @@ public class NovelParser {
 		 *  
 		 *  Top longest sentences
 		 */
+		np.printStats();
 		
+		np.printExceptionWordList();
 		Log.println("End");
 	}
 	
 	
 	
 	
+
 
 	public static void testParse(){
 		BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.US);

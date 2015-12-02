@@ -19,6 +19,7 @@ public class Sentence {
 	}
 	
 	private List<Problem> problems;
+	private Set<String> exceptionWords;
 	private int sentenceNumber;
 	private Paragraph paragraph;
 	private String text;
@@ -32,6 +33,7 @@ public class Sentence {
 		this.type = t;
 		dialogues = new ArrayList<Dialogue>(); 
 		problems = new ArrayList<Problem>();
+		exceptionWords  = new TreeSet<String>();
 		processDialogue();
 		checkForProblems();
 	}
@@ -54,6 +56,7 @@ public class Sentence {
 				int dialogueId = d.getNumber();
 				String dtext = d.getText();
 				List<String> unknownWords = dict.findUnknownWords(dtext,true);//AsJoinedString
+				exceptionWords.addAll(unknownWords);
 				if(unknownWords.size()>0){
 					StringBuffer buff = new StringBuffer();
 					buff.append("Unknown Words:[");
@@ -71,6 +74,9 @@ public class Sentence {
 		return this.problems;
 	}
 	
+	public Set<String> getExceptionWords(){
+		return this.exceptionWords;
+	}
 	
 	public List<Dialogue> getDialogues(){
 		return this.dialogues;

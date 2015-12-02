@@ -1,7 +1,7 @@
 package jhg.util.book;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 import chp.dbutil.Log;
 
@@ -53,6 +53,15 @@ public class Book {
 		}
 		return rv;
 	}
+	public Set<String> getAllExceptionWords(){
+		List<Sentence> sentencesInBook = getAllSentences();
+		Set<String> allExceptionWords = new TreeSet<String>();
+		for(Sentence s:sentencesInBook){
+			allExceptionWords.addAll(s.getExceptionWords());
+		}
+		return allExceptionWords;
+	}
+	
 	public List<Problem> getAllProblems(){
 		List<Problem> rv = new ArrayList<Problem>();
 		for(Chapter c:chapters){
