@@ -3,6 +3,7 @@ package jhg.common.goal;
 import jhg.common.units.Weight;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -10,24 +11,30 @@ import java.util.List;
 
 import chp.dbutil.Log;
 
+@SuppressWarnings("unused")
 public class TestGoal {
 
 	
 	
+	
 	public static void main(String[] args){
 		Goal goal = new Goal("Lose 50 pounds.",Goal.Direction.DECREASE,50.0,Weight.Unit.POUNDS);
-		goal.setPeriod(Period.ofMonths(6));
+		goal.setGoalPeriod(Period.ofMonths(6));
 		goal.setMeasurementFrequency(Duration.ofDays(1));
-		Calendar cal1 = new GregorianCalendar(2015,Month.DECEMBER.getValue(),8);
+		LocalDateTime startDate = LocalDateTime.now();//LocalDate.now().atStartOfDay().toLocalDateTime(ZoneOffset.UTC);//plus(16,ChronoUnit.HOURS);//LocalDate.of(2015,Month.DECEMBER.getValue(),8);
 		Double weight = 250.0;
-		goal.update(cal1.getTime());
-		boolean isDue = goal.isDueMeasurement();
+		
+		//boolean isDue = goal.isDueMeasurement(); if the current time is past the last measurement time, then true.
 		boolean isInProgress = goal.isInProgress();
-		goal.start(cal1.getTime(),weight); //starts the time now.
-		Double goalWeight = goal.getGoalValue();
-		Date endDate = goal.getEndDate();
-		Double measurementGoal = goal.getMeasureIncrementGoal();
-		Log.println("Goal Weight: "+goalWeight);
+		
+		goal.start(startDate,weight); //starts the time now.
+		Log.println("Starting Weight: "+goal.getStartingMeasure());
+		goal.update(startDate);
+		Log.println("Goal Start Date: "+goal.getStartDate() +", End Date: "+goal.getEndDate());
+		Double goalWeight = goal.getGoalChangeValue();
+		LocalDateTime endDate = goal.getEndDate();
+		//Double measurementGoal = goal.getMeasureIncrementGoal();
+		Log.println("Goal Weight Loss: "+goalWeight);
 			
 		/*
 		 * scenarios: 
@@ -41,18 +48,49 @@ public class TestGoal {
 		 * 
 		 * late, set Goal Timer., Reminder (timer simulation)
 		 */
+		LocalDateTime newLocalDateTime = startDate;
+		
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(4));
+		goal.addMeasurement(newLocalDateTime,249.0);
+		
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(3));
+		goal.addMeasurement(newLocalDateTime,248.7);
+		
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(2));
+		goal.addMeasurement(newLocalDateTime,248.6);
+		
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(6));
+		goal.addMeasurement(newLocalDateTime,246.5);
+
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(1));
+		goal.addMeasurement(newLocalDateTime,244.0);		
+		
+		newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(167));
+		goal.addMeasurement(newLocalDateTime,199.5);		
+		
+		/* Regular Measurement
 		for(int i=0;i<=180;i++){
-			cal1.add(Calendar.HOUR,24);
+			newLocalDateTime = newLocalDateTime.plus(Duration.ofDays(1));
 			weight -= 0.28;                       //0.25:Yellow,0.40
-			goal.addMeasurement(cal1.getTime(),weight);
+			goal.addMeasurement(newLocalDateTime,weight);
 		}
+		*/
 		List<Measurement> measurements = goal.getMeasurements();
 		
 		//TreeMap<Date,Double> graphPoints = goal.graph(Duration duration); 
 		goal.stop();
-		Date date = goal.currently();
-		Double finalVal = goal.getCurrentValue();
-		Log.println("Final :"+finalVal);
+		LocalDateTime date = goal.currently();
+		Double finalVal = goal.getCurrentMeasurement();
+		Log.println("Goal Measurement: "+goal.getGoalMeasurement());
+		Log.println("Final Measure:"+finalVal);
+		Log.println("Actual Weight Loss :"+goal.getActualValue());
+		Log.println("Goal Success :"+goal.goalSuccess()+"\nMeasurements:\n\n");
+		
+		for(Measurement m:measurements){
+			Log.println("Measurement "+m.toString());
+		}
+		
+		
 		//goal.triggerExpire();
 		//goal.triggerLate();
 		

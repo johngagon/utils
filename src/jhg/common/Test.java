@@ -5,7 +5,17 @@ public class Test {
 	
 	
 	public static void main(String[] args){
-		
+		/*
+		 * Inventory
+		 * Event Log / Sales Contact
+		 * Market analysis
+		 * Sales list
+		 * Point of Sale / purchase recording
+		 * Accounting
+		 * Business Planning and investing.
+		 * Personnel, scheduling etc. payroll
+		 * 
+		 */
 		
 		/*
 		 * Goals:
