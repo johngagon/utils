@@ -16,6 +16,8 @@
 	<classpathentry kind="lib" path="lib/postgresql-9.0-801.jdbc3.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-csv-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections4-4.1.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_31">

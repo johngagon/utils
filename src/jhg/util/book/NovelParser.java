@@ -108,7 +108,7 @@ public class NovelParser {
 		Log.println("Start");
 		//testParse();
 		Dictionary d = new Dictionary();
-		String dictionaryFilename = "data/perioddictionaries/combined_dictionary.txt";//"data/perioddictionaries/olddictionary.txt";
+		String dictionaryFilename = "data/perioddictionaries/dictionary_20151209.txt";//"data/perioddictionaries/olddictionary.txt";
 		d.load(dictionaryFilename);
 		NovelParser.dictionary = d;
 		NovelParser.MAX_LENGTH = 250;

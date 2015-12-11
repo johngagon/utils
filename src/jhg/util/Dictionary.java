@@ -114,12 +114,22 @@ public class Dictionary {
 	
 	
 	public static void main(String[] args){
-		
+		/*
 		Dictionary old = Dictionary.instantiateDictionary("data/perioddictionaries/olddictionary.txt");
 		Dictionary duchess = Dictionary.instantiateDictionary("data/perioddictionaries/duchess_current_dictionary.txt");
 		Dictionary winthrop = Dictionary.instantiateDictionary("data/perioddictionaries/winthrop_current_dictionary.txt");
 		String filename = "data/perioddictionaries/combined_dictionary.txt";
 		Dictionary[] dictionaries = {old,duchess,winthrop}; 
+		Dictionary.mergeDictionaries(filename, dictionaries);
+		*/
+		Dictionary old = Dictionary.instantiateDictionary("data/perioddictionaries/olddictionary.txt");      //the old dictionary of the time.
+		Dictionary raw = Dictionary.instantiateDictionary("data/perioddictionaries/raw/standard.txt");       //unfamiliar added back in
+		//700 problems
+		Dictionary win = Dictionary.instantiateDictionary("data/perioddictionaries/raw/winthrop_dict.txt");  //basic words
+		Dictionary cheat = Dictionary.instantiateDictionary("data/perioddictionaries/raw/cheat.txt");  //basic words
+		//500 problems
+		String filename = "data/perioddictionaries/dictionary_20151209.txt";
+		Dictionary[] dictionaries = {old,raw,win,cheat};
 		Dictionary.mergeDictionaries(filename, dictionaries);
 		
 	}
