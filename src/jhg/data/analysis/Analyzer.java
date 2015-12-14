@@ -1,8 +1,10 @@
 package jhg.data.analysis;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import jhg.util.Log;
+import jhg.data.analysis.Column.Group;
 
 public class Analyzer {
 
@@ -45,12 +47,17 @@ public class Analyzer {
 		for(int i=0;i<colCount;i++){
 			analyzeColumnType(i);
 			analyzeColumnExtremes(i);
+			analyzeColumnGroups(i);
 		}
 		/*
 		 * TODO impl
 		 * 
 		 * 1. Analyze each column for data type.
 		 * 	  first column
+		 * 
+		 * 
+		 * Statistics: groupings. pick a number: top 10 then a threshold on non-uniques.
+		 * 
 		 * 
 		 * 
 		 * Questions:
@@ -106,8 +113,126 @@ public class Analyzer {
 		 */
 		return true;
 	}
+	
 
 
+	
+	private void analyzeColumnGroups(int i) {
+		Column col = analysis.getColumn(i);
+		if(Type.ALL_NULL.equals(col.getType())){
+			col.setGroupType(Group.NONE);
+		}else if(Type.UNIFORM.equals(col.getType())){
+			col.setGroupType(Group.NONE);
+		}else if(Type.BOOLVAL.equals(col.getType()) || Type.TWO_VALUE.equals(col.getType())){
+			col.setGroupType(Group.BISET);
+		}else{
+			int groupCount = col.getUniques().size();
+			if(groupCount<5){                                             //TODO extract CONFIG RULE
+				col.setGroupType(Group.SHORTSET);
+			}else{
+				if(analysis.getRecordCount()>=100){
+					double root = Math.sqrt(analysis.getRecordCount()+0.0);//TODO extract rule
+					if(groupCount<root){
+						col.generateCounts();
+						Map<String,IncrementingInt> groupCounts = col.getUniqueCounts();
+						final double TOP = 0.1; //10%
+						final double TAPER_POINT = 0.01;
+						double halfway = groupCount/2;
+						//Log.println("halfway: "+halfway);
+						Map<String,IncrementingInt> sortedGroupCounts = MapUtil.reverseSortByValue(groupCounts);
+						int count = 0;
+						boolean notFlat = false;
+						for(String s:sortedGroupCounts.keySet()){
+							if(count==0){ //top
+								IncrementingInt topCountII = sortedGroupCounts.get(s);
+								Integer topCount = topCountII.get();
+								double topPercent = topCount/analysis.getRecordCount();
+								notFlat = topPercent>TOP;
+							}
+							if(notFlat && count>halfway){
+								IncrementingInt medianGroupCountII = sortedGroupCounts.get(s);
+								Integer medianGroupCount= medianGroupCountII.get();
+								double medianPercent = medianGroupCount/analysis.getRecordCount();
+								notFlat = medianPercent<=TAPER_POINT;
+							}
+							count++;
+						}
+						if(notFlat){
+							col.setGroupType(Group.GROUP);
+						}else{
+							col.setGroupType(Group.FLAT);
+						}
+						/* 
+						 * Pretty group criteria:
+						 *      a. The top value, is it a fair percentage? >10?
+						 * 
+						 * question: at which point do the remaining groups
+						 * 
+						 * CASE 1:
+						 * Assume we have 20 groups for a count of 4000 rows 
+						 *     The top group has 15% of 4000 roughly - good.
+						 *     The sum of the last 8 groups we want to be <15% 
+						 * 
+						 * Assume we have 200 groups for 4000 rows
+						 * 
+						 */
+						
+					}else{
+						col.setGroupType(Group.MYRIAD);
+					}
+				}else{
+					col.setGroupType(Group.SMALL_SAMPLE);
+				}
+			}
+		}
+	}
+/*
+Data can have groupings where the top percent is a factor greater (twice)
+as much as the smallest or it might be relatively unvaried. Group counts 
+form a labeled quantity set that can be represented as a pie or stack bar.
+This double factor is only true when the max >=20 (twice 10). Otherwise, the 
+counts are merely an even distribution instead of grouping.
+
+Groups that number under a threshold 4000->200 of SQRT for sets >100 are proper
+groups. Other groups could be real groups but are not significant in terms of data.
+It should also be over the threshold of >=5. flags do not form groups, use 
+something other than pie for those. (2 bars or a single stack bar is better)
+
+
+
+Go through all sets. Label if group, shortset, distribution or binary.
+Go through the groups and do "other".
+For the binary case render one way
+For the shortset, do a stackbar
+For the group, do a pie.
+For distributions, do average then curve.
+
+ */
+
+/*
+OTHER:
+
+	The "Other" group should always be both <20% when percents of the others total
+AND smaller than the largest piece. If the largest piece is 10%, then Other should
+be less than that. 
+
+The smallest piece of the pie should be no less than 5%, otherwise, it's a distribution.
+
+ */
+/*
+
+ResultSet
+
+ResultSet -> get value based on the meta data for the type.
+
+Option to cast the type.
+
+ */
+/*
+
+
+When a count is > 9999, then use K and M abbreviations.	
+ */
 	
 	private void analyzeColumnType(int i) {
 
