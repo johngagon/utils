@@ -66,8 +66,19 @@ public class Test {
 		 * 4. Create a unique sorted set for the key if possible.
 		 * 
 		 */
-		 
-		File csvData = new File("data/baseball/AllstarFull.csv");
+		String[] files = {"AllstarFull",        "Appearances",  "AwardsManagers",  "AwardsPlayers",  "AwardsShareManagers",
+				          "AwardsSharePlayers", "Batting",      "BattingPost",     "CollegePlaying", "Fielding",
+				          "FieldingOF",         "FieldingPost", "HallOfFame",      "Managers",       "ManagersHalf",
+				          "Master",             "Pitching",     "PitchingPost",    "Salaries",       "Schools",
+				          "SeriesPost",         "Teams",        "TeamsFranchises", "TeamsHalf"
+				          };
+				//0-4, 5-9, 10-14, 15-19, 20,21,22,23
+				//>1MB    Master 2.4, Pitching 3.7, Appearances 5.8, Batting 6.0, Fielding 8.0
+		String dir = "data/baseball/";
+		String ext = ".csv";
+		String nameFile = files[23];//"Batting";//"AllstarFull";
+		String fileName = dir + nameFile + ext;
+		File csvData = new File(fileName);
 		
 		CSVParser parser;
 		try {
@@ -107,5 +118,9 @@ public class Test {
 	public static void main(String[] args){
 		execute();
 	}
+	/*
+	 * everything should have basic logging and profiling and debugging enabled and progress reporting. 
+	 * utilize basics.
+	 */
 	
 }

@@ -1,14 +1,12 @@
 package jhg.data.analysis;
 
 import java.util.*;
-
-
 import jhg.util.Log;
 
 public class Column {
 
 	public static enum Group {
-		NONE,BISET,SHORTSET,GROUP,FLAT, SMALL_SAMPLE, MYRIAD
+		NONE, BISET, SHORTSET, GROUP, FLAT, SMALL_SAMPLE, MYRIAD
 	}
 	
 	private String name;
