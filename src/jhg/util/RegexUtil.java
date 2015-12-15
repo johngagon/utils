@@ -55,6 +55,10 @@ public class RegexUtil {
 	
 	public static final String HTML_TAG = "<(\"[^\"]*\"|'[^']*'|[^'\">])*>";
 	
+	public static final String EIN = "^[1-9]\\d?-\\d{7}$";
+	
+	public static final String ISBN10 = "ISBN\\x20(?=.{13}$)\\d{1,5}([- ])\\d{1,7}\\1\\d{1,6}\\1(\\d|X)$";
+	public static final String ISBN = "^ISBN\\s(?=[-0-9xX ]{13}$)(?:[0-9]+[- ]){3}[0-9]*[xX0-9]$";
 	
 	/*
 	 * lowercase a-z
@@ -78,7 +82,7 @@ public class RegexUtil {
 		return matcher.matches();
 	}
 	
-	public static void test(){
+	public static void test2(){
 		String bad = "abcdefghijklmonpqrs";
 		String good = "mkyong_2002";                      //no uppercase
 		boolean pass1= (match(USERNAME,bad) == false);
@@ -86,8 +90,18 @@ public class RegexUtil {
 		Log.println(" Pass1:"+pass1);
 		Log.println(" Pass2:"+pass2);
 	}
-	
+	private static void doSimpleTest(String name,String passCase, String failCase, String regex){
+		boolean r1 = passCase.matches(regex);
+		boolean r2 = failCase.matches(regex);
+		Log.println("Testing: '"+name+"' - Pass case '"+passCase+"' passed as expected?:"+r1+", and fail case '"+failCase+"' failed as expected?:"+(!r2)+"  with regex: '"+regex+"'");
+		
+	}
+	public static void testISBN10(){
+		String passCase = "ISBN 1-56389-668-0";
+		String failCase = "ISBN 9-87654321-2";
+		doSimpleTest("ISBN10", passCase,failCase,ISBN10);
+	}
 	public static void main(String[] args){
-		test();
+		testISBN10();
 	}
 }

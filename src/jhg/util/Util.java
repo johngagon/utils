@@ -9,6 +9,12 @@ public class Util {
 	 * 
 	 * 
 	 * 
+	 * 
+	 * Java code that has the most codified conventions requiring reference use.
+	 * 
+	 * https://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html
+	 * https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html
+	 * 
 	 */
 	
 	
