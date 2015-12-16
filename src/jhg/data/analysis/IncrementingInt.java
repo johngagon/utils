@@ -8,6 +8,12 @@ package jhg.data.analysis;
  */
 public class IncrementingInt implements Comparable<IncrementingInt>{
 	private Integer value = 0;
+	public IncrementingInt(){
+		super();
+	}
+	public IncrementingInt(IncrementingInt ii){
+		this.value = ii.value;
+	}
 	public void increment(){ 
 		++value;
 	}

@@ -33,9 +33,18 @@ public class Log {
 	public static void print(String s){
 		out.print(s);
 	}
+	
+	@SuppressWarnings("rawtypes")
 	public static void print(Collection list){
 		for(Object o:list){
 			out.println(o);
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void print(Map map){
+		for(Object k:map.keySet()){
+			out.println(k+":"+map.get(k));
 		}
 	}
 	
