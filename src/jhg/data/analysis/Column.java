@@ -6,7 +6,7 @@ import jhg.util.Log;
 public class Column {
 
 	public static enum Group {
-		NONE, BISET, SHORTSET, GROUP, FLAT, SMALL_SAMPLE, MYRIAD
+		NONE, BISET, SHORTSET, GROUP, FLAT, SMALL_SAMPLE, MYRIAD, WEAK
 	}
 	
 	private String name;
@@ -129,14 +129,20 @@ public class Column {
 		sb.append("min:  "+this.min+",  ");
 		sb.append("max:  "+this.max+"  ");
 		sb.append("Group Type:  "+this.groupType.name()+".  ");
-		if(Group.GROUP.equals(groupType)){
+		if(!Group.MYRIAD.equals(groupType) && !Group.WEAK.equals(groupType)){
 			sb.append("\nGroup Counts:\n");
-			//if(uniqueCounts.size()==0){
-			//	this.generateCounts();
-			//}
+			if(uniqueCounts.size()==0){
+				this.generateCounts();
+			}
 			Map<String,IncrementingInt> sortedUnique = MapUtil.reverseSortByValue(uniqueCounts);
+			final int PRINT_LIMIT = 20;
+			int count = 1;
 			for(String s:sortedUnique.keySet()){
-				sb.append("\t"+s+":"+sortedUnique.get(s)+"\n");	
+				sb.append(count+"- \t"+s+":"+sortedUnique.get(s)+"\n");
+				if(count>=PRINT_LIMIT){
+					break;
+				}
+				count++;
 			}
 		}
 		return sb.toString();

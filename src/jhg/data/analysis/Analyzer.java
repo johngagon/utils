@@ -118,6 +118,8 @@ public class Analyzer {
 
 	
 	private void analyzeColumnGroups(int i) {
+		final int SHORTSET_THRESHOLD = 4;
+		
 		Column col = analysis.getColumn(i);
 		if(Type.ALL_NULL.equals(col.getType())){
 			col.setGroupType(Group.NONE);
@@ -127,55 +129,64 @@ public class Analyzer {
 			col.setGroupType(Group.BISET);
 		}else{
 			int groupCount = col.getUniques().size();
-			if(groupCount<5){                                             //TODO extract CONFIG RULE
+			if(groupCount<SHORTSET_THRESHOLD){                                             //TODO extract CONFIG RULE
 				col.setGroupType(Group.SHORTSET);
 			}else{
 				if(analysis.getRecordCount()>=100){
-					double root = Math.sqrt(analysis.getRecordCount()+0.0);//TODO extract rule
-					if(groupCount<root){
+					//final double root = Math.sqrt(analysis.getRecordCount()+0.0);               //TODO extract rule
+					
+					final double tenth = analysis.getRecordCount()/10;
+					final double LIMIT = tenth;
+					//Log.println("LIMIT:"+limit);
+					if(groupCount<LIMIT){
 						col.generateCounts();
 						Map<String,IncrementingInt> groupCounts = col.getUniqueCounts();
-						final double TOP = 0.1; //10%
-						final double TAPER_POINT = 0.01;
+						final double TOP = 0.05;//1; //10%
+						//final double TAPER_POINT = 0.01;
 						double halfway = groupCount/2;
 						//Log.println("halfway: "+halfway);
 						Map<String,IncrementingInt> sortedGroupCounts = MapUtil.reverseSortByValue(groupCounts);
-						int count = 0;
+						//not truly sorted.FIXME
 						boolean notFlat = false;
+						double topPercent = 0.0;
 						for(String s:sortedGroupCounts.keySet()){
-							if(count==0){ //top
-								IncrementingInt topCountII = sortedGroupCounts.get(s);
-								Integer topCount = topCountII.get();
-								double topPercent = topCount/analysis.getRecordCount();
-								notFlat = topPercent>TOP;
-							}
-							if(notFlat && count>halfway){
-								IncrementingInt medianGroupCountII = sortedGroupCounts.get(s);
-								Integer medianGroupCount= medianGroupCountII.get();
-								double medianPercent = medianGroupCount/analysis.getRecordCount();
-								notFlat = medianPercent<=TAPER_POINT;
-							}
-							count++;
-						}
+
+							IncrementingInt topCountII = sortedGroupCounts.get(s);
+							Integer topCount = topCountII.get();
+							topPercent = (double)topCount/analysis.getRecordCount();
+							notFlat = topPercent>TOP;
+							break;//we only want the first value.
+						}//break
+						int count=0;
 						if(notFlat){
-							col.setGroupType(Group.GROUP);
+							for(String s:sortedGroupCounts.keySet()){
+								if(count>halfway-2 && count < halfway+2){
+									IncrementingInt medianGroupCountII = sortedGroupCounts.get(s);
+									Integer medianGroupCount= medianGroupCountII.get();
+									double medianPercent = (double)medianGroupCount/analysis.getRecordCount();
+									notFlat = (topPercent - medianPercent) > (TOP/2);
+									break;
+								}
+								count++;
+							}
+							if(notFlat){
+								col.setGroupType(Group.GROUP);
+							}else{
+								col.setGroupType(Group.FLAT);
+							}							
 						}else{
-							col.setGroupType(Group.FLAT);
+							col.setGroupType(Group.WEAK);//the most frequent, top count group is below 5% of all.an issue with myriad groups (which may be possible data, hard to determine if integer. if value is decimal, can determine based on that
 						}
-						/* 
-						 * Pretty group criteria:
-						 *      a. The top value, is it a fair percentage? >10?
-						 * 
-						 * question: at which point do the remaining groups
-						 * 
-						 * CASE 1:
-						 * Assume we have 20 groups for a count of 4000 rows 
-						 *     The top group has 15% of 4000 roughly - good.
-						 *     The sum of the last 8 groups we want to be <15% 
-						 * 
-						 * Assume we have 200 groups for 4000 rows
-						 * 
-						 */
+
+/*
+ * Output wrong: FIXME flat issue is it flat because top value is < 5% of all counts? (probably).
+Column[1]:'yearID' type:numerical unique values:82 length: -1,  min:  1933,  max:  2014  Group Type:  FLAT.  
+Group Counts:
+	1960:122
+	1959:114
+	1962:111
+	1961:107
+ */
 						
 					}else{
 						col.setGroupType(Group.MYRIAD);

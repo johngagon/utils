@@ -73,10 +73,10 @@ public class Test {
 				          "SeriesPost",         "Teams",        "TeamsFranchises", "TeamsHalf"
 				          };
 				//0-4, 5-9, 10-14, 15-19, 20,21,22,23
-				//>1MB    Master 2.4, Pitching 3.7, Appearances 5.8, Batting 6.0, Fielding 8.0
+				//>1MB    [15]Master 2.4, [16]Pitching 3.7, [1]Appearances 5.8, [6]Batting 6.0, [9]Fielding 8.0
 		String dir = "data/baseball/";
 		String ext = ".csv";
-		String nameFile = files[23];//"Batting";//"AllstarFull";
+		String nameFile = files[21];//"Batting";//"AllstarFull";
 		String fileName = dir + nameFile + ext;
 		File csvData = new File(fileName);
 		
@@ -93,7 +93,7 @@ public class Test {
 			//Log.println("headerMap null: "+(headerMap==null));
 			//MapUtils.debugPrint(System.out, "allstar", headerMap);
 
-			Analyzer analyzer = Analyzer.defaultInstance("All Stars");
+			Analyzer analyzer = Analyzer.defaultInstance(nameFile);
 			analyzer.setHeader(headerMap);
 			for (CSVRecord csvRecord : parser) {
 				String[] record = new String[headerMap.size()];
