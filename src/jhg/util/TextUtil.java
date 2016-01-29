@@ -6,6 +6,10 @@ public class TextUtil {
 		
 	}
 
+	public static final String mask(String s, String r){
+		return s.replaceAll("(?s).",r);		
+	}
+	
 	public static String truncPossessive(String word){
 		String out = word;
 		String possessive1 = "'s";
@@ -27,6 +31,8 @@ public class TextUtil {
 	}
 	
 	public static void main(String[] args){
+		Log.println(mask("A supersecret 1234*password","*"));
+		/*
 		String test1 = "Sally's";
 		String test2 = "puppies'";
 		
@@ -36,7 +42,7 @@ public class TextUtil {
 		String actual2 = truncPossessive(test2);
 		Log.test(actual1.equals(expected1),"Fail 1:"+actual1,"Pass 1:"+actual1);
 		Log.test(actual2.equals(expected2),"Fail 2:"+actual2,"Pass 2:"+actual2);
-		
+		*/
 	
 	}
 }
