@@ -1,6 +1,7 @@
 package jhg.puzzles;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 import jhg.util.*;
 
@@ -15,12 +16,35 @@ public class Main {
 	
 	
 	public static void main(String[] args) {
-		try {
-			testPuzzle3_18();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		testPuzzle_23();
+	}
+	public static void testPuzzle_23(){
+		Random rnd = new Random();
+		StringBuffer word = null;
+		switch(rnd.nextInt(2)){					//this should work.
+		case 1: word = new StringBuffer('P');
+		case 2: word = new StringBuffer('G');
+		default: word = new StringBuffer('M');
 		}
+		word.append('a');						//naive: random Pain or Gain.
+		word.append('i');						//expected: fall through  Main
+		word.append('n');
+		Log.println(word.toString());			//actual: ain
+	}
+	public static void testPuzzle_22(){
+		System.out.print(":iexplore:");
+		http://www.google.com
+		ftp://www.msnbc.com
+		System.out.print(":maximize");
+	}
+	private static void testPuzzle_21(){
+		MeToo.test();
+	}
+	private static void testPuzzle_20(){
+		Me.test();
+	}
+	private static void testPuzzle_19(){
+		Classifier.test();
 	}
 	private static void testPuzzle3_18() throws UnsupportedEncodingException{                    //prediction: narrowing cast. those bytes as string might not work.
 		byte[] bytes = new byte[256];
