@@ -31,6 +31,11 @@ public class ProgressReporter {
 	private int increment;
 	private int totalCount;
 	private int progress;
+	private long time1;
+	private long time2;
+	private long timeDiff;
+	private long timeEstimate;
+	private long timeElapsed;
 	private List<ProgressListener> listeners;
 	
 	public ProgressReporter(int totalWork, Marker marker){
@@ -40,6 +45,16 @@ public class ProgressReporter {
 		this.listeners = new ArrayList<ProgressListener>();
 		this.listeners.add(new SimpleProgressListener());
 		this.progress = -1;
+		this.timeEstimate = 0L;
+		this.timeElapsed = 0L;
+	}
+	
+	public long getEstimate(){
+		return timeEstimate;
+	}
+	
+	public long getElapsed(){
+		return timeElapsed;
 	}
 	
 	public int getTotalCount(){
@@ -55,6 +70,18 @@ public class ProgressReporter {
 		if(progress!=-1){
 			notifyListeners();
 		}
+		if(counter==1){
+			time1 = System.currentTimeMillis();
+		}
+		if(counter==2){
+			time2 = System.currentTimeMillis();
+			timeDiff = time2-time1;
+			timeEstimate = timeDiff * totalCount;
+		}
+		if(timeEstimate!=0L){
+			timeElapsed = counter*timeEstimate;
+		}
+		
 	}
 	
 	private void notifyListeners() {

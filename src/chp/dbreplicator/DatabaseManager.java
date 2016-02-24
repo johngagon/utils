@@ -1,5 +1,6 @@
 package chp.dbreplicator;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
 
@@ -136,18 +137,73 @@ public class DatabaseManager {
 		return rv;
 	}
 	
+	public Map<Integer, String> getAllJdbcTypeNames() {
+	    Map<Integer, String> result = new HashMap<Integer, String>();
+		try{
+		    for (Field field : Types.class.getFields()) {
+		        result.put((Integer)field.get(null), field.getName());
+		    }
+		}catch(Exception e){
+			Log.error(e);
+		}
+
+	    return result;
+	}	
+	
+	public List<ColumnDefinition> getColumns(String schema, String table){
+		String query = "";
+		if(getDatabase().rdbms().equals(Rdbms.POSTGRESQL)){
+			query = "select * ";
+		}else{
+			query = "select top 1 * ";
+		}
+		query +=" from "+schema+"."+table;
+		if(getDatabase().rdbms().equals(Rdbms.POSTGRESQL)){
+			query += " limit 1";
+		}
+		query(query);
+		return getDefinition();
+	}
+	public List<String> getPKColumns(String schema, String table){
+		List<String> defs = new ArrayList<String>();
+		try{
+			DatabaseMetaData dbmd = conn.getMetaData();
+			String catalog = null;
+			
+			ResultSet rs = dbmd.getPrimaryKeys(catalog, schema, table);
+			while(rs.next()){
+				defs.add(rs.getString(4));
+			}
+
+		}catch(Exception e){
+			Log.error(e);
+		}
+		return defs;		
+	}
+	
 	public List<String> getTables(String schema){
 		List<String> list = new ArrayList<String>();
 		
 		try{
 			DatabaseMetaData md = conn.getMetaData();
-			ResultSet rs = md.getTables(null, null, null, null);
+			String catalogPattern = null;
+			String tablePattern = null;
+			String[] types = null;
+			ResultSet rs = md.getTables(catalogPattern, schema, tablePattern, types);
 			while(rs.next()){
 				String catFound = rs.getString(1);
 				String schemaFound = rs.getString(2);
 				String tableFound = rs.getString(3);
-				Log.pl("Get tables: found "+catFound+"."+schemaFound+"."+tableFound);
-				list.add(tableFound);
+				String tableType = rs.getString(4);
+				String cat = "";
+				if(catFound!=null){
+					cat = catFound+".";
+				}
+				
+				if("TABLE".equals(tableType)){//FIXME : Postgres specific
+					Log.pl("  Get tables: found "+cat+schemaFound+"."+tableFound+".");//+" tableType:"+tableType);
+					list.add(tableFound);
+				}
 			}
 		}catch(Exception e){
 			Log.error(e);
@@ -264,18 +320,18 @@ public class DatabaseManager {
 			schema = names[0];
 			table = names[1];
 		}
-		Log.pl("Checking if schema: "+schema+", table: "+table+" exists.");
+		Log.pl("  Checking if schema: "+schema+", table: "+table+" exists.");
 		try{
 			DatabaseMetaData md = conn.getMetaData();
 			ResultSet rs = md.getTables(null, schema, table.toLowerCase(), null);
 			if (rs.next()) {
-				Log.pl("Table found: "+rs.getString(3));
+				Log.pl("  Table found: "+rs.getString(3));
 				rv = true;
 			}
 			rs.close();
 			rs = md.getTables(null, null, table.toUpperCase(), null);
 			if (rs.next()) {
-				Log.pl("Table found: "+rs.getString(3));
+				Log.pl("  Table found: "+rs.getString(3));
 				rv = true;
 			}
 			rs.close();
@@ -284,7 +340,7 @@ public class DatabaseManager {
 			Log.error(e);
 		}
 		if(!rv){
-			Log.pl("Table not found: "+table);
+			Log.pl("  Table not found: "+table);
 		}
 		return rv;
 	}
@@ -440,14 +496,27 @@ public class DatabaseManager {
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
-			Log.pl("Executed query:"+sql);
+			Log.pl("  Executed query:"+sql);
 		}catch(Exception e){
 			e.printStackTrace();
 			//Log.error(e);
 		}
 		return rs;
 	}
-	
+	public ResultSet queryLarge(String sql){
+		//Log.println("SQL:"+sql);
+		try{
+			conn.setAutoCommit(false);
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setFetchSize(10000);
+			rs = stmt.executeQuery();
+			Log.pl("  Executed query:"+sql);
+		}catch(Exception e){
+			e.printStackTrace();
+			//Log.error(e);
+		}
+		return rs;
+	}	
 	public void printResult(){
 		try{
 		int row = 0;

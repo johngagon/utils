@@ -59,6 +59,27 @@ public class TextFile {
 		}
 		return rv;
 	}
+	
+	public static boolean append(String filename, String data) {
+		BufferedWriter writer = null;
+		boolean rv = false;
+		try {
+			File file = new File(filename);
+			writer = new BufferedWriter(new FileWriter(file,true));
+			writer.write(data);
+			rv = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(writer!=null)
+					writer.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rv;
+	}	
 		  
 	
 	public static void main(String[] args){

@@ -47,7 +47,7 @@ public class ProgramHospitalMapper {
 		}
 	}
 	public static void readHospitals(){
-		TextFile f = new TextFile("bdtc_hospital.txt");
+		TextFile f = new TextFile("data/hospital/hospital.csv");
 		//String content = f.getText();
 		String[] lines = f.getLines();
 		for(String line:lines){

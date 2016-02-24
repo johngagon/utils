@@ -1,9 +1,9 @@
 package chp.dbreplicator;
 
-import java.lang.reflect.Field;
+
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
+
 
 import chp.dbreplicator.ProgressReporter.Marker;
 
@@ -329,18 +329,7 @@ public class ReplicationJob {
 		return rv;
 	}
 	
-	public Map<Integer, String> getAllJdbcTypeNames() {
-	    Map<Integer, String> result = new HashMap<Integer, String>();
-		try{
-		    for (Field field : Types.class.getFields()) {
-		        result.put((Integer)field.get(null), field.getName());
-		    }
-		}catch(Exception e){
-			Log.error(e);
-		}
 
-	    return result;
-	}
 	
 }
 /*

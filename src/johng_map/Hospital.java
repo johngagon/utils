@@ -12,8 +12,11 @@ public class Hospital implements Comparable<Hospital> {
 	
 	public static Hospital parse(String line, String delim){
 		Hospital h = new Hospital();
-		String[] values = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");//= line.split(delim);
-		int numFields = 5;
+		String[] values = line.split(delim+"(?=([^\"]*\"[^\"]*\")*[^\"]*$)");//= line.split(delim);
+		for(String v:values){
+			System.out.println("  Value:"+v);
+		}
+		int numFields = 4;
 		if(values.length>=numFields){
 			if(values[0]!=null){
 				String idS = values[0].replaceAll("\"", "");
@@ -21,7 +24,7 @@ public class Hospital implements Comparable<Hospital> {
 				try{
 					id = Integer.parseInt(idS);
 				}catch(NumberFormatException nfe){
-					//System.out.println("Line:"+line+" had exception:"+nfe.getMessage()+" the value of the id string is '"+idS+"'");
+					System.out.println("Line:"+line+" had exception:"+nfe.getMessage()+" the value of the id string is '"+idS+"'");
 					
 					//nfe.printStackTrace();
 				}
@@ -35,28 +38,26 @@ public class Hospital implements Comparable<Hospital> {
 				h.name = name;
 			}else{
 				h.name = "Undefined.";
-			}			
-
-			if(values[4]!=null){
-				String city = values[4].replaceAll("\"", "");
-				h.city = city;
-			}else{
-				h.city = "";
-			}
-			
-			if(values[3]!=null){
+			}		
+			if(values[2]!=null){
 				String address = values[3].replaceAll("\"", "");
 				h.address = address;
 			}else{
 				h.address = "";
-			}	
-			
-			
-			if(values[5]!=null){
-				String stateS = values[5].replaceAll("\"", "");//.substring(0,2);
+			}				
+
+			if(values[3]!=null){
+				String city = values[3].replaceAll("\"", "");
+				h.city = city;
+			}else{
+				h.city = "";
+			}
+			if(values[4]!=null){
+				String stateS = values[4].replaceAll("\"", "").trim();//.substring(0,2);
+				//System.out.println("State code:'"+stateS+"'");
 				State state = State.valueOf(stateS);//State.fromLongName(stateS);
 				if(state==null){
-					//System.out.println("Hospital id:"+h.id+" has null state from String:'"+stateS+"'");
+					System.out.println("Hospital id:"+h.id+" has null state from String:'"+stateS+"'");
 				}
 				h.state = state;
 			}else{

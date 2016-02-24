@@ -12,11 +12,12 @@ import org.json.*;
 
 
 public class HospitalImages {
-	private static List<String> nofilelist = Arrays.asList((new String[] {"1932472255","1629243001","1649368523","1295756948","1326041633","1164514741","1447363270","1285662981","1225066327","1700805157","1093748642","1093748642","1659465094","1619941333","1144251059",""}));
+	private static List<String> nofilelist = Arrays.asList((new String[] {""}));//"1932472255","1629243001","1649368523","1295756948","1326041633","1164514741","1447363270","1285662981","1225066327","1700805157","1093748642","1093748642","1659465094","1619941333","1144251059",
 	
 	private static List<Hospital> hospitals = new ArrayList<Hospital>();
 
 	public static String findImage(String s,int index){
+		System.out.println("  findImage: '"+s+"' index: "+index);
 		String imageUrl = null;
 		
         try{
@@ -29,7 +30,9 @@ public class HospitalImages {
             while((line = reader.readLine()) != null) {
                 builder.append(line);
             }
-            JSONObject json = new JSONObject(builder.toString());
+            String output = builder.toString();
+            System.out.println("Response:"+output);
+            JSONObject json = new JSONObject(output);
             //System.out.println(json.toString(2));
             imageUrl = json.getJSONObject("responseData").getJSONArray("results").getJSONObject(index).getString("url");
             System.out.print(" Image URL: '"+imageUrl+"', ");
@@ -100,13 +103,17 @@ public class HospitalImages {
 	}
 	
 	public static void readHospitals(){
-		TextFile f = new TextFile("bdtc_hospital.txt");
+		TextFile f = new TextFile("data/hospital/hospital.csv");
 		//String content = f.getText();
 		String[] lines = f.getLines();
+		System.out.println("Found "+lines.length+" lines.");
 		for(String line:lines){
-			Hospital h = Hospital.parse(line, ",");
+			//System.out.println("Line:"+line);
+			Hospital h = Hospital.parse(line, ";");
 			if(h.isValid()){
 				hospitals.add(h);
+			}else{
+				System.out.println("Line invalid.");
 			}
 		}		
 	}		
@@ -119,10 +126,11 @@ public class HospitalImages {
 	}
 	
     public static void main(String[] args) {
+    	System.out.println("Start.");
     	//TODO Search for image with criteria (format, minimum width, minimum length, min/max aspect ratio.)
     	//System.out.println("Long:"+getRandomWait());
     	
-    	String outfolder = "hospital_images";
+    	String outfolder = "data/hospital_images";
     	
     	String id = "1";
     	String searchString = "Godfather"; 
@@ -132,7 +140,7 @@ public class HospitalImages {
     	int i=1;
     	for(Hospital h:hospitals){
     		id = h.id.toString();
-    		if(nofilelist.contains(id)){
+    		//if(nofilelist.contains(id)){
 	    		System.out.print("\n"+i+":HospitalID:"+id);
 	    		searchString = "Photo "+h.name +" "+h.address+" "+ h.city + ", " + h.state;
 	    		try {
@@ -150,7 +158,7 @@ public class HospitalImages {
 				}
 	        	System.out.print(" : Finding image search on: '"+searchString+"'.");
 	    		findAndSaveImageForHospital(outfolder, id, searchString);
-    		}
+    		//}//if(nofilelist.contains(id))
     		i++;
     	}
     	System.out.println("\nDone.");
@@ -160,19 +168,23 @@ public class HospitalImages {
 		
 		int index = 0;
 		String url = findImage(searchString,index);
-    	String ext = getFileExtension(url);
-    	BufferedImage image = null;
-    	while( (image=readImage(url))==null && index<=10){
-    		index++;
-    		url = findImage(searchString,index);
-    	}
-    	if(image!=null){
-	    	String outFileName = (outfolder+"\\"+id+"."+ext);
-	    	//System.out.println("Output file:'"+outFileName+"'");
-	    	writeToFile(image, ext, outFileName);
-	    	System.out.print(" Saving image found at:"+url);
+    	if(url!=null){
+			String ext = getFileExtension(url);
+	    	BufferedImage image = null;
+	    	while( (image=readImage(url))==null && index<=10){
+	    		index++;
+	    		url = findImage(searchString,index);
+	    	}
+	    	if(image!=null){
+		    	String outFileName = (outfolder+"\\"+id+"."+ext);
+		    	//System.out.println("Output file:'"+outFileName+"'");
+		    	writeToFile(image, ext, outFileName);
+		    	System.out.print(" Saving image found at:"+url);
+	    	}else{
+	    		System.out.print("Failed to find image at url for id:"+id);
+	    	}
     	}else{
-    		System.out.print("Failed to find image at url for id:"+id);
+    		System.out.print("Failed to get url from findImage for id:"+id);
     	}
 	}
 }

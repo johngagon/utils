@@ -3,17 +3,26 @@ package jhg.acl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockSecuredObject implements Secure,Mock {
+public class StandardSecuritySupport {/*extends SecuritySupport {
 
+	public static final String READ = "read";
+	public static final String WRITE = "write";
+	public static final String COUNT = "count";
+	public static final String SHARE = "share";
+	public static final String PUBLISH = "publish";		
 	
-
-	private static final User OWNER = MockUser.find(MockUser.JOHN);
-	private static final SecurityPolicy policy = SecurityPolicy.createPolicy(OWNER,new String[] {READ,WRITE,TINKER,SHARE,PUBLISH});
-	private SecurityTag tag;
+	protected static String[] perms = new String[] {READ,WRITE,COUNT,SHARE,PUBLISH};
 	
 	
-	private static List<MockSecuredObject> instances = new ArrayList<MockSecuredObject>();
-	private String msg;
+	
+	protected StandardSecuritySupport(User user){
+		super(user,perms);
+		
+	}
+	
+	
+	protected List<StandardSecuritySupport> instances = new ArrayList<StandardSecuritySupport>();
+	
 	
 	public MockSecuredObject(User user, String m){
 		if(!policy.allowsOwner(user)){
@@ -69,7 +78,7 @@ public class MockSecuredObject implements Secure,Mock {
 	private static User sharedContributer = new MockUser(CHET);
 	private static User publishedReader = new MockUser(FENTON);//he could be anyone
 	
- */
+ *
 	
 	@Override
 	public int getId() {
@@ -77,7 +86,7 @@ public class MockSecuredObject implements Secure,Mock {
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
-	 */
+	 *
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,7 +96,7 @@ public class MockSecuredObject implements Secure,Mock {
 	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	 *
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -133,4 +142,5 @@ public class MockSecuredObject implements Secure,Mock {
 		tag.printAclTable();
 		System.out.println("---------------------");
 	}
+	*/
 }

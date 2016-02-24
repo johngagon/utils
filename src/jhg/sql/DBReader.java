@@ -347,8 +347,8 @@ int	getSQLStateType()
 		return this.rs;
 	}
 
-	public static void main(String[] args){
-		System.out.println("Starting.");
+	public static void testSimple(){		
+		
 		DBReader db = new DBReader(Database.SQLPROD);
 		String[] tableNames = {"valuequest_vq_carrier"};
 		db.connect();
@@ -360,11 +360,20 @@ int	getSQLStateType()
 				}			
 			}
 		}
-		db.close();
+		db.close();		
+	}
+	
+	public static void testReportDb(){
+		DBReader db = new DBReader(Database.SQLPROD);
 		/*
-		 * Read from a table.
+		 * get database properties
 		 * 
 		 */
+	}
+	
+	public static void main(String[] args){
+		System.out.println("Starting.");
+		testReportDb();
 		System.out.println("Finished.");
 	}
 	

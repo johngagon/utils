@@ -2,6 +2,7 @@ package chp.dbreplicator;
 
 import static java.lang.System.out;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Log {
@@ -89,6 +90,35 @@ public class Log {
 		}
 		limit = 0;
 		errors.clear();
+	}
+	
+	private static long lastTime = 0L;
+    private static long minuteElapse = 0L;
+    private static final long MINUTE = 60000L;	
+    private static final long MAX_TIME = 5000L;
+	public static void profile(String s){
+		long now = System.currentTimeMillis();
+        DecimalFormat f = new DecimalFormat("00000000000000000000");//9223372036854775807 is max long
+        long diff = now-lastTime;
+        minuteElapse = minuteElapse+diff;
+        String diffStr = null;
+        if(diff>MAX_TIME){
+        	if(lastTime==0L){
+        		diffStr = "***"+f.format(0L);
+        	}else{
+        		diffStr = "!!!"+f.format(diff);
+        	}
+        }else{
+            diffStr = "---"+f.format(diff);
+        }
+        out.println( " P:"+diffStr+" "+s );
+
+        if(minuteElapse>=MINUTE){
+            System.out.println( "Minute mark "+String.valueOf(new Date()));
+            minuteElapse = 0L;
+        }
+        lastTime = now;		
+		
 	}
 	
 	public static void print(String s){
