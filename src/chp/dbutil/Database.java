@@ -3,7 +3,8 @@ package chp.dbutil;
 public enum Database {
 
 	SQLPROD("com.microsoft.sqlserver.jdbc.SQLServerDriver","sqlserver","sqlprod01.corp.chpinfo.com","1433","IDSProd","app_etl","fact-H3d4x"),
-	PGDEVOLD("org.postgresql.Driver","postgresql","chp-dbdev03.corp.chpinfo.com","5444","DM_DEV","whs_viewer","whs_viewer")
+	PGDEVOLD("org.postgresql.Driver","postgresql","chp-dbdev03.corp.chpinfo.com","5444","DM_DEV","whs_viewer","whs_viewer"),
+	PGDEVNEWMR("org.postgresql.Driver","postgresql","chp-dbdev03.corp.chpinfo.com","5432","foundation_data_mart","app_market_reports","4pp_m4rk3t"),
 	//PGDEVNEW
 	//PGUATOLD
 	//PGUATNEW

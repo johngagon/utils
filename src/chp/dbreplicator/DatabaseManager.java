@@ -3,8 +3,13 @@ package chp.dbreplicator;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
+import java.sql.Types;
+
 
 public class DatabaseManager {
+	
+	public static Map<Integer,String> TYPES = getAllJdbcTypeNames();
 	
 	private Database database;
 	private Connection conn;
@@ -91,6 +96,15 @@ public class DatabaseManager {
 		}
 	}
 	
+	public DatabaseMetaData getMetaData(){
+		DatabaseMetaData dbmd = null;
+		try{
+			dbmd = conn.getMetaData();
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+		return dbmd;
+	}
 
 
 	public boolean doesSchemaExist(String schema){
@@ -137,7 +151,7 @@ public class DatabaseManager {
 		return rv;
 	}
 	
-	public Map<Integer, String> getAllJdbcTypeNames() {
+	public static Map<Integer, String> getAllJdbcTypeNames() {
 	    Map<Integer, String> result = new HashMap<Integer, String>();
 		try{
 		    for (Field field : Types.class.getFields()) {
@@ -149,6 +163,10 @@ public class DatabaseManager {
 
 	    return result;
 	}	
+	
+	public Connection getConnection(){
+		return conn;
+	}
 	
 	public List<ColumnDefinition> getColumns(String schema, String table){
 		String query = "";
@@ -462,6 +480,66 @@ public class DatabaseManager {
 		}
 		
 	}	
+
+	public boolean executeUpdate(String sql, List<ColumnDefinition> cds, List<Object> data){
+		//Log.println("SQL:"+sql);
+		boolean rv = false;
+		Object datum = null;
+		int j = 0;
+		try{
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			for(int i = 0;i<data.size();i++){
+				j = i+1;
+				datum = data.get(i);
+				ColumnDefinition cd = cds.get(i);
+				setStatementByType(stmt,j,cd,datum);
+				//stmt.setObject(j, datum);
+			}
+			stmt.executeUpdate();
+			rv = true;
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+			Log.print("SQLException SQL:"+sql+" .");
+			Log.cr();
+			//Log.print("  Datum("+j+"):"+datum);
+			Log.print(data);
+			Log.cr();
+			Log.pl("SQLException:"+sqle.getMessage());
+		}catch(Exception e){
+			Log.exception(e);
+		}
+		return rv;
+	}	
+	
+	@SuppressWarnings("boxing")
+	private void setStatementByType(PreparedStatement stmt, int j,	ColumnDefinition cd, Object datum) {
+		int colType = cd.getColType();
+		Log.pl("Setting field: "+j+"  coltype: "+TYPES.get(colType)+"  to "+datum.toString()+" "+datum.getClass().getCanonicalName()+"");
+		
+		try{
+			switch(colType){
+				
+				case          1111 : stmt.setObject(j, datum);break;
+				case Types.VARCHAR : stmt.setString(j, (String)datum);break;
+				case Types.INTEGER : stmt.setLong(j, (Long)datum);break;
+				case Types.BIGINT  : stmt.setLong(j, (Long)datum);break;
+				case Types.NVARCHAR: stmt.setString(j, (String)datum);break;
+				case Types.DATE    : stmt.setObject(j, datum);break;               //setDate uses java.sql.Date.
+				default            : stmt.setString(j, (String)datum);break;
+			}
+		}catch(SQLException sqle){
+			Log.pl("SQL Exception !!!: "+j);
+			sqle.printStackTrace();
+		}catch(Exception e){
+			Log.pl("Exception!: "+j);
+			e.printStackTrace();
+		}
+		//	stmt.setObject(j, datum);
+		
+	}
+
+	
+	
 	public boolean executeUpdate(String sql, List<Object> data){
 		//Log.println("SQL:"+sql);
 		boolean rv = false;
@@ -477,8 +555,11 @@ public class DatabaseManager {
 			stmt.executeUpdate();
 			rv = true;
 		}catch(SQLException sqle){
-			Log.print("SQL:"+sql);
-			Log.print("  Datum("+j+"):"+datum);
+			sqle.printStackTrace();
+			Log.print("SQLException SQL:"+sql+" .");
+			Log.cr();
+			//Log.print("  Datum("+j+"):"+datum);
+			Log.print(data);
 			Log.cr();
 			Log.pl("SQLException:"+sqle.getMessage());
 		}catch(Exception e){
@@ -602,6 +683,79 @@ public class DatabaseManager {
 		return data;
 	}
 
+
+	
+	public String createInsertQuery(List<ColumnDefinition> cds,String destTable) {
+		Log.pl("createInsertQuery("+destTable+")");
+		//List<ColumnDefinition> cds = getColumnDefsFromDbMeta(destTable);
+		
+		/*
+		 * 1. use database meta data to inspect the table.
+		 * 2. Get columns
+		 */
+		return createInsertQuery(destTable,cds);
+	}
+
+	public List<ColumnDefinition> getColumnDefsFromDbMeta(String destTable) {
+		List<ColumnDefinition> cds = new ArrayList<ColumnDefinition>();
+		try {
+			DatabaseMetaData dbmd = conn.getMetaData();
+			String[] parts = destTable.split("\\.");
+			
+			ResultSet columns = dbmd.getColumns(null,parts[0],parts[1],null);
+			
+			final int COLUMN_NAME = 4;
+			final int DATA_TYPE = 5;
+			final int TYPE_NAME = 6;
+			while(columns.next()){
+				String colname = columns.getString(COLUMN_NAME);
+				int coltype = columns.getInt(DATA_TYPE);
+				String coltypeName = columns.getString(TYPE_NAME);
+				ColumnDefinition cd = new ColumnDefinition(colname,coltypeName,coltype);
+				//Log.pl("Column Definition:"+cd.toString());
+				cds.add(cd);
+			}
+		} catch (SQLException e) {
+			Log.error(e);
+		}
+		return cds;
+	}
+	private String createInsertQuery(String tableName, List<ColumnDefinition> defs){
+		String query = "INSERT INTO "+tableName+" (";
+		String[] parts = tableName.split("\\.");
+		
+		boolean first = true;
+		for(ColumnDefinition def:defs){
+			if(!first){
+				query+=", ";	
+			}else{	
+				first=false;
+			}
+			String colname = def.getColName();
+			if("group".equalsIgnoreCase(colname.trim().toLowerCase())){
+				colname = "\""+colname+"\"";
+			}
+			query+=colname;
+		}
+		query += ") VALUES (";
+		first = true;
+		
+		for(ColumnDefinition def:defs){
+			if(!first){
+				query+=", ";	
+			}else{	
+				first=false;
+			}
+			query+="?";
+			if(def.getColType()==1111 && def.getColTypeName()!=null){
+				query+="::"+parts[0]+"."+def.getColTypeName();
+			}
+		}
+		query += ")";
+
+		Log.pl("INSERT:"+query);
+		return query;		
+	}
 
 
 

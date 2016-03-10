@@ -94,7 +94,28 @@ public class TextFile {
 		}
 	}
 	
+	private static Map<String, String> parseMapping(String[] lines) {
+		Map<String,String> rv = new Hashtable<String,String>();
+		for(String line:lines){
+			
+			if(!line.startsWith("#") && line.contains(":")){
+				
+				int colonPos = line.indexOf(":");
+				int endPos = line.length()-1;
+				String left = line.substring(0,colonPos);
+				String right = line.substring(colonPos+1,endPos);
+				rv.put(left,right);
+			}
+		}
+		
+		return rv;
+	}	
 
+	public Map<String, String> getMapping(){
+		String[] lines = this.getLines();
+		return parseMapping(lines);
+	}
+	
 	public static void testRead(){
 		TextFile f = new TextFile("data/notes.txt");
 		//String content = f.getText();

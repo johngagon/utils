@@ -5,9 +5,16 @@ import java.sql.*;
 public class ColumnDefinition {
 
 	private String colName;
+	private String colTypeName="";
 	private int colType;
 	private int colLen;
 	private int colScale;
+
+	public ColumnDefinition(String _colName, String _colTypeName, int _colType) {
+		this.colName = _colName;
+		this.colTypeName = _colTypeName;
+		this.colType = _colType;
+	}	
 	
 	public ColumnDefinition(String _colName, int _colType, int _colLen, int _colScale) {
 		this.colName = _colName;
@@ -18,8 +25,16 @@ public class ColumnDefinition {
 	public boolean hasLength(){
 		return (Types.INTEGER != this.getColType() && Types.BIGINT != this.getColType() && Types.DATE != this.getColType());
 	}
+	
+	
 	public String getColName() {
 		return colName;
+	}
+
+	
+	
+	public String getColTypeName() {
+		return colTypeName;
 	}
 
 	public int getColType() {
@@ -36,7 +51,7 @@ public class ColumnDefinition {
 
 	@Override
 	public String toString() {
-		return "F:"+colName + "| type=" + colType				+ " (" + colLen + ")(" + colScale + ")";
+		return "F:"+colName + "| type=" + colType				+ " (" + colLen + ")(" + colScale + ")::"+colTypeName+"";
 	}
 
 

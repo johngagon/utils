@@ -1,5 +1,7 @@
 package chp.dbreplicator;
 
+import jhg.util.JG;
+
 public enum Database {
 	//"jdbc:hsqldb:file:
 	LFB(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:file:/hsqldat/company",													"foundation",	"f0vnd4t10n"),
@@ -8,8 +10,17 @@ public enum Database {
 	
 	DM( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV",				"whs_viewer",	"whs_viewer"),
 	
-	DMF( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	            "jgagon",	    "FireWork72!"),
-	DWF( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=Foundation_App_Logic;integratedSecurity=true",	"jgagon",		                                                            "FireWork72!")
+	DMF( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	            "jgagon",	    JG.WPASS()),
+	DWF( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=Foundation_App_Logic;integratedSecurity=true",	"jgagon",		                                                            JG.WPASS()),
+	
+	
+	DMFRW( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
+
+	DMFMR( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"app_market_reports",	    "4pp_m4rk3t"  ),
+	DMFBM( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"app_benchmarking"   ,	    "tbd"  ),
+	DMFES( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"app_employer_search",	    "tbd"  ),
+	DMFNC( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"app_network_compare",	    "tbd"  )
+	
 	;
 	
 	private String url;

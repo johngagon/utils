@@ -18,6 +18,14 @@ public class StringUtil {
 	 * UTF-16
 	 */
 	
+	public static String[] duplicateString(String s, int length){
+		String[] rv = new String[length];
+		for(int i=0;i<length;i++){
+			rv[i]=s;
+		}
+		return rv;
+	}
+	
 	public static boolean func(String x, String y){
 		return false;
 	}

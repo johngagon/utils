@@ -84,7 +84,7 @@ cpt_pkey PRIMARY KEY(cpt_code, cq_year, upload)
 			table.name = tableString;
 			String criteria = "";
 			if(!nonUploadTables.contains(tableString)){
-				criteria = " where cq_year = 2011 or (cq_year=2012 and upload = 2)";
+				criteria = " where cq_year = 2011 or (cq_year=2012 and upload = 1)";
 			}
 			if(doCount){
 				String countQuery = "select count(*) from "+schema+"."+tableString+criteria;
@@ -150,7 +150,14 @@ cpt_pkey PRIMARY KEY(cpt_code, cq_year, upload)
 							case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
 							case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
 							case Types.NVARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+							case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
+							case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
 							case Types.DATE:sb.append("\""+rs.getDate(cd.getColName())+"\"");break;
+							//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
+							//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
+							//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
+							//TINYINT,VARBINARY,VARCHAR
+							
 							default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
 						}
 						
