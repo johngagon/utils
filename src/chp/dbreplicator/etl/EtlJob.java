@@ -9,6 +9,7 @@ import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
+import chp.dbreplicator.Rdbms;
 
 import java.util.*;
 
@@ -76,6 +77,9 @@ public class EtlJob {
 							case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
 							case Types.DATE:sb.append("\""+rs.getDate(cd.getColName())+"\"");break;
 							case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
+							
+							case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
+							
 							//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
 							//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
 							//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
@@ -111,12 +115,34 @@ public class EtlJob {
 	}
 	
 	
+	
+	
+	
+	
+	
 	//@SuppressWarnings("boxing")
 	public static void etlBenchmarkingOldDev(boolean cleanTarget){
 		etl(cleanTarget,Database.DW,Database.DMFRW,"benchmarking");//IDSProd on MSSQL -> DM_DEV on postgres
 	}
 	
-
+	//@SuppressWarnings("boxing")
+	public static void etlNetworkCompareNew(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"network_compare");//IDSProd on MSSQL -> DM_DEV on postgres
+	}
+	
+	//@SuppressWarnings("boxing")
+	public static void etlMarketReportsNew(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"market_reports");
+	}
+	
+	//@SuppressWarnings("boxing")
+	public static void etlEmployerSearchNew(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"employer_search");
+	}
+	
+	
+	
+	
 	private static void cleanTable(DatabaseManager targetDatabase,	String destTable) {
 		targetDatabase.clearTable(destTable);
 	}
@@ -196,38 +222,91 @@ public class EtlJob {
 	
 	
 	
+	public static void testPostgresDataMart(){
+		DatabaseManager test1 = new DatabaseManager(Database.DM);
+		DatabaseManager test2 = new DatabaseManager(Database.DMDEVNEW);
+		DatabaseManager test3 = new DatabaseManager(Database.DMTESTOLD);
+		DatabaseManager test4 = new DatabaseManager(Database.DMTESTNEW);
+		DatabaseManager test5 = new DatabaseManager(Database.DMPPRDOLD);
+		DatabaseManager test6 = new DatabaseManager(Database.DMPPRDNEW);
+		DatabaseManager test7 = new DatabaseManager(Database.DMPRODOLD);
+		DatabaseManager test8 = new DatabaseManager(Database.DMPRODNEW);
+		
+		Log.pl("Connecting 1");
+		test1.connect();
+		Log.pl("1 Connected "+test1.test()+"\n\n");		//PASS
+		
+		Log.pl("Connecting 2");
+		test2.connect();
+		Log.pl("2 Connected "+test2.test()+"\n\n");		//FAIL: FATAL: password authentication failed for user "whs_viewer" (for benchmarking)
+		
+		Log.pl("Connecting 3");
+		test3.connect();
+		Log.pl("3 Connected "+test3.test()+"\n\n");		//PASS
+		
+		Log.pl("Connecting 4");
+		test4.connect();
+		Log.pl("4 Connected "+test4.test()+"\n\n");		//FAIL: null
+		
+		Log.pl("Connecting 5");
+		test5.connect();
+		Log.pl("5 Connected "+test5.test()+"\n\n");		//FAIL: FATAL: password authentication failed for user "whs_viewer"
+		
+		Log.pl("Connecting 6");
+		test6.connect();
+		Log.pl("6 Connected "+test6.test()+"\n\n");		//FAIL: FATAL: password authentication failed for user "whs_viewer"
+		
+		Log.pl("Connecting 7");
+		test7.connect();
+		Log.pl("7 Connected "+test7.test()+"\n\n");		//PASS
+		
+		Log.pl("Connecting 8");
+		test8.connect();
+		Log.pl("8 Connected "+test8.test()+"\n\n");		//FAIL: FATAL: password authentication failed for user "whs_viewer"
+
+		
+/*
+	DM(       Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV",				"whs_viewer",	"whs_viewer"),
+	DMDEVNEW( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
+	DMTESTOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5444/DM_TEST",				"whs_viewer",	"whs_viewer"),
+	DMTESTNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
+	DMPPRDOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD",				"whs_viewer",	"whs_viewer"),
+	DMPPRDNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
+	DMPRODOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD",				"whs_viewer",	"whs_viewer"),
+	DMPRODNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
 	
-	
-	
+ */
+	}
+	public static void testPostgresFoundation(){
+		
+	}
+	public static void testSQLIDSProd(){
+		
+	}
 	
 	
 	
 	
 	
 	public static void main(String[] args){
-		etlBenchmarkingOldDev(true);
+		//etlBenchmarkingOldDev(true);
+		testPostgresDataMart();
 		
 	}
 	
 	
 	public static void etlBenchmarkingNew(){
-		
+		//Pre-requisite: Benchmarking set up on foundation_data_mart
 	}
 	
 	public static void etlEmployerSearchNew(){
-		
+		//Pre-requisite: Employer Search set up on foundation_data_mart
 	}
 	
-	public static void etlNetworkCompareNew(){
-		
-	}
-	
-	public static void etlMarketReportsNew(){
-		
-	}
+
 	
 	public static void etlSupplementaryNew(){
-		
+		//Pre-requisite: Employer Search set up on foundation_data_mart
 	}	
 	
 	

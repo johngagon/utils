@@ -3,7 +3,6 @@ package chp.dbreplicator;
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 import java.sql.Types;
 
 
