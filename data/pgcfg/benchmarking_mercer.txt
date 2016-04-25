@@ -1,0 +1,3 @@
+app_etl.benchmarking_data_mercer_blue:benchmarking.data_mercer_blue
+app_etl.benchmarking_data_mercer_competitor:benchmarking.data_mercer_competitor
+app_etl.benchmarking_networks:benchmarking.networks

@@ -125,6 +125,20 @@ public class Log {
 		out.print(s);
 	}
 	
+	public static void print(List<String> list){
+		out.print("[");
+		boolean first = true;
+		for(String s:list){
+			if(first){
+				out.print(s);
+				first=false;
+			}else{
+				out.print(","+s);
+			}
+		}
+		out.print("]");
+	}
+	
 	public static void print(Collection<Object> list){
 		for(Object o:list){
 			out.println(o);

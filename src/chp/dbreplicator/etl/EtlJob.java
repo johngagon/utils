@@ -1,7 +1,9 @@
 package chp.dbreplicator.etl;
 
+import java.util.*;
+
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
+//import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -9,9 +11,6 @@ import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
-import chp.dbreplicator.Rdbms;
-
-import java.util.*;
 
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -21,10 +20,67 @@ import jhg.util.TextFile;
 
 public class EtlJob {
 
+	
+	private static final String D = "\t";
+	private static final String noq = "";
+	private static String Q = noq;	
+	
+	/*
+	 * ETL Jobs:
+	 * 
+	 *    NAME							METHOD							TESTED?
+	 * 1. Benchmarking: Hewitt			etlBenchmarkingHewitt(true)		false
+	 * 2. Benchmarking: TowersWatson	etlBenchmarkingTowers(true)		false
+	 * 3. Benchmarking: Mercer			etlBenchmarkingMercer(true)		false	
+	 * 4. MarketQuest
+	 * 5. NetworkCompare 
+	 * 6. EmployerSearch 
+	 * 
+	 */
+	
+	public static void main(String[] args){
+		//testSourceAndTarget();
+		//compareSchemas(Database.DMCUST , Database.DMFRW , "employer");
+		etlBenchmarkingHewitt(true); 
+		//also need to insert into a row into the dataset.
+	
+	}
+	
+	//does this have the new tiered network in the table?
+	public static void etlBenchmarkingHewitt(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_hewitt");
+	}
+	
+	public static void etlBenchmarkingTowers(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_towers");
+	}
+	
+	public static void etlBenchmarkingMercer(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_mercer");
+	}	
+	
+	
 
-	@SuppressWarnings("boxing")
+	
+	
+	public static void etlMarketReports(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"market_reports");
+	}
+	
+	
+	public static void etlNetworkCompare(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"network_compare");//IDSProd on MSSQL -> DM_DEV on postgres
+	}	
+	
+	public static void etlEmployerSearch(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMFRW,"employer_search");
+	}
+
+	
+
+	//@SuppressWarnings("boxing")
 	private static void etl(boolean cleanTarget,Database source, Database target, String filename){
-		Log.pl("Starting Copy of IDSPROD app_etl benchmarking to DMDEV benchmarking on "+new java.util.Date());
+		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
 		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
@@ -40,186 +96,144 @@ public class EtlJob {
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
 			
-			if(cleanTarget){
-				cleanTable(targetDatabase,destTable);
-			}			
-			
-			List<ColumnDefinition> cds = targetDatabase.getColumnDefsFromDbMeta(destTable);
-			for(ColumnDefinition cd:cds){
-				int cdcoltype = cd.getColType();
-				Log.pl("Column: "+cd.getColName()+" type:"+DatabaseManager.TYPES.get(cdcoltype)+"");
-			}
-			String countQuery = "select count(*) from "+sourceRelation;
-			sourceDatabase.query(countQuery);
-			int countResult = sourceDatabase.getCountResult();
-			Log.pl("Result Size:"+countResult);
-			int max = getMagnitude(countResult);
-			String query = "select * from "+sourceRelation;
-			Log.pl("Reading rows:"+query);
-			int count=0;
-			ResultSet rs = sourceDatabase.queryLarge(query);
-			try{
-				StringBuilder sb = new StringBuilder();
-				while(rs.next()){
-					
-					boolean first = true;
-					for(ColumnDefinition cd:cds){
-						if(!first){sb.append("|");}else{first=false;}
-						int cdcoltype = cd.getColType();
-						
-						switch (cdcoltype){
-							case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
-							case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-							case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
-							case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
-							case Types.NVARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-							case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
-							case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
-							case Types.DATE:sb.append("\""+rs.getDate(cd.getColName())+"\"");break;
-							case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
-							
-							case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
-							
-							//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
-							//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
-							//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
-							//TINYINT,VARBINARY,VARCHAR
-							default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-						}
-						
-					}//for(ColumnDefinition cd:cds)
-					sb.append("\n");
-					//Log.profile("    Read Record "+count+"  appending to file:"+filename);
-					if(count%max==0){
-						Log.pl("Copying data for "+destTable+" at count: "+count);
-						
-						copyPostgres(targetDatabase,destTable, sb.toString());
-						sb = new StringBuilder();
-					}
-					count++;
-					//progrpt.completeWork();
-				}//while(rs.next())
-				
-				copyPostgres(targetDatabase, destTable, sb.toString());
-				sb = new StringBuilder();				
-				
-			}catch(Exception e){
-				e.printStackTrace();
-			}//trycatch
+			performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
 		}
 		
 		sourceDatabase.close();
 		targetDatabase.close();
 		
 		Log.pl("Finished on "+new java.util.Date()+"!");			
-	}
+	}		
 	
 	
-	
-	
-	
-	
-	
-	//@SuppressWarnings("boxing")
-	public static void etlBenchmarkingOldDev(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFRW,"benchmarking");//IDSProd on MSSQL -> DM_DEV on postgres
-	}
-	
-	//@SuppressWarnings("boxing")
-	public static void etlNetworkCompareNew(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFRW,"network_compare");//IDSProd on MSSQL -> DM_DEV on postgres
-	}
-	
-	//@SuppressWarnings("boxing")
-	public static void etlMarketReportsNew(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFRW,"market_reports");
-	}
-	
-	//@SuppressWarnings("boxing")
-	public static void etlEmployerSearchNew(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFRW,"employer_search");
-	}
-	
-	
-	
+	@SuppressWarnings("boxing")
+	private static void performCopy(boolean cleanTarget,
+			DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+			String sourceRelation, String destTable) {
+		if(cleanTarget){
+			cleanTable(targetDatabase,destTable);
+		}			
+		
+		List<ColumnDefinition> cds = sourceDatabase.getColumnDefsFromDbMeta(sourceRelation);
+		for(ColumnDefinition cd:cds){
+			int cdcoltype = cd.getColType();
+			Log.pl("Column: "+cd.getColName()+" type:"+DatabaseManager.TYPES.get(cdcoltype)+"");
+		}
+		String countQuery = "select count(*) from "+sourceRelation;
+		sourceDatabase.query(countQuery);
+		int countResult = sourceDatabase.getCountResult();
+		Log.pl("Source Result Size:"+countResult);
+		int max = getMagnitude(countResult);
+		String query = "select * from "+sourceRelation;
+		Log.pl("Source Reading rows:"+query);
+		int count=0;
+		ResultSet rs = sourceDatabase.queryLarge(query);
+		try{
+			StringBuilder sb = new StringBuilder();
+			while(rs.next()){
+				
+				boolean first = true;
+				for(ColumnDefinition cd:cds){
+					if(!first){sb.append(D);}else{first=false;}
+					int cdcoltype = cd.getColType();
+					
+					switch (cdcoltype){
+						
+						//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+						case Types.VARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+						case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+						
+						case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
+						case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
+						
+						case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
+						case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
+						case Types.DATE:sb.append(Q+rs.getDate(cd.getColName())+"\"");break;
+						
+						case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
+						case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
+						case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
+						
+						//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
+						//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
+						//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
+						//TINYINT,VARBINARY,VARCHAR
+						default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+					}
+					
+				}//for(ColumnDefinition cd:cds)
+				sb.append("\n");
+				//Log.profile("    Read Record "+count+"  appending to file:"+filename);
+				if(count%max==0){
+					Log.pl("Copying data to target: "+destTable+" at count: "+count);
+					
+					copyPostgres(targetDatabase,destTable, sb.toString());
+					sb = new StringBuilder();
+				}
+				count++;
+				//progrpt.completeWork();
+			}//while(rs.next())
+			
+			copyPostgres(targetDatabase, destTable, sb.toString());
+			sb = new StringBuilder();				
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}//trycatch
+	}	
 	
 	private static void cleanTable(DatabaseManager targetDatabase,	String destTable) {
 		targetDatabase.clearTable(destTable);
 	}
 
-
-	private static void copyPostgres(DatabaseManager targetDatabase,String destTable, String s) throws SQLException {
-		CopyIn cpIN=null;
-		CopyManager cm = new CopyManager((BaseConnection) targetDatabase.getConnection());
-		cpIN = cm.copyIn("COPY "+destTable+" FROM STDIN  WITH DELIMITER '|'");
-		byte[] bytes = s.getBytes();
-		cpIN.writeToCopy(bytes, 0, bytes.length);
-		cpIN.endCopy();
-		
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-	//TODO move this to database manager
-    public static Object[] handle(ResultSet rs) throws SQLException {
-        if (!rs.next()) {
-            return null;
-        }
-    
-        ResultSetMetaData meta = rs.getMetaData();
-        int cols = meta.getColumnCount();
-        Object[] result = new Object[cols];
-
-        for (int i = 0; i < cols; i++) {
-            result[i] = rs.getObject(i + 1);
-        }
-
-        return result;
-    }	
-	
 	private static int getMagnitude(int countResult) {
 		int rv = 10;
 		if(countResult>100){
 			rv = (int)countResult/10;
 		}
 		return rv;
-	}
-
-	//TODO move this to DatabaseManager
-	public static boolean insertPostgres(DatabaseManager targetDatabase, String insertQuery, List<ColumnDefinition> cds, Object[] row) throws SQLException {
-		
-		List<Object> objArr = Arrays.asList(row);
-		
-		boolean success =  targetDatabase.executeUpdate(insertQuery, cds, objArr);
-		if(!success){
-			Log.pl("Insert fail:"+insertQuery);
-			Log.pl("Object Array:");
-			Log.hr(20,"-");
-			Log.print(objArr);
-			Log.hr(20,"-");
-		}else{
-			Log.pl("Inserted row.");
-		}
-		return success;
 	}	
 	
+	
+	private static void copyPostgres(DatabaseManager targetDatabase,String destTable, String s) throws SQLException {
+		CopyIn cpIN=null;
+		CopyManager cm = new CopyManager((BaseConnection) targetDatabase.getConnection());
+		cpIN = cm.copyIn("COPY "+destTable+" FROM STDIN  WITH DELIMITER '"+D+"' NULL 'null' ");
+		byte[] bytes = s.getBytes();
+		cpIN.writeToCopy(bytes, 0, bytes.length);
+		cpIN.endCopy();
+		
+	}
+			
+	
 
-
-
+	
+	//@SuppressWarnings("boxing")
+	private static void test(Database source, Database target){
+		Log.pl("Testing connections of "+source.name()+" and "+target.name()+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path")+" \n\n");
+		DatabaseManager sourceDatabase = new DatabaseManager(source);
+		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		sourceDatabase.connect();
+		Log.pl("Connected to source: "+source.name()+" is connected: "+sourceDatabase.test()+"\n");
+	
+		targetDatabase.connect();
+		Log.pl("Connected to target: "+target.name()+" is connected: "+targetDatabase.test()+"\n");		
+		
+		sourceDatabase.close();
+		targetDatabase.close();
+		
+		Log.pl("Finished on "+new java.util.Date()+"!");			
+	}
 
 
 	
+	public static void testSourceAndTarget(){
+		test(Database.DMCUST, Database.DMFRW);
+	}
 	
 	
+
 	
 	
 	public static void testPostgresDataMart(){
@@ -288,27 +302,51 @@ public class EtlJob {
 	
 	
 	
-	public static void main(String[] args){
-		//etlBenchmarkingOldDev(true);
-		testPostgresDataMart();
+	
+	@SuppressWarnings("unused")
+	private static void compareSchemas(Database source, Database target, String schema){
+		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
+		DatabaseManager sourceDatabase = new DatabaseManager(source);
+		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		sourceDatabase.connect();
+		Log.pl("Connected to "+source.name()+" is connected: "+sourceDatabase.test());
+	
+		targetDatabase.connect();
+		Log.pl("Connected to "+target.name()+" is connected: "+targetDatabase.test());
 		
-	}
-	
-	
-	public static void etlBenchmarkingNew(){
-		//Pre-requisite: Benchmarking set up on foundation_data_mart
-	}
-	
-	public static void etlEmployerSearchNew(){
-		//Pre-requisite: Employer Search set up on foundation_data_mart
-	}
-	
-
-	
-	public static void etlSupplementaryNew(){
-		//Pre-requisite: Employer Search set up on foundation_data_mart
+		List<String> tables = sourceDatabase.getTables(schema);
+		Log.pl("");
+		for(String table:tables){
+			Log.pl("\n\nComparing both schemas for table: "+table);
+			String srcTable = schema+"."+table;
+			String destTable = schema+"."+table;
+			
+			List<ColumnDefinition> sourceCols = sourceDatabase.getColumnDefsFromDbMeta(srcTable);
+			List<ColumnDefinition> targetCols = targetDatabase.getColumnDefsFromDbMeta(destTable);
+			
+			for(ColumnDefinition sourceCol:sourceCols){
+			
+				if(!targetCols.contains(sourceCol)){
+					Log.pl("!!Column: "+sourceCol.getColName()+" in source didn't match a column in destination for table "+table);
+				}else{
+					ColumnDefinition targetCol = targetCols.get(targetCols.indexOf(sourceCol));
+					Log.pl("Found :"+sourceCol.getColName()+ " matches "+targetCol.getColName());
+				}
+			}
+		}
+		Log.pl("----------- ");
+		sourceDatabase.close();
+		targetDatabase.close();
+		
+		Log.pl("Finished on "+new java.util.Date()+"!");	
+		
+		
+		//for(ColumnDefinition cd:cds){
+		//	int cdcoltype = cd.getColType();
+		//	Log.pl("Column: "+cd.getColName()+" type:"+DatabaseManager.TYPES.get(cdcoltype)+"");
+		//}		
 	}	
-	
 	
 	/*
 	 * Describe source table/view, destination table/view.
@@ -346,6 +384,46 @@ public class EtlJob {
 	
 	
 }
+
+/*
+//TODO move this to database manager
+public static Object[] handle(ResultSet rs) throws SQLException {
+    if (!rs.next()) {
+        return null;
+    }
+
+    ResultSetMetaData meta = rs.getMetaData();
+    int cols = meta.getColumnCount();
+    Object[] result = new Object[cols];
+
+    for (int i = 0; i < cols; i++) {
+        result[i] = rs.getObject(i + 1);
+    }
+
+    return result;
+}	
+
+
+
+//TODO move this to DatabaseManager
+public static boolean insertPostgres(DatabaseManager targetDatabase, String insertQuery, List<ColumnDefinition> cds, Object[] row) throws SQLException {
+	
+	List<Object> objArr = Arrays.asList(row);
+	
+	boolean success =  targetDatabase.executeUpdate(insertQuery, cds, objArr);
+	if(!success){
+		Log.pl("Insert fail:"+insertQuery);
+		Log.pl("Object Array:");
+		Log.hr(20,"-");
+		Log.print(objArr);
+		Log.hr(20,"-");
+	}else{
+		Log.pl("Inserted row.");
+	}
+	return success;
+}	
+*/
+
 /*
 DatabaseMetaData dbmd = targetDatabase.getMetaData();
 try {
@@ -581,3 +659,10 @@ private static String formPlainInsertQuery(String table, int cols) {
 		Log.pl("Finished on "+new java.util.Date()+"!");		
 	}
  */
+/*
+@SuppressWarnings("unused")
+private static void etlAventionStructureWithDunAndBradstreetData(boolean clean){
+	//test(Database.DWP, Database.DMFRW);
+	etl(clean,Database.DWP,Database.DMFRW,"employer_search");
+}
+*/

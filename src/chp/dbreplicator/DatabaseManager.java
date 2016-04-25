@@ -571,6 +571,19 @@ public class DatabaseManager {
 		return this.database;
 	}
 	
+	public int getResultColCount(){
+		ResultSetMetaData rsmd;
+		int rv = -1;
+		try {
+			rsmd = rs.getMetaData();
+			rv = rsmd.getColumnCount();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return rv;
+	}
+	
 	public ResultSet query(String sql){
 		//Log.println("SQL:"+sql);
 		try{
@@ -706,11 +719,14 @@ public class DatabaseManager {
 			final int COLUMN_NAME = 4;
 			final int DATA_TYPE = 5;
 			final int TYPE_NAME = 6;
+			final int NULLABLE = 11;
 			while(columns.next()){
 				String colname = columns.getString(COLUMN_NAME);
 				int coltype = columns.getInt(DATA_TYPE);
 				String coltypeName = columns.getString(TYPE_NAME);
-				ColumnDefinition cd = new ColumnDefinition(colname,coltypeName,coltype);
+				int colnullable = columns.getInt(NULLABLE);
+				boolean notNull = (colnullable==DatabaseMetaData.columnNoNulls);
+				ColumnDefinition cd = new ColumnDefinition(colname,coltypeName,coltype,notNull);
 				//Log.pl("Column Definition:"+cd.toString());
 				cds.add(cd);
 			}
@@ -719,6 +735,7 @@ public class DatabaseManager {
 		}
 		return cds;
 	}
+	
 	private String createInsertQuery(String tableName, List<ColumnDefinition> defs){
 		String query = "INSERT INTO "+tableName+" (";
 		String[] parts = tableName.split("\\.");
@@ -755,6 +772,30 @@ public class DatabaseManager {
 		Log.pl("INSERT:"+query);
 		return query;		
 	}
+
+
+	public String getDDL(String existingSchema, String fqTableName, String newTable) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("CREATE TABLE "+newTable+ "_backup ( ");
+		List<ColumnDefinition> defs = getColumnDefsFromDbMeta(fqTableName);
+		boolean first = true;
+		for(ColumnDefinition def:defs){
+			if(!first){
+				sb.append(", ");	
+			}else{	
+				first=false;
+			}	
+			String nullable = (def.getNullable())?"":"NOT NULL";
+			String coltype = ((def.getColType()==1111)?(existingSchema+"."+def.getColTypeName()):def.getColTypeName());//FIXME create types
+			
+			sb.append(def.getColName()+" "+coltype+" "+nullable);
+		}
+		sb.append(")");
+		return sb.toString();
+	}
+
+
 
 
 
