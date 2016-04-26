@@ -49,9 +49,31 @@ public class DeployTool {
 	 */
 
 	public static void main(String[] args){
-		esUAT();
+		//esUAT();
 		
 	}
+
+	
+	public static void bscUAT(){
+		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"blue_solutions");
+	}
+	public static void bscPRP(){
+		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"blue_solutions");
+	}	
+	public static void bscPRD(){
+		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"blue_solutions");
+	}			
+	
+	public static void bmUAT(){
+		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking");
+	}
+	public static void bmPRP(){
+		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"benchmarking");
+	}	
+	public static void bmPRD(){
+		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking");
+	}		
+	
 	
 	public static void esUAT(){
 		deploy(true, Database.DMFRW, Database.DMFUAT,"employer");
@@ -65,8 +87,33 @@ public class DeployTool {
 		deploy(true, Database.DMFRW, Database.DMFPRD,"employer");
 	}	
 	
-	
+	/*
+	 * need the specific dataset for this one.
+	 */
+	public static void mrUAT(String dataset){
+		//deploy(true, Database.DMFRW, Database.DMFUAT,"valuequest");
+	}
 
+	public static void mrPRP(String dataset){
+		//deploy(true, Database.DMFRW, Database.DMFPRP,"valuequest");
+	}
+	
+	public static void mrPRD(String dataset){
+		//deploy(true, Database.DMFRW, Database.DMFPRD,"valuequest");
+	}		
+
+	public static void ncUAT(){
+		deploy(true, Database.DMFRW, Database.DMFUAT,"whs_viewer");
+	}
+
+	public static void ncPRP(){
+		deploy(true, Database.DMFRW, Database.DMFPRP,"whs_viewer");
+	}
+	
+	public static void ncPRD(){
+		deploy(true, Database.DMFRW, Database.DMFPRD,"whs_viewer");
+	}		
+	
 	
 	//@SuppressWarnings("boxing")
 	private static void test(Database source, Database target){

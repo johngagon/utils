@@ -777,7 +777,7 @@ public class DatabaseManager {
 	public String getDDL(String existingSchema, String fqTableName, String newTable) {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("CREATE TABLE "+newTable+ "_backup ( ");
+		sb.append("CREATE TABLE "+newTable+ " ( ");
 		List<ColumnDefinition> defs = getColumnDefsFromDbMeta(fqTableName);
 		boolean first = true;
 		for(ColumnDefinition def:defs){
@@ -789,18 +789,28 @@ public class DatabaseManager {
 			String nullable = (def.getNullable())?"":"NOT NULL";
 			String coltype = ((def.getColType()==1111)?(existingSchema+"."+def.getColTypeName()):def.getColTypeName());//FIXME create types
 			
-			sb.append(def.getColName()+" "+coltype+" "+nullable);
+			sb.append("\""+def.getColName()+"\" "+coltype+" "+nullable);
 		}
 		sb.append(")");
+		
 		return sb.toString();
 	}
-
-
-
-
-
-
 	
+	public String getDDLOwnerAlter(String existingSchema, String fqTableName, String newTable, String owner) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ALTER TABLE "+newTable+ " OWNER TO "+owner+" ");
+		return sb.toString();
+	}
+	public String getDDLOwnerGrant(String existingSchema, String fqTableName, String newTable, String owner) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GRANT ALL ON TABLE "+newTable+ " TO "+owner+" ");
+		return sb.toString();
+	}
+	public String getDDLViewerGrant(String existingSchema, String fqTableName, String newTable, String viewer) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GRANT SELECT ON TABLE "+newTable+ " TO "+viewer+" ");
+		return sb.toString();
+	}	
 
 }
 /*

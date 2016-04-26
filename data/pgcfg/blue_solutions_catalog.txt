@@ -1,0 +1,1 @@
+app_etl.blue_solutions_data:blue_solutions.data

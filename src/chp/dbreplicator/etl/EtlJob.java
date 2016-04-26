@@ -35,7 +35,7 @@ public class EtlJob {
 	 * 4. MarketQuest
 	 * 5. NetworkCompare 
 	 * 6. EmployerSearch 
-	 * 
+	 * 7. Blue Solutions Catalog
 	 */
 	
 	public static void main(String[] args){
@@ -76,6 +76,9 @@ public class EtlJob {
 		etl(cleanTarget,Database.DW,Database.DMFRW,"employer_search");
 	}
 
+	public static void etlBlueSolutionsCatalog(boolean cleanTarget){
+		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"blue_solutions_catalog");
+	}
 	
 
 	//@SuppressWarnings("boxing")
