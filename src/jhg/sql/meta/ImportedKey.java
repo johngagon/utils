@@ -1,6 +1,26 @@
 package jhg.sql.meta;
 
 public class ImportedKey {
+	
+
+	public static enum Field{
+		NIL,
+		PKTABLE_CAT,
+		PKTABLE_SCHEM,
+		PKTABLE_NAME,
+		PKCOLUMN_NAME,
+		FKTABLE_CAT,
+		FKTABLE_SCHEM,
+		FKTABLE_NAME,
+		FKCOLUMN_NAME,
+		KEY_SEQ,
+		UPDATE_RULE,//ImportRule
+		DELETE_RULE,//ImportRule
+		FK_NAME,
+		PK_NAME,
+		DEFERRABILITY;//DeferType 		
+	}	
+	
 /*
 PKTABLE_CAT String => primary key table catalog being imported (may be null)
 PKTABLE_SCHEM String => primary key table schema being imported (may be null)

@@ -1,6 +1,33 @@
 package jhg.sql.meta;
 
 public class Index {
+	
+	public static enum IndexType{
+		/*
+		tableIndexStatistic - this identifies table statistics that are returned in conjuction with a table's index descriptions
+		tableIndexClustered - this is a clustered index
+		tableIndexHashed - this is a hashed index
+		tableIndexOther - this is some other style of index		
+		*/
+	}
+	
+	public static enum Field{
+		NIL,
+		TABLE_CAT,
+		TABLE_SCHEM,
+		TABLE_NAME,
+		NON_UNIQUE,
+		INDEX_QUALIFIER,
+		INDEX_NAME,
+		TYPE,//IndexType
+		ORDINAL_POSITION,
+		COLUMN_NAME,
+		ASC_OR_DESC,
+		CARDINALITY,
+		PAGES,
+		FILTER_CONDITION;		
+	}	
+	
 /*
 Each index column description has the following columns:
 

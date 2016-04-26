@@ -1,6 +1,26 @@
 package jhg.sql.meta;
 
 public class Procedure {
+	
+	public static enum Type{
+		/*
+		procedureResultUnknown - Cannot determine if a return value will be returned
+		procedureNoResult - Does not return a return value
+		procedureReturnsResult - Returns a return value
+
+		 */
+	}
+	
+	public static enum Field{
+		NIL,
+		PROCEDURE_CAT,
+		PROCEDURE_SCHEM,
+		PROCEDURE_NAME,
+		REMARKS,
+		PROCEDURE_TYPE,//Type
+		SPECIFIC_NAME;		
+	}	
+	
 /*
 Retrieves a description of the stored procedures available in the given catalog.
 Only procedure descriptions matching the schema and procedure name criteria are returned. They are ordered by PROCEDURE_CAT, PROCEDURE_SCHEM, PROCEDURE_NAME and SPECIFIC_ NAME.

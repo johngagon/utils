@@ -1,6 +1,12 @@
 package jhg.sql.meta;
 
 public class TableType {
+	
+	public static enum Field{
+		NIL,
+		TABLE_TYPE;
+	}	
+	
 /*
 The table type is:
 

@@ -1,6 +1,18 @@
 package jhg.sql.meta;
 
 public class TablePrivilege {
+	
+	public static enum Field{
+		NIL,
+		TABLE_CAT,
+		TABLE_SCHEM,
+		TABLE_NAME,
+		GRANTOR,
+		GRANTEE,
+		PRIVILEGE,
+		IS_GRANTABLE;//TriFlag		
+	}	
+	
 /*
 Each privilige description has the following columns:
 

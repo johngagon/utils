@@ -1,6 +1,25 @@
 package jhg.sql.meta;
 
 public class CrossReference {
+	
+	public static enum Field{
+		NIL,
+		PKTABLE_CAT,
+		PKTABLE_SCHEM,
+		PKTABLE_NAME,
+		PKCOLUMN_NAME,
+		FKTABLE_CAT,
+		FKTABLE_SCHEM,
+		FKTABLE_NAME,
+		FKCOLUMN_NAME,
+		KEY_SEQ,
+		UPDATE_RULE,//ImportRTule
+		DELETE_RULE,//ImportRule
+		FK_NAME,
+		PK_NAME,
+		DEFERRABILITY;//DeferType		
+	}	
+	
 /*
 PKTABLE_CAT String => parent key table catalog (may be null)
 PKTABLE_SCHEM String => parent key table schema (may be null)

@@ -1,6 +1,23 @@
 package jhg.sql.meta;
 
 public class PseudoColumn {
+	
+	public static enum Field{
+		NIL,
+		TABLE_CAT,
+		TABLE_SCHEM,
+		TABLE_NAME,
+		COLUMN_NAME,
+		DATA_TYPE,
+		COLUMN_SIZE,
+		DECIMAL_DIGITS,
+		NUM_PREC_RADIX,
+		COLUMN_USAGE,
+		REMARKS,
+		CHAR_OCTET_LENGTH,
+		IS_NULLABLE;//TriFlag
+	}	
+	
 /*
 Only column descriptions matching the catalog, schema, table and column name criteria are returned. They are ordered by TABLE_CAT,TABLE_SCHEM, TABLE_NAME and COLUMN_NAME.
 

@@ -1,6 +1,46 @@
 package jhg.sql.meta;
 
 public class FunctionColumn {
+	
+	public static enum Type{
+		/*
+		functionColumnUnknown - nobody knows
+		functionColumnIn - IN parameter
+		functionColumnInOut - INOUT parameter
+		functionColumnOut - OUT parameter
+		functionColumnReturn - function return value
+		functionColumnResult - Indicates that the parameter or column is a column in the ResultSet
+		 */
+	}
+	public static enum Nullable{
+		/*
+		functionNoNulls - does not allow NULL values
+		functionNullable - allows NULL values
+		functionNullableUnknown - nullability unknown
+
+		 */
+	}
+	
+	public static enum Field{
+		FUNCTION_CAT,
+		FUNCTION_SCHEM,
+		FUNCTION_NAME,
+		COLUMN_NAME,
+		COLUMN_TYPE,//Type
+		DATA_TYPE,
+		TYPE_NAME,
+		PRECISION,
+		LENGTH,
+		SCALE,
+		RADIX,
+		NULLABLE,
+		REMARKS,
+		CHAR_OCTET_LENGTH,
+		ORDINAL_POSITION,
+		IS_NULLABLE,//TriFlag
+		SPECIFIC_NAME;
+
+	}	
 
 	/*
 Each row in the ResultSet is a parameter description, column description or return type description with the following fields:

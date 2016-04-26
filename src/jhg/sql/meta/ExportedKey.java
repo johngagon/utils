@@ -1,6 +1,27 @@
 package jhg.sql.meta;
 
 public class ExportedKey {
+	
+	
+	public static enum Field{
+		NIL,
+		PKTABLE_CAT,
+		PKTABLE_SCHEM,
+		PKTABLE_NAME,
+		PKCOLUMN_NAME,
+		FKTABLE_CAT,
+		FKTABLE_SCHEM,
+		FKTABLE_NAME,
+		FKCOLUMN_NAME,
+		KEY_SEQ,
+		UPDATE_RULE,//ImportRule
+		DELETE_RULE,//ImportRule
+		FK_NAME,
+		PK_NAME,
+		DEFERRABILITY;//DeferType 	
+		
+	}	
+	
 /*
 Each foreign key column description has the following columns:
 

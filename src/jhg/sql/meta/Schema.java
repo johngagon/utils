@@ -1,6 +1,13 @@
 package jhg.sql.meta;
 
 public class Schema {
+	
+	public static enum Field{
+		NIL,
+		TABLE_SCHEM,
+		TABLE_CATALOG;		
+	}	
+	
 /*
 The schema columns are:
 

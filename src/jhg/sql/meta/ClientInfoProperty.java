@@ -1,6 +1,17 @@
 package jhg.sql.meta;
 
 public class ClientInfoProperty {
+	
+	public static enum Field{
+		NIL,//0
+		NAME,
+		MAX_LEN,
+		DEFAULT_VALUE,
+		DESCRIPTION;
+	}	
+	private String name,defaultValue,description;
+	private int maxLength;
+	
 /*
 Retrieves a list of the client info properties that the driver supports. The result set contains the following columns
 NAME String=> The name of the client info property

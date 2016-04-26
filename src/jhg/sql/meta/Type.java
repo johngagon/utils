@@ -1,6 +1,47 @@
 package jhg.sql.meta;
 
 public class Type {
+	
+	public static enum Nullable{
+	/*
+		typeNoNulls - does not allow NULL values
+		typeNullable - allows NULL values
+		typeNullableUnknown - nullability unknown	
+	 */
+	}
+	
+	public static enum Searchable{
+/*
+		typePredNone - No support
+		typePredChar - Only supported with WHERE .. LIKE
+		typePredBasic - Supported except for WHERE .. LIKE
+		typeSearchable - Supported for all WHERE ..
+		
+ */
+	}
+	
+	public static enum Field{
+		NIL,
+		TYPE_NAME,
+		DATA_TYPE,
+		PRECISION,
+		LITERAL_PREFIX,
+		LITERAL_SUFFIX,
+		CREATE_PARAMS,
+		NULLABLE,//Nullable
+		CASE_SENSITIVE,
+		SEARCHABLE,//Searchable
+		UNSIGNED_ATTRIBUTE,
+		FIXED_PREC_SCALE,
+		AUTO_INCREMENT,
+		LOCAL_TYPE_NAME,
+		MINIMUM_SCALE,
+		MAXIMUM_SCALE,
+		SQL_DATA_TYPE,
+		SQL_DATETIME_SUB,
+		NUM_PREC_RADIX;		
+	}	
+	
 /*
 TYPE_NAME String => Type name
 DATA_TYPE int => SQL data type from java.sql.Types

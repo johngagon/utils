@@ -1,6 +1,53 @@
 package jhg.sql.meta;
 
 public class ProcedureColumn {
+	
+	public static enum Type{
+/*
+		procedureColumnUnknown - nobody knows
+		procedureColumnIn - IN parameter
+		procedureColumnInOut - INOUT parameter
+		procedureColumnOut - OUT parameter
+		procedureColumnReturn - procedure return value
+		procedureColumnResult - result column in ResultSet
+ */
+	}
+	public static enum Nullable{
+/*
+		procedureNoNulls - does not allow NULL values
+		procedureNullable - allows NULL values
+		procedureNullableUnknown - nullability unknown
+
+ */
+	}
+	
+	public static enum Field{
+		NIL,
+		PROCEDURE_CAT,
+		PROCEDURE_SCHEM,
+		PROCEDURE_NAME,
+		COLUMN_NAME,
+		COLUMN_TYPE,//Type
+		DATA_TYPE,
+		TYPE_NAME,
+		PRECISION,
+		LENGTH,
+		SCALE,
+		RADIX,
+		NULLABLE,//Nullable
+		REMARKS,
+		COLUMN_DEF,
+		TRUNCATE,
+		NULL,
+		SQL_DATA_TYPE,
+		SQL_DATETIME_SUB,
+		CHAR_OCTET_LENGTH,
+		ORDINAL_POSITION,
+		IS_NULLABLE,//TriFlag
+		SPECIFIC_NAME;
+
+	}	
+	
 /*
 Each row in the ResultSet is a parameter description or column description with the following fields:
 

@@ -1,8 +1,21 @@
 package jhg.sql.meta;
 
 public class UserDefinedTypes {
+	
+	public static enum Field{
+		NIL,
+		TYPE_CAT,
+		TYPE_SCHEM,
+		TYPE_NAME,
+		CLASS_NAME,
+		DATA_TYPE,
+		REMARKS,
+		BASE_TYPE;
+
+	}	
+	
 /*
- TYPE_CAT String => the type's catalog (may be null)
+TYPE_CAT String => the type's catalog (may be null)
 TYPE_SCHEM String => type's schema (may be null)
 TYPE_NAME String => type name
 CLASS_NAME String => Java class name

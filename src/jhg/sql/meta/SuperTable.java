@@ -1,6 +1,15 @@
 package jhg.sql.meta;
 
 public class SuperTable {
+
+	public static enum Field{
+		NIL,
+		TABLE_CAT,
+		TABLE_SCHEM,
+		TABLE_NAME,
+		SUPERTABLE_NAME;		
+	}	
+	
 /*
 Each type description has the following columns:
 

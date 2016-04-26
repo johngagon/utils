@@ -1,6 +1,17 @@
 package jhg.sql.meta;
 
 public class PrimaryKey {
+	
+	public static enum Field{
+		NIL,
+		TABLE_CAT,
+		TABLE_SCHEM,
+		TABLE_NAME,
+		COLUMN_NAME,
+		KEY_SEQ,
+		PK_NAME;		
+	}	
+	
 /*
 Each primary key column description has the following columns:
 
