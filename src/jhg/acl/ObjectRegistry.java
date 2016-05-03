@@ -1,6 +1,7 @@
 package jhg.acl;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class ObjectRegistry {

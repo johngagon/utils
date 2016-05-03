@@ -1,7 +1,9 @@
 package jhg.util;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class TextUtil {
 
 	public TextUtil() {
@@ -55,6 +57,7 @@ public class TextUtil {
 		return out;
 	}
 	
+	//@SuppressWarnings("unused")
 	private static void testFilterInString(){
 		Log.println("Testing filter.");
 		String funny = "~@$#%$#@Mary's Funny Farm Pa((((((ncakes+__+++____ Inc.;;;";

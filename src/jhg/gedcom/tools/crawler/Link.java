@@ -1,6 +1,5 @@
 package jhg.gedcom.tools.crawler;
 
-import java.net.URL;
 
 public class Link {
 

@@ -1,9 +1,11 @@
 package jhg.security;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SecurityManager<T> {
 
+	@SuppressWarnings("unused")
 	private Class<T> clazz;
 	private Role owningRole;
 	private List<SecurityTag> tags;

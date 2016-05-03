@@ -1,12 +1,12 @@
 package jhg.calendar;
 
-import java.text.*;
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 
 /**
  * Utilitity class for calendar date calculations.

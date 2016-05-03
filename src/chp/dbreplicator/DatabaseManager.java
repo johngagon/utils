@@ -1,9 +1,19 @@
 package chp.dbreplicator;
 
 import java.lang.reflect.Field;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class DatabaseManager {
@@ -601,7 +611,7 @@ public class DatabaseManager {
 		try{
 			conn.setAutoCommit(false);
 			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setFetchSize(10000);
+			stmt.setFetchSize(1000);
 			rs = stmt.executeQuery();
 			Log.pl("  Executed query:"+sql);
 		}catch(Exception e){
@@ -651,7 +661,8 @@ public class DatabaseManager {
 				int colType = rsmd.getColumnType(i);
 				int colLen = rsmd.getPrecision(i);
 				int colScal = rsmd.getScale(i);
-				cd = new ColumnDefinition(colName,colType,colLen,colScal);
+				
+				cd = new ColumnDefinition(colName,colType,colLen,colScal,i);
 				defs.add(cd);
 			}
 		}catch(Exception e){
@@ -720,13 +731,15 @@ public class DatabaseManager {
 			final int DATA_TYPE = 5;
 			final int TYPE_NAME = 6;
 			final int NULLABLE = 11;
+			final int ORDINAL = 17;
 			while(columns.next()){
 				String colname = columns.getString(COLUMN_NAME);
 				int coltype = columns.getInt(DATA_TYPE);
 				String coltypeName = columns.getString(TYPE_NAME);
 				int colnullable = columns.getInt(NULLABLE);
 				boolean notNull = (colnullable==DatabaseMetaData.columnNoNulls);
-				ColumnDefinition cd = new ColumnDefinition(colname,coltypeName,coltype,notNull);
+				int ordinal = columns.getInt(ORDINAL);
+				ColumnDefinition cd = new ColumnDefinition(colname,coltypeName,coltype,notNull,ordinal);
 				//Log.pl("Column Definition:"+cd.toString());
 				cds.add(cd);
 			}

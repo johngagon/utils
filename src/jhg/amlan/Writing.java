@@ -1,6 +1,6 @@
 package jhg.amlan;
 
-
+@SuppressWarnings("unused")
 public class Writing {
 
 	public static void main(String[] args){

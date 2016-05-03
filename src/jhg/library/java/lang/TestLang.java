@@ -1,6 +1,6 @@
 package jhg.library.java.lang;
 
-import jhg.util.*;
+import jhg.util.Log;
 
 public class TestLang {
 

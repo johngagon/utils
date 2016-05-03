@@ -1,22 +1,24 @@
 package chp.dbreplicator.pg2sql;
 
-import chp.dbreplicator.ColumnDefinition;
-import chp.dbreplicator.Database;
-import chp.dbreplicator.DatabaseManager;
-import chp.dbreplicator.Log;
-import chp.dbreplicator.ProgressReporter;
-import chp.dbreplicator.SimpleProgressListener;
-import chp.dbreplicator.ProgressReporter.Marker;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import jhg.util.TextFile;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.StringUtil;
+
+import chp.dbreplicator.ColumnDefinition;
+import chp.dbreplicator.Database;
+import chp.dbreplicator.DatabaseManager;
+import chp.dbreplicator.Log;
+import chp.dbreplicator.ProgressReporter;
+import chp.dbreplicator.ProgressReporter.Marker;
+import chp.dbreplicator.SimpleProgressListener;
 
 public class TransferJob {
 	

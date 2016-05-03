@@ -3,7 +3,7 @@ package jhg.puzzles;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
-import jhg.util.*;
+import jhg.util.Log;
 
 /*
  * 4: 24-
@@ -86,7 +86,7 @@ public class Main {
 	private static void testPuzzle3_12(){
 		String letters = "ABC";
 		char[] numbers = {'1','2','3'};
-		Log.println("Result:"+(letters + " easy as "+numbers));//probably prints the array object, not the letters concatenated.
+		//Log.println("Result:"+(letters + " easy as "+numbers));//probably prints the array object, not the letters concatenated.
 		//fix: String.valueOf(numbers)
 	}
 	private static void testPuzzle3_11(){

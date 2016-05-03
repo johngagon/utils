@@ -1,11 +1,16 @@
 package jhg.game.powerball;
 
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-import jhg.util.*;
+import jhg.util.Log;
+import jhg.util.TextFile;
 
 @SuppressWarnings("boxing")
 public class Powerball {

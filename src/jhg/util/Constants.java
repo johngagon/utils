@@ -1,5 +1,6 @@
 package jhg.util;
 
+@SuppressWarnings("boxing")
 public interface Constants {
 
 	/*

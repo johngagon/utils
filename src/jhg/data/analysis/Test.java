@@ -1,6 +1,6 @@
 package jhg.data.analysis;
 
-
+/*
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -12,10 +12,10 @@ import jhg.util.*;
 
 import java.io.*;
 import java.util.*;
-
-@SuppressWarnings("unused")
+*/
+//@SuppressWarnings("unused")
 public class Test {
-
+/*
 	private static String readFile( File file ) throws IOException {
 	    @SuppressWarnings("resource")
 		BufferedReader reader = new BufferedReader( new FileReader (file));
@@ -33,7 +33,7 @@ public class Test {
 	
 
 	public static void execute() {
-		/*
+		*
 		 * Give some csv data, introspect it. 
 		 * 
 		 * 
@@ -65,7 +65,7 @@ public class Test {
 		 * 3. Create sorted lists for indexing on groups.
 		 * 4. Create a unique sorted set for the key if possible.
 		 * 
-		 */
+		 *
 		String[] files = {"AllstarFull",        "Appearances",  "AwardsManagers",  "AwardsPlayers",  "AwardsShareManagers",
 				          "AwardsSharePlayers", "Batting",      "BattingPost",     "CollegePlaying", "Fielding",
 				          "FieldingOF",         "FieldingPost", "HallOfFame",      "Managers",       "ManagersHalf",
@@ -118,9 +118,9 @@ public class Test {
 	public static void main(String[] args){
 		execute();
 	}
-	/*
-	 * everything should have basic logging and profiling and debugging enabled and progress reporting. 
-	 * utilize basics.
-	 */
-	
+
+	 //* everything should have basic logging and profiling and debugging enabled and progress reporting. 
+	 //* utilize basics.
+	 
+	*/
 }

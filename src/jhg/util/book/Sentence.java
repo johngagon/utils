@@ -1,10 +1,13 @@
 package jhg.util.book;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import jhg.util.Dictionary;
 import jhg.util.Log;
 import jhg.util.QuoteExtractor;
-import jhg.util.Dictionary;
 
 public class Sentence {
 

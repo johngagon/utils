@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("boxing")
 public class DataStructureUtil {
+	
 	public static Integer[] autoBoxIntArray(int[] array){
 		Integer[] result = new Integer[array.length];
 		for (int i = 0; i < array.length; i++)

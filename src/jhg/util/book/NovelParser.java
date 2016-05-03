@@ -1,12 +1,15 @@
 package jhg.util.book;
 
 
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import jhg.util.Dictionary;
 import jhg.util.Log;
 import jhg.util.TextFile;
-
-import java.text.BreakIterator;
-import java.util.*;
 
 @SuppressWarnings("unused")
 public class NovelParser {

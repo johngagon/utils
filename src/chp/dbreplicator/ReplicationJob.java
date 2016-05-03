@@ -1,9 +1,12 @@
 package chp.dbreplicator;
 
 
-import java.sql.*;
-import java.util.*;
-
+import java.sql.ResultSet;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import chp.dbreplicator.ProgressReporter.Marker;
 

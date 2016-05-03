@@ -1,12 +1,16 @@
 package jhg.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Dictionary {
 
 	private Set<String> words;
+	@SuppressWarnings("unused")
 	private String filename;
 	public Dictionary() {
 		this.words = new TreeSet<String>();

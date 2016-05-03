@@ -1,8 +1,9 @@
 package jhg.diviner;
 
+import java.util.Set;
+
 import jhg.util.Log;
 import jhg.util.TextFile;
-import java.util.*;
 
 public class WordExtractor {
 

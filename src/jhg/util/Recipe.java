@@ -3,9 +3,6 @@
  */
 package jhg.util;
 
-import java.util.Hashtable;
-import java.util.TreeSet;
-
 import jhg.util.Value.ValidationException;
 
 /**

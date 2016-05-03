@@ -1,7 +1,9 @@
 package jhg.data.analysis;
 
-import java.util.*;
-import jhg.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jhg.util.Log;
 
 public class Analysis {
 
@@ -57,7 +59,7 @@ public class Analysis {
 	}
 	
 	public static void main(String[] args){
-		Test.execute();
+		//Test.execute();
 	}
 
 	public void addColumn(Column c) {

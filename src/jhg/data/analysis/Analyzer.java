@@ -1,11 +1,16 @@
 package jhg.data.analysis;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import jhg.util.Log;
 import jhg.data.analysis.Column.Group;
+import jhg.util.Log;
 
+@SuppressWarnings("boxing")
 public class Analyzer {
 
 	public static final String[] TRUE_VALUES = {"true","TRUE","T","1"};
@@ -300,6 +305,7 @@ When a count is > 9999, then use K and M abbreviations.
 		
 	}
 	
+	
 	private void analyzeColumnExtremes(int index) {	
 		Column col = analysis.getColumn(index);
 		Type t = col.getType();
@@ -394,7 +400,7 @@ When a count is > 9999, then use K and M abbreviations.
 	}
 	
 	public static void main(String[] args){
-		Test.execute();
+		//Test.execute();
 	}
 	
 	

@@ -7,8 +7,8 @@ public enum Database {
 	LFB(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:file:/hsqldat/company",													"foundation",	"f0vnd4t10n"),
 	LMC(Rdbms.HSQLDB,		"org.hsqldb.jdbc.JDBCDriver",					"jdbc:hsqldb:mem:employer_search",											"foundation",	"f0vnd4t10n"),
 	
-	DW(  Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://sqlprod01.corp.chpinfo.com:1433;databaseName=IDSProd",	"app_etl",		"fact-H3d4x"),
-	DWP( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=IDSPreProd",	"app_etl",		"fact-H3d4x"),
+	DW(  Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://sqlprod01.corp.chpinfo.com:1433;databaseName=IDSProd",	"app_transfer",		"4pp_+ransf3r"),
+	DWP( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=IDSPreProd",	"app_transfer",		"4pp_+ransf3r"),
 	
 	DWF( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=Foundation_App_Logic;integratedSecurity=true",	"jgagon",		                                                            JG.WPASS()),
 
@@ -26,10 +26,10 @@ public enum Database {
 	/*
 	 * General purpose
 	 */
-	DMFRW( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
-	DMFUAT( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
-	DMFPRP( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
-	DMFPRD( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprod04.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
+	DMFDEV( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"foundation_data_management","naive-qS_uA"),
+	DMFUAT( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"whs_viewer","whs_viewer"),
+	DMFPRP( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"whs_viewer","whs_viewer"),
+	DMFPRD( Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprod04.corp.chpinfo.com:5444/foundation_data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",	"whs_viewer","whs_viewer"),
 	
 	NULL( Rdbms.POSTGRESQL, "",	"",	"", ""),
 	

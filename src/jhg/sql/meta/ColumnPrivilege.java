@@ -14,6 +14,7 @@ public class ColumnPrivilege {
 		IS_GRANTABLE;
 		
 	}
+	@SuppressWarnings("unused")
 	private String tableCatalog,tableSchema,tableName,columnName,grantor,grantee,privilege,isGrantable;
 	
 /*

@@ -1,7 +1,6 @@
 package cache;
 
 //import java.net.InetAddress.Cache;
-import java.text.MessageFormat;
 
 /**
  * Serves as a groovy cache for zip byte[] objects

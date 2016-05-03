@@ -2,7 +2,7 @@ package chp.dbutil;
 
 import static java.lang.System.out;
 
-import java.util.*;
+import java.util.Collection;
 
 public class Log {
 
@@ -22,7 +22,7 @@ public class Log {
 	public static void print(String s){
 		out.print(s);
 	}
-	public static void print(Collection list){
+	public static void print(@SuppressWarnings("rawtypes") Collection list){
 		for(Object o:list){
 			out.println(o);
 		}

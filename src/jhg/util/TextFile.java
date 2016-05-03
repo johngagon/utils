@@ -3,9 +3,16 @@ package jhg.util;
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -95,7 +102,7 @@ public class TextFile {
 	}
 	
 	private static Map<String, String> parseMapping(String[] lines) {
-		Map<String,String> rv = new Hashtable<String,String>();
+		Map<String,String> rv = new LinkedHashMap<String,String>();
 		for(String line:lines){
 			
 			if(!line.startsWith("#") && line.contains(":")){

@@ -1,6 +1,6 @@
 package jhg.util.types;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
 public class Text {
 

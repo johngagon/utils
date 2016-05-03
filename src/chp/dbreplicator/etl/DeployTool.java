@@ -8,61 +8,137 @@ import java.util.Arrays;
 import java.util.List;
 //import java.util.Map;
 
-//import jhg.util.TextFile;
-
-import org.postgresql.copy.CopyIn;
-import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 
 import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
+//import jhg.util.TextFile;
+import org.postgresql.copy.CopyIn;
+import org.postgresql.copy.CopyManager;
 
 public class DeployTool {
 	
 	/*
-	 *   EDB                        dbdev03:5444->dbtest01:5444	dbtest01:5444->dbprp01:5444		dbtest01:5444->dbprod04:5444        
-	 *   EmployerSearch (ES)		esUAT						esPRP							esPRD
-	 *   MarketReports (MR)			mrUAT						mrPRP							mrPRD
-	 *      
-	 *   
-	 *   Network Compare (NC)
-	 *   
-	 *   PPS
-	 *   SADB
-	 *   I2I
-	 *   RFI
-	 *   RAS? 
-	 *   
-	 *   9.3						5432-->
-	 *   
-	 *   Benchmarking (SDB)
-	 *   
-	 *   BDTC (BDTC)
-	 *   
-	 *   TRAC (Qlik?)
-	 *   
-	 * 
-	 * 
+	 * D : tab delimiter
+	 * noq: non quoted for some data types in some database vendors do not use quotes in some cases while others do.
+	 * Q : switches between dq or noq
 	 * 
 	 */
+	private static final String D = "\t";
 
-	public static void main(String[] args){
-		//esUAT();
-		
-	}
-
+	private static final String noq = "";
 	
-	public static void bscUAT(){
-		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"blue_solutions");
+	@SuppressWarnings("unused")
+	private static final String dq = "\"";
+	
+	private static String Q = noq;
+	
+	/*
+	 * 	 For data refresh only.
+	 *   For schema development updates, we have to manually apply schema changes if any.
+	 *   For all uses, please BACKUP first!!!
+	 * 
+	 *   EDB                        dbdev03:5444->dbtest01:5444	dbtest01:5444->dbprp01:5444		dbtest01:5444->dbprod04:5444
+	 *   --------------------------------------------------------------------------------------------------------------------        
+	 *   EmployerSearch (ES)		esUAT						esPRP							esPRD
+	 *   MarketReports (MR)			mrUAT(2XXXuY)				mrPRP(2XXXuY					mrPRD(2XXXuY)
+	 *   Network Compare (NC)		ncUAT						ncPRP							ncPRD
+	 *   
+	 *   ====================================================================================================================
+	 *   
+	 *   9.3						5432-->
+	 *   --------------------------------------------------------------------------------------------------------------------
+	 *   Benchmarking (SDB)			bmUAT(consultant)			bmPRP(consultant)				bmPRD(consultant)
+	 *   Blue Solutions (BSC)		bscUAT						bscPRP							bscPRD
+	 * 
+	 *   
+	 * 	main() 						: calls an etl
+	 *  testSourceAndTarget			: calls test(source,target).
+	 *  test(source,target)			: tests the source and target
+	 *  testLegacy()				: tests all the connections for postgres known. Inherited 9.3 new and the enterprisedb old. (foundation not included)
+	 *  
+	 *  deploy						: (called by each of the above)
+	 *  performCopy					: called by deploy
+	 *  cleanTable					: called by deploy
+	 *  copyPostgres				: called by performCopy
+	 *  getMagnitude				: determines the modulus factor (multiple of 10) for progress reporting, called by performCopy
+	 *  
+	 *  insertPostgres				: not used anywhere, plan on moving to DatabaseManager (with intelligent logic to check database is postgres)
+	 *  handle						: not used anywhere, very generic way of converting ResultSet ot Object[]s
+	 */
+	public static void main(String[] args){
+		//esUAT2PRD();
+		ncRestore();
 	}
-	public static void bscPRP(){
-		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"blue_solutions");
+	public static void testSourceAndTarget(){
+		//test(Database.DMCUST, Database.DMFRW);
+	}
+	
+	/*
+	 * Employer Search
+	 */
+	public static void esUAT2PRD(){
+		deploy(true, Database.DMFUAT, Database.DMFPRD,"employer");
+	}
+	
+	public static void esUAT(){
+		deploy(true, Database.DMFDEV, Database.DMFUAT,"employer");
+	}
+
+	public static void esPRP(){
+		deploy(true, Database.DMFDEV, Database.DMFPRP,"employer");
+	}
+	
+	public static void esPRD(){
+		deploy(true, Database.DMFDEV, Database.DMFPRD,"employer");
 	}	
-	public static void bscPRD(){
-		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"blue_solutions");
+	
+	
+	/*
+	 * Market Reports
+	 * 		Need the specific dataset for this one
+	 * 		Need to create new table manually.
+	 * 		Need to update valuequest partition manually.
+	 */
+	public static void mrUAT(String dataset){
+		deploy(true, Database.DMFDEV, Database.DMFUAT,"valuequest_"+dataset);
+	}
+
+	public static void mrPRP(String dataset){
+		deploy(true, Database.DMFDEV, Database.DMFPRP,"valuequest_"+dataset);
+	}
+	
+	public static void mrPRD(String dataset){
+		deploy(true, Database.DMFDEV, Database.DMFPRD,"valuequest_"+dataset);
+	}		
+
+	/*
+	 * Network Compare
+	 */
+	
+	//Custom: restore DM_DEV to foundation_data_mart
+	public static void ncRestore(){
+		deploy(true, Database.DM, Database.DMFDEV,"whs_viewer");
+	}
+	
+	public static void ncUAT(){
+		deploy(true, Database.DMFDEV, Database.DMFUAT,"whs_viewer");
+	}
+
+	public static void ncPRP(){
+		deploy(true, Database.DMFDEV, Database.DMFPRP,"whs_viewer");
+	}
+	
+	public static void ncPRD(){
+		deploy(true, Database.DMFDEV, Database.DMFPRD,"whs_viewer");
 	}			
+	
+	
+	/*
+	 * Benchmarking 		
+	 */
 	
 	public static void bmUAT(){
 		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking");
@@ -74,48 +150,35 @@ public class DeployTool {
 		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking");
 	}		
 	
-	
-	public static void esUAT(){
-		deploy(true, Database.DMFRW, Database.DMFUAT,"employer");
+	public static void bmUAT(String consultant){//hewitt,mercer,towers
+		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking_"+consultant);
 	}
-
-	public static void esPRP(){
-		deploy(true, Database.DMFRW, Database.DMFPRP,"employer");
-	}
-	
-	public static void esPRD(){
-		deploy(true, Database.DMFRW, Database.DMFPRD,"employer");
+	public static void bmPRP(String consultant){
+		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"benchmarking_"+consultant);
 	}	
+	public static void bmPRD(String consultant){
+		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking"+consultant);
+	}			
 	
 	/*
-	 * need the specific dataset for this one.
+	 * Blue Solutions Catalog
 	 */
-	public static void mrUAT(String dataset){
-		//deploy(true, Database.DMFRW, Database.DMFUAT,"valuequest");
+	public static void bscUAT(){
+		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"blue_solutions");
 	}
+	
+	public static void bscPRP(){
+		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"blue_solutions");
+	}	
+	
+	public static void bscPRD(){
+		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"blue_solutions");
+	}	
 
-	public static void mrPRP(String dataset){
-		//deploy(true, Database.DMFRW, Database.DMFPRP,"valuequest");
-	}
-	
-	public static void mrPRD(String dataset){
-		//deploy(true, Database.DMFRW, Database.DMFPRD,"valuequest");
-	}		
-
-	public static void ncUAT(){
-		deploy(true, Database.DMFRW, Database.DMFUAT,"whs_viewer");
-	}
-
-	public static void ncPRP(){
-		deploy(true, Database.DMFRW, Database.DMFPRP,"whs_viewer");
-	}
-	
-	public static void ncPRD(){
-		deploy(true, Database.DMFRW, Database.DMFPRD,"whs_viewer");
-	}		
 	
 	
-	//@SuppressWarnings("boxing")
+	
+	@SuppressWarnings("unused")
 	private static void test(Database source, Database target){
 		Log.pl("Testing connections of "+source.name()+" and "+target.name()+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path")+" \n\n");
@@ -150,8 +213,9 @@ public class DeployTool {
 		for(String table:tables){
 			String sourceRelation = schema+"."+table;
 			String destTable = schema+"."+table;
-			
-			performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+			if(!"request_log".equals(table)){
+				performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+			}
 		}
 		
 		sourceDatabase.close();
@@ -162,12 +226,17 @@ public class DeployTool {
 	
 
 
-	private static final String D = "\t";
-	//private static final String dq = "\"";
-	private static final String noq = "";
-	private static String Q = noq;
+
 	
-	
+	/**
+	 * Built for a postgres to postgres copy.
+	 * 
+	 * @param cleanTarget  true if you want to delete data.
+	 * @param sourceDatabase
+	 * @param targetDatabase
+	 * @param sourceRelation
+	 * @param destTable
+	 */
 	@SuppressWarnings("boxing")
 	private static void performCopy(boolean cleanTarget,
 			DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
@@ -244,17 +313,8 @@ public class DeployTool {
 		}//trycatch
 	}	
 	
-
-	
 	
 
-	
-	public static void testSourceAndTarget(){
-		test(Database.DMCUST, Database.DMFRW);
-	}
-	
-	
-	
 	
 	
 	private static void cleanTable(DatabaseManager targetDatabase,	String destTable) {
@@ -273,18 +333,8 @@ public class DeployTool {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
 	//TODO move this to database manager
-    public static Object[] handle(ResultSet rs) throws SQLException {
+    static Object[] handle(ResultSet rs) throws SQLException {
         if (!rs.next()) {
             return null;
         }
@@ -299,17 +349,17 @@ public class DeployTool {
 
         return result;
     }	
-	
+    
 	private static int getMagnitude(int countResult) {
 		int rv = 10;
 		if(countResult>100){
 			rv = (int)countResult/10;
 		}
 		return rv;
-	}
-
+	}    
+	
 	//TODO move this to DatabaseManager
-	public static boolean insertPostgres(DatabaseManager targetDatabase, String insertQuery, List<ColumnDefinition> cds, Object[] row) throws SQLException {
+	static boolean insertPostgres(DatabaseManager targetDatabase, String insertQuery, List<ColumnDefinition> cds, Object[] row) throws SQLException {
 		
 		List<Object> objArr = Arrays.asList(row);
 		
@@ -324,19 +374,11 @@ public class DeployTool {
 			Log.pl("Inserted row.");
 		}
 		return success;
-	}	
-	
-
-
-
-
+	}	    
+    
 
 	
-	
-	
-	
-	
-	public static void testPostgresDataMart(){
+	static void testLegacy(){
 		DatabaseManager test1 = new DatabaseManager(Database.DM);
 		DatabaseManager test2 = new DatabaseManager(Database.DMDEVNEW);
 		DatabaseManager test3 = new DatabaseManager(Database.DMTESTOLD);
@@ -377,47 +419,9 @@ public class DeployTool {
 		Log.pl("Connecting 8");
 		test8.connect();
 		Log.pl("8 Connected "+test8.test()+"\n\n");		//FAIL: FATAL: password authentication failed for user "whs_viewer"
-
-		
-/*
-	DM(       Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV",				"whs_viewer",	"whs_viewer"),
-	DMDEVNEW( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
-	DMTESTOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5444/DM_TEST",				"whs_viewer",	"whs_viewer"),
-	DMTESTNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
-	DMPPRDOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD",				"whs_viewer",	"whs_viewer"),
-	DMPPRDNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
-	DMPRODOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD",				"whs_viewer",	"whs_viewer"),
-	DMPRODNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5432/data_mart",				"whs_viewer",	"whs_viewer"),
-	
- */
-	}
-	public static void testPostgresFoundation(){
-		
-	}
-	public static void testSQLIDSProd(){
-		
-	}
-	
-	
-	
-	
-	
-
-	
-	public static void etlBenchmarkingNew(){
-		//Pre-requisite: Benchmarking set up on foundation_data_mart
-	}
-	
-	public static void etlEmployerSearchNew(){
-		//Pre-requisite: Employer Search set up on foundation_data_mart
 	}
 	
 
-	
-	public static void etlSupplementaryNew(){
-		//Pre-requisite: Employer Search set up on foundation_data_mart
-	}	
-	
 	
 	@SuppressWarnings("unused")
 	private static void compareSchemas(Database source, Database target, String schema){
@@ -464,6 +468,9 @@ public class DeployTool {
 		//}		
 	}	
 }
+
+
+
 /*
 
 public static void etlCustom(boolean cleanTarget){
@@ -524,4 +531,12 @@ private static void etl(boolean cleanTarget,Database source, Database target, St
 	}
 	
 		
+*/
+/*
+public static void testPostgresFoundation(){
+	
+}
+public static void testSQLIDSProd(){
+	
+}
 */

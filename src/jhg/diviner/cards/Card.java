@@ -1,9 +1,12 @@
 package jhg.diviner.cards;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import jhg.util.Log;
 
+@SuppressWarnings("boxing")
 public class Card {
 	
 	/*

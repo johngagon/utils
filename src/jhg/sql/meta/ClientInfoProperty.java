@@ -9,7 +9,9 @@ public class ClientInfoProperty {
 		DEFAULT_VALUE,
 		DESCRIPTION;
 	}	
+	@SuppressWarnings("unused")
 	private String name,defaultValue,description;
+	@SuppressWarnings("unused")
 	private int maxLength;
 	
 /*

@@ -1,15 +1,23 @@
 package cache;
 
-import java.sql.*;
-import java.text.MessageFormat;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.io.*;
-
 
 import jhg.util.Log;
 
+@SuppressWarnings("boxing")
 public class CachedDataStore {
 	public static final long MB = 1024*1024;
 	

@@ -1,6 +1,5 @@
 package jhg.groovy.benchmark
 
-
 import java.text.*;
 
 class MercerReportService {

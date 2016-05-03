@@ -1,7 +1,6 @@
 package jhg.util;
 
-import java.util.*;
-import jhg.util.Log;
+import java.util.Map;
 public class MapUtil {
 
 	

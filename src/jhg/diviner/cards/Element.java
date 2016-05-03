@@ -1,6 +1,5 @@
 package jhg.diviner.cards;
 
-import jhg.util.Log;
 
 public enum Element {
 	AIR("\u2660"),

@@ -1,16 +1,17 @@
 package jhg.gedcom.tools.crawler;
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import jhg.util.Log;
 import jhg.util.TextFile;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 @SuppressWarnings("unused")
 public class GedcomReader {

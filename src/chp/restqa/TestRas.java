@@ -1,28 +1,22 @@
 package chp.restqa;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URLConnection;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-//import org.apache.http.HttpResponse;
-
-
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -30,6 +24,7 @@ import org.xml.sax.SAXException;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
+//import org.apache.http.HttpResponse;
 
 
 
@@ -115,7 +110,7 @@ public class TestRas {
 			
 			//when
 			try {
-				
+				/*
 				HttpResponse res = HttpClientBuilder.create().build().execute(req);
 				
 				int actualCode = res.getStatusLine().getStatusCode();
@@ -133,12 +128,11 @@ public class TestRas {
 				}else{
 					Log.pl("!!!   url:"+url+"  code:"+actualCode+ "  not ok.");
 				}
-				
+				*/
+				throw new ClientProtocolException("No longer implemented due to compilation dependency issue.");
 				
 			} catch (ClientProtocolException e1) {
 				handle(e1);
-			} catch (IOException e2) {
-				handle(e2);
 			}
 
 			//then

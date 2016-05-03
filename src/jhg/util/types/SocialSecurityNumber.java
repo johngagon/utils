@@ -1,7 +1,9 @@
 package jhg.util.types;
 
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+@SuppressWarnings("boxing")
 public class SocialSecurityNumber {
 	private static final String regex = "^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
 	private static final Pattern pattern = Pattern.compile(regex);

@@ -1,5 +1,6 @@
 package jhg.util.book;
 
+@SuppressWarnings("unused")
 public class Translator {
 
 	private static final String[] removeList = {

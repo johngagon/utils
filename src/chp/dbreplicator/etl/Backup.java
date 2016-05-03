@@ -23,7 +23,7 @@ public class Backup {
 	private static final String EXIT_FAIL_MSG = "Exiting without finishing.";
 	
 	public static void main(String[] args){
-		backup(Database.DMDEVNEW,"benchmarking");
+		backup(Database.DMDEVNEW,"blue_solutions");
 		//test(Database.DMDEVNEW,"benchmarking_backup");
 	}
 	

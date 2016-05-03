@@ -3,7 +3,7 @@ package jhg.game;
 
 
 
-
+@SuppressWarnings("unused")
 public class MinionType {
 
 	

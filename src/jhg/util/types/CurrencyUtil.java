@@ -1,6 +1,7 @@
 package jhg.util.types;
 
-import java.util.*;
+import java.util.Currency;
+import java.util.Set;
 
 public class CurrencyUtil {
 

@@ -2,8 +2,6 @@ package jhg.sql.meta;
 
 import java.sql.DatabaseMetaData;
 
-import jhg.sql.meta.Attribute.Nullable;
-
 /*
  * FIXME add constructor with ResultSet, make getters and toString() and test out.
  */

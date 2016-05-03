@@ -1,7 +1,11 @@
 package jhg.util;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class QuoteExtractor {
@@ -89,6 +93,7 @@ public class QuoteExtractor {
 		return output;
 	}
 	
+	@SuppressWarnings("unused")
 	private static void test1(){
 		String testString = "The quick brown fox jumps over the lazy dog but \"Now is the time.\" for all good men to \"come to their party\". If you know what I mean.";
 		
@@ -108,6 +113,7 @@ public class QuoteExtractor {
 	
 	public static void main(String[] args){
 	
+		@SuppressWarnings("unused")
 		String testString = "The quick brown fox jumps over the lazy dog but \"Now is the time.\" for all good men to \"come to their party\". If you know what I mean.";
 		
 		String testString2 = "\"The quick brown fox jumps over the lazy dog.\" he said \"Now is the time. for all good men to come to their party. If you know what I mean.\"";

@@ -81,6 +81,7 @@ public class ProgressReporter {
 		Log.println("Finished");	
 	}
 	
+	@SuppressWarnings("unused")
 	private static void testReportProgress(){
 		ProgressReporter pr = new ProgressReporter(3423,Marker.TICKS);
 		Log.println("Starting");
@@ -113,6 +114,7 @@ public class ProgressReporter {
 	
 	
 	
+	@SuppressWarnings("unused")
 	private static void statictest(){
 		int workCount = 3423;
 		int milestone = 5;

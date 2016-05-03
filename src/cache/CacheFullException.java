@@ -2,6 +2,9 @@ package cache;
 
 public class CacheFullException extends Exception {
 
+
+	private static final long serialVersionUID = 1L;
+
 	public CacheFullException() {
 		super();
 	}

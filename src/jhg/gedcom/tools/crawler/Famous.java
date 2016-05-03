@@ -1,7 +1,7 @@
 package jhg.gedcom.tools.crawler;
 
-import java.util.*;
-import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Famous {
 

@@ -1,6 +1,8 @@
 package jhg.util.types.locale;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Earth {
 

@@ -2,7 +2,8 @@ package jhg.util;
 
 import static java.lang.System.out;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
 public class Log {
 

@@ -1,6 +1,8 @@
 package jhg.util;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +13,7 @@ import java.util.regex.Pattern;
  * 		b. B isn't using all the vocabulary found in A.  (A is basic english list, B is instructional text), the reverse says words that are too complex.
  * 
  */
-
+@SuppressWarnings("unused")
 public class TextAnalyzer {
 	private static Pattern numberPattern;
 	

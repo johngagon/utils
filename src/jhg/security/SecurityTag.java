@@ -1,6 +1,7 @@
 package jhg.security;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Security tag goes on any object.

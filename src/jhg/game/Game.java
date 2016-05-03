@@ -1,11 +1,13 @@
 package jhg.game;
 
+@SuppressWarnings("unused")
 public class Game {
 
 	
 	public Game(){
 		
 	}
+	
 	
 	public void init(){
 		

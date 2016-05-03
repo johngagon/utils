@@ -1,6 +1,6 @@
 package chp.dbreplicator;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * The custom types in a database.
@@ -8,6 +8,7 @@ import java.util.*;
  * @author jgagon
  *
  */
+@SuppressWarnings("unused")
 public class Type {
 
 	private String name;

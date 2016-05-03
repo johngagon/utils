@@ -2,6 +2,7 @@ package jhg.diviner;
 
 import java.util.Random;
 
+@SuppressWarnings({"boxing","unused"})
 public class Diviner {
 
 	//exempt words: If, When, about, according, be, about, as, then, therefore, (most adverbs that are not ly and conj),

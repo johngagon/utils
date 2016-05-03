@@ -3,14 +3,11 @@ package calendar;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 
+@SuppressWarnings("unused")
 public class Phours {
 	//http://www.shodor.org/stella2java/rgbint.html
 	private static int MARS = 16711680;    //red

@@ -26,7 +26,7 @@ public class DatabaseManager {
 	private Connection conn;
 	
 	public static void main(String[] args){
-		Database test = Database.DMFRW;
+		Database test = Database.DMFDEV;
 		DatabaseManager dm = new DatabaseManager(test);
 		dm.connect();
 		String testSchema = "employer";

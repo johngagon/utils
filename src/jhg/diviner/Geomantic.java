@@ -2,7 +2,8 @@ package jhg.diviner;
 
 import java.util.Random;
 
-@SuppressWarnings("unused")
+
+@SuppressWarnings({"unused","boxing"})
 public class Geomantic {
 
 	public static enum Shape{

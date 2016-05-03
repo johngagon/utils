@@ -5,6 +5,7 @@ public class Weight {
 		POUNDS(1.0),
 		KILOGRAMS(2.2046);
 		private Double conversionToPounds;
+		@SuppressWarnings("boxing")
 		private Unit(double _c){
 			this.conversionToPounds = _c;
 		}

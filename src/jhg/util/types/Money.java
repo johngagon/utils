@@ -1,14 +1,16 @@
 package jhg.util.types;
 
 
-import java.util.*;
-import java.io.Serializable;
+import static java.math.BigDecimal.ZERO;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import static java.math.BigDecimal.ZERO;
 import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.Currency;
 
 
 

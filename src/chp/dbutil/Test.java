@@ -1,7 +1,7 @@
 package chp.dbutil;
 
-import java.sql.*;
-import java.io.*;
+import java.io.FileWriter;
+import java.sql.ResultSet;
 
 import chp.dbutil.ProgressReporter.Marker;
 

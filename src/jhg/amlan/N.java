@@ -64,7 +64,7 @@ public class N {
 	 * Abstraction
 	 * 		xenophobia
 	 */
-	
+	@SuppressWarnings("unused")
 	private N parent;
 	
 	private String name;

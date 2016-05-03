@@ -1,5 +1,6 @@
 package jhg.util.types;
 
+@SuppressWarnings("boxing")
 public class PhoneNumber{
 
 	private String value;

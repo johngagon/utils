@@ -1,1 +1,5 @@
-app_etl.blue_solutions_data:blue_solutions.data
+blue_solutions.programs:blue_solutions.programs
+blue_solutions.data:blue_solutions.data
+blue_solutions.program_carriers:blue_solutions.program_carriers
+blue_solutions.program_keys_to_success:blue_solutions.program_keys_to_success
+blue_solutions.trend_factors:blue_solutions.trend_factors

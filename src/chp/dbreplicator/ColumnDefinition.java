@@ -1,43 +1,49 @@
 package chp.dbreplicator;
 
-import java.sql.*;
+import java.sql.Types;
 
 public class ColumnDefinition {
 
+
+	
 	private String colName;
 	private String colTypeName="";
 	private int colType;
 	private int colLen;
 	private int colScale;
 	private boolean nullable;
-
-	public ColumnDefinition(String _colName, String _colTypeName, int _colType) {
+	private int ordinal;
+	public ColumnDefinition(String _colName, String _colTypeName, int _colType, int _o) {
 		this.colName = _colName;
 		this.colTypeName = _colTypeName;
 		this.colType = _colType;
 		this.nullable = true;
+		this.ordinal = _o;
 	}	
 	
-	public ColumnDefinition(String _colName, int _colType, int _colLen, int _colScale) {
+	public ColumnDefinition(String _colName, int _colType, int _colLen, int _colScale, int _o) {
 		this.colName = _colName;
 		this.colType = _colType;
 		this.colLen = _colLen;
 		this.colScale = _colScale;
 		this.nullable = true;
+		this.ordinal = _o;
 	}
-	public ColumnDefinition(String _colName, String _colTypeName, int _colType, boolean notNull) {
+	public ColumnDefinition(String _colName, String _colTypeName, int _colType, boolean notNull, int _o) {
 		this.colName = _colName;
 		this.colTypeName = _colTypeName;
 		this.colType = _colType;
 		this.nullable = !notNull;
+		this.ordinal = _o;
 	}	
 	
-	public ColumnDefinition(String _colName, int _colType, int _colLen, int _colScale, boolean notNull) {
+	public ColumnDefinition(String _colName, int _colType, int _colLen, int _colScale, boolean notNull, int _o) {
 		this.colName = _colName;
 		this.colType = _colType;
 		this.colLen = _colLen;
 		this.colScale = _colScale;
 		this.nullable = !notNull;
+		this.ordinal = _o;
 	}
 	
 	public boolean hasLength(){
@@ -49,7 +55,10 @@ public class ColumnDefinition {
 		return colName;
 	}
 
-	
+	@SuppressWarnings("boxing")
+	public Integer getOrdinal(){
+		return ordinal;
+	}
 	
 	public String getColTypeName() {
 		return colTypeName;

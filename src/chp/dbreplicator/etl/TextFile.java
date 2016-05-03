@@ -3,9 +3,16 @@ package chp.dbreplicator.etl;
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import chp.dbreplicator.Log;
 

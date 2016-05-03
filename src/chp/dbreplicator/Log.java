@@ -3,7 +3,10 @@ package chp.dbreplicator;
 import static java.lang.System.out;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 public class Log {
 	public static boolean STACKS = false;

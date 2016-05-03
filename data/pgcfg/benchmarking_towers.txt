@@ -1,3 +1,3 @@
-app_etl.benchmarking_data_towers_blue:benchmarking.data_towers_blue
-app_etl.benchmarking_data_towers_competitor:benchmarking.data_towers_competitor
-app_etl.benchmarking_networks:benchmarking.networks
+benchmarking.data_towers_blue:benchmarking.data_towers_blue
+benchmarking.data_towers_competitor:benchmarking.data_towers_competitor
+benchmarking.networks:benchmarking.networks

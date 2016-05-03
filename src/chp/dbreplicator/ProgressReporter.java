@@ -1,6 +1,7 @@
 package chp.dbreplicator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import jhg.util.Log;
 
@@ -157,6 +158,7 @@ public class ProgressReporter {
 	
 	
 	
+	@SuppressWarnings("unused")
 	private static void statictest(){
 		int workCount = 3423;
 		int milestone = 5;

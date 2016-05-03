@@ -1,6 +1,7 @@
 package jhg.util.book;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import chp.dbutil.Log;
 

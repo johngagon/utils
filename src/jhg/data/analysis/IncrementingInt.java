@@ -6,6 +6,7 @@ package jhg.data.analysis;
  * @author jgagon
  *
  */
+@SuppressWarnings("boxing")
 public class IncrementingInt implements Comparable<IncrementingInt>{
 	private Integer value = 0;
 	public IncrementingInt(){

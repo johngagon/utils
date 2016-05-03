@@ -1,6 +1,9 @@
 package jhg.security.test;
 
-import jhg.security.*;
+import jhg.security.Action;
+import jhg.security.Role;
+import jhg.security.Secured;
+import jhg.security.SecurityTag;
 
 /**
  * Mutable string class.

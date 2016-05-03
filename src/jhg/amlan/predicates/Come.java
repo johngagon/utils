@@ -1,5 +1,6 @@
 package jhg.amlan.predicates;
 
+@SuppressWarnings("unused")
 public class Come extends Common {
 
 	public Come(){
@@ -8,6 +9,7 @@ public class Come extends Common {
 	public Come(Argument subject){
 		super(subject);
 	}
+	
 	private Argument destination;
 	private Argument origin;
 	private Argument route;

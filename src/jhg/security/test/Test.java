@@ -1,6 +1,7 @@
 package jhg.security.test;
 
-import jhg.security.*;
+import jhg.security.Action;
+import jhg.security.SecurityTag;
 
 @SuppressWarnings("unused")
 public class Test {

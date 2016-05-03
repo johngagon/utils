@@ -1,7 +1,7 @@
 package chp.dbreplicator;
 
-import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import chp.dbreplicator.ProgressReporter.Marker;
 
@@ -24,7 +24,7 @@ public class ReplicationTest {
 	
 	private static void replicateDwToLocal(){
 		Log.pl("\nReplicating Datawarehouse");
-		DatabaseManager dataWarehouseDb = new DatabaseManager(Database.DW);
+		DatabaseManager dataWarehouseDb = new DatabaseManager(Database.DWP);
 		DatabaseManager localDatabase = new DatabaseManager(Database.LFB);	
 		String[] tableList = {"companies_benefit_decision_makers",
 				"companies_blue_competitors",

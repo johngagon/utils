@@ -1,9 +1,10 @@
 package jhg.util.book;
 
 import java.text.BreakIterator;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-import jhg.util.Log;
 import jhg.util.book.Sentence.Type;
 
 public class Paragraph {

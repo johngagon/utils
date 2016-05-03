@@ -1,11 +1,14 @@
 package cache;
 
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import jhg.util.Log;
 
-
+@SuppressWarnings("boxing")
 public class CacheTest {
 
 	/*
@@ -30,6 +33,7 @@ public class CacheTest {
 		,"valuequest_cpt_modifier"
 		,"valuequest_cpt"};
 	
+	@SuppressWarnings("unused")
 	private static String[] carrierDividedTableList = {
 		"valuequest_market_zip_code"
 		,"valuequest_market_cost_model_glance"
@@ -44,6 +48,7 @@ public class CacheTest {
 		,"valuequest_market_cpt_modifier"};
 	
 	 
+	@SuppressWarnings("unused")
 	private static String[] carriers = {};
 	
 	private static Map<String,String[]> indexes = new Hashtable<String,String[]>();
@@ -135,6 +140,7 @@ public class CacheTest {
 				db.query("select count(*) from "+table.getName()+" where cq_year = '"+year+"' and upload = '"+upload+"' ");
 				
 				if(db.haveResult()){
+					@SuppressWarnings("unused")
 					ResultSet rs = db.getResult();
 					cds.setTableCount(table,db.getResult());
 					db.closeRs();
@@ -178,6 +184,7 @@ public class CacheTest {
 		
 	}
 
+	@SuppressWarnings("unused")
 	private static void debug(CachedDataStore cds) {
 		for(Table table:cds.getTables()){
 			List<List<Object>> data = cds.getData(table);

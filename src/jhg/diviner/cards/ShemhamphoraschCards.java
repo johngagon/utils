@@ -1,7 +1,6 @@
 package jhg.diviner.cards;
 
 import jhg.util.Log;
-import jhg.util.TextFile;
 
 public class ShemhamphoraschCards {
 
