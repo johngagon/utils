@@ -30,6 +30,83 @@ public class TableAnalyzer {
 	private Analysis analysis;
 	private List<String> errors;
 	
+	public static void main(String[] args){
+		Database foundationDataMartDev = Database.DMDEVNEW;
+		testAnalysis(foundationDataMartDev,"data_mart","company");
+	}	
+	
+	
+	public static void testAnalysis(Database db, String schema, String table){
+		Log.pl("Starting Analysis of "+db.name()+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
+		DatabaseManager database = new DatabaseManager(db);
+			
+		database.connect();
+		Log.pl("Connected to "+db.name()+" is connected: "+database.test());		
+		//List<String> tables = database.getTables(schema);		Log.pl("");		for(String table:tables){ }
+		String fqTableName = schema+"."+table;
+		List<ColumnDefinition> cols = database.getColumnDefsFromDbMeta(fqTableName);
+		/*
+		cols.sort(new Comparator<ColumnDefinition>(){
+
+			@Override
+			public int compare(ColumnDefinition a, ColumnDefinition b) {
+				
+				return a.getOrdinal().compareTo(b.getOrdinal());
+			}
+			
+		});
+		for(ColumnDefinition col:cols){
+			Log.pl("Column: "+col);
+		}
+		*/
+		Log.pl("Column List size: "+cols.size());
+		
+		Map<String,Integer> headerMap = convert(cols);
+		/*
+		for(String s:headerMap.keySet()){
+			Log.pl("s:"+s+", i:"+headerMap.get(s));
+		}
+		*/
+		
+		TableAnalyzer analyzer = TableAnalyzer.defaultInstance(fqTableName);
+		analyzer.setHeader(headerMap);
+		String query = "select * from "+fqTableName;
+		ResultSet rs = database.query(query);
+		int count = 0;
+		try {
+			while(rs.next()){
+				String[] record = new String[headerMap.size()];
+				
+				for(Integer i:headerMap.values()){
+					record[i-1]=rs.getString(i);
+				}
+				analyzer.addRecord(record);
+				count++;
+				if(count%10000==0){
+					//Log.pl(count+" records read.");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+			
+		Log.pl("Finished reading records. Starting Analysis");//247,062
+		
+		if(analyzer.analyze()){
+			Analysis a = analyzer.getAnalysis();
+			Log.pl(a.export());
+			//a.report();
+			
+		}else{
+			analyzer.reportErrors();
+		}		
+
+		
+		database.close();
+		Log.pl("Finished on "+new java.util.Date()+"!");			
+	}	
+	
 	private TableAnalyzer(String name){
 		super();
 		this.analysis = new Analysis(name);
@@ -433,83 +510,10 @@ When a count is > 9999, then use K and M abbreviations.
 	}
 	
 	
-	public static void main(String[] args){
-		Database foundationDataMartDev = Database.DMFDEV;
-		testAnalysis(foundationDataMartDev,"employer","company");
-	}
-	
-	
-	
-	public static void testAnalysis(Database db, String schema, String table){
-		Log.pl("Starting Analysis of "+db.name()+" on "+new java.util.Date());
-		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
-		DatabaseManager database = new DatabaseManager(db);
-			
-		database.connect();
-		Log.pl("Connected to "+db.name()+" is connected: "+database.test());		
-		//List<String> tables = database.getTables(schema);		Log.pl("");		for(String table:tables){ }
-		String fqTableName = schema+"."+table;
-		List<ColumnDefinition> cols = database.getColumnDefsFromDbMeta(fqTableName);
-		/*
-		cols.sort(new Comparator<ColumnDefinition>(){
 
-			@Override
-			public int compare(ColumnDefinition a, ColumnDefinition b) {
-				
-				return a.getOrdinal().compareTo(b.getOrdinal());
-			}
-			
-		});
-		for(ColumnDefinition col:cols){
-			Log.pl("Column: "+col);
-		}
-		*/
-		Log.pl("Column List size: "+cols.size());
-		
-		Map<String,Integer> headerMap = convert(cols);
-		/*
-		for(String s:headerMap.keySet()){
-			Log.pl("s:"+s+", i:"+headerMap.get(s));
-		}
-		*/
-		
-		TableAnalyzer analyzer = TableAnalyzer.defaultInstance(fqTableName);
-		analyzer.setHeader(headerMap);
-		String query = "select * from "+fqTableName;
-		ResultSet rs = database.query(query);
-		int count = 0;
-		try {
-			while(rs.next()){
-				String[] record = new String[headerMap.size()];
-				
-				for(Integer i:headerMap.values()){
-					record[i-1]=rs.getString(i);
-				}
-				analyzer.addRecord(record);
-				count++;
-				if(count%10000==0){
-					//Log.pl(count+" records read.");
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-			
-		Log.pl("Finished reading records. Starting Analysis");//247,062
-		
-		if(analyzer.analyze()){
-			Analysis a = analyzer.getAnalysis();
-			Log.pl(a.export());
-			//a.report();
-			
-		}else{
-			analyzer.reportErrors();
-		}		
+	
+	
 
-		
-		database.close();
-		Log.pl("Finished on "+new java.util.Date()+"!");			
-	}
 
 	private static Map<String, Integer> convert(List<ColumnDefinition> cols) {
 		Map<String, Integer> rv = new Hashtable<String,Integer>();

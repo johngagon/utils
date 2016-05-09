@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 //import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class EtlJob {
 	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
 	private static final String D = "\t";
 	private static final String noq = "";
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private static String Q = noq;	
 	
 	/*
@@ -61,6 +63,7 @@ public class EtlJob {
 		//etlBenchmarkingHewitt(true); 
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
+		//etlMarketReports(true,"2014","1");
 		etlNetworkCompare(true);
 	}
 	
@@ -91,15 +94,17 @@ public class EtlJob {
 	
 	/*
 	 * Add the new schema in advance.
+	 * Change the year and upload in mapping file.
+	 * Insert into valuequest_2014u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2014,1,'2014-07-01','2015-06-30','2015-08-31','MY')
 	 */
-	public static void etlMarketReports(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFDEV,"market_reports");
-		getCounts(Database.DMFDEV,"valuequest_2014u2");
+	public static void etlMarketReports(boolean cleanTarget, String year, String upload){
+		etl(cleanTarget,Database.DW,Database.DMFDEV,"market_reports",year,upload);
+		//getCounts(Database.DMFDEV,"valuequest_2014u1","2014","1");
 	}
 	
 	
 	public static void etlNetworkCompare(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFUAT,"network_compare");//IDSProd on MSSQL -> DM_DEV on postgres
+		etl(cleanTarget,Database.DW,Database.DMFUAT,"network_compare");//IDSProd on MSSQL -> dbtest/foundation_data_mart
 	}	
 	
 	public static void etlEmployerSearch(boolean cleanTarget){
@@ -110,7 +115,7 @@ public class EtlJob {
 		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"blue_solutions_catalog");
 	}
 	
-	//@SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private static void getCounts(Database db,String schema){
 		Log.pl("\n\nStarting Verification of "+db.name()+" on "+new java.util.Date());
 		DatabaseManager database = new DatabaseManager(db);
@@ -135,8 +140,12 @@ public class EtlJob {
 		Log.pl("\n\nFinished on "+new java.util.Date()+"!");	
 	}
 	
-	//@SuppressWarnings("boxing")
 	private static void etl(boolean cleanTarget,Database source, Database target, String filename){
+		etl(cleanTarget,source,target,filename,"","");
+	}
+	
+	//@SuppressWarnings("boxing")
+	private static void etl(boolean cleanTarget,Database source, Database target, String filename, String year, String upload){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
@@ -179,7 +188,7 @@ public class EtlJob {
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
 			
-			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable);
+			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable, year, upload);
 		}
 		
 		sourceDatabase.close();
@@ -188,11 +197,12 @@ public class EtlJob {
 		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
 	}		
 	
-	
+
+
 	//@SuppressWarnings("boxing")
-	private static void performCopy(
-			DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
-			String sourceRelation, String destTable) {
+	private static void performCopy(DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+			String sourceRelation, String destTable, 
+			String year, String upload) {
 		
 		
 		List<ColumnDefinition> cds = sourceDatabase.getColumnDefsFromDbMeta(sourceRelation);
@@ -202,7 +212,7 @@ public class EtlJob {
 		//}
 		String countQuery = "select count(*) from "+sourceRelation;
 		if(sourceRelation.startsWith("market_reports.")){
-			countQuery += " where cq_year=2014 and upload=2";
+			countQuery += " where cq_year="+year+" and upload="+upload;
 		}		
 		sourceDatabase.query(countQuery);
 		int countResult = sourceDatabase.getCountResult();
@@ -211,7 +221,7 @@ public class EtlJob {
 		String query = "select * from "+sourceRelation;
 		
 		if(sourceRelation.startsWith("market_reports.")){
-			query += " where cq_year=2014 and upload=2";
+			query += " where cq_year="+year+" and upload="+upload;
 		}
 		
 		Log.pl("Source query: "+query);
@@ -231,17 +241,38 @@ public class EtlJob {
 					switch (cdcoltype){
 						
 						//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-						case Types.VARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+						case Types.VARCHAR:
 						case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
 						
-						case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
-						case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
+						case Types.INTEGER:
+							int ival = rs.getInt(cd.getColName());
+							if(rs.wasNull()){
+								sb.append("null");
+							}else{
+								sb.append(ival);
+							}
+							break;
+						case Types.BIGINT:
+							long lval = rs.getLong(cd.getColName());
+							if(rs.wasNull()){
+								sb.append("null");
+							}else{
+								sb.append(lval);
+							}
+							break;
+						case Types.DOUBLE:
+						case Types.NUMERIC: 
+						case Types.DECIMAL:
+							double dval = rs.getDouble(cd.getColName());
+							if(rs.wasNull()){
+								sb.append("null");
+							}else{
+								sb.append(dval);
+							}
+							break;
+						case Types.DATE:sb.append(Q+formatDate(rs.getDate(cd.getColName()))+"\"");break;
 						
-						case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
-						case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
-						case Types.DATE:sb.append(Q+rs.getDate(cd.getColName())+"\"");break;
 						
-						case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
 						case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
 						case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
 						
@@ -272,7 +303,17 @@ public class EtlJob {
 			e.printStackTrace();
 		}//trycatch
 		Log.pl("Finished copying "+destTable+".\n\n");
-	}	
+	}		
+
+	private static String formatDate(java.sql.Date inDate){
+		String rv = "";
+		if(inDate==null){
+			rv = "null";
+		}else{
+			rv = sdf.format(inDate);
+		}
+		return rv;
+	}
 	
 	private static void cleanTable(DatabaseManager targetDatabase,	String destTable) {
 		targetDatabase.clearTable(destTable);
@@ -399,7 +440,7 @@ public class EtlJob {
 	
 	@SuppressWarnings("unused")
 	private static void compareSchemas(Database source, Database target, String schema){
-		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
+		Log.pl("Starting Comparison of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
 		DatabaseManager targetDatabase = new DatabaseManager(target);	//	

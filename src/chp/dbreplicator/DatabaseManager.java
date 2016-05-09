@@ -228,7 +228,7 @@ public class DatabaseManager {
 				}
 				
 				if("TABLE".equals(tableType)){//FIXME : Postgres specific
-					Log.pl("  Get tables: found "+cat+schemaFound+"."+tableFound+".");//+" tableType:"+tableType);
+					//Log.pl("  Get tables: found "+cat+schemaFound+"."+tableFound+".");//+" tableType:"+tableType);
 					list.add(tableFound);
 				}
 			}
@@ -593,6 +593,13 @@ public class DatabaseManager {
 		}
 		return rv;
 	}
+
+	public ResultSet queryThrow(String sql) throws SQLException{
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		rs = stmt.executeQuery();
+			
+		return rs;
+	}	
 	
 	public ResultSet query(String sql){
 		//Log.println("SQL:"+sql);
@@ -613,7 +620,7 @@ public class DatabaseManager {
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setFetchSize(1000);
 			rs = stmt.executeQuery();
-			Log.pl("  Executed query:"+sql);
+			//Log.pl("  Executed query:"+sql);
 		}catch(Exception e){
 			e.printStackTrace();
 			//Log.error(e);

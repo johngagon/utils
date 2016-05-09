@@ -15,7 +15,7 @@ public enum Database {
 	DM(       Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5444/DM_DEV",				"whs_viewer",	"whs_viewer"),
 	DMDEVNEW( Rdbms.POSTGRESQL,	"org.postgresql.Driver",						"jdbc:postgresql://chp-dbdev03.corp.chpinfo.com:5432/data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"postgres",	"p0stgres"),
 	DMTESTOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5444/DM_TEST?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"whs_viewer",	"whs_viewer"),
-	DMTESTNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5432/data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"whs_viewer",	"whs_viewer"),
+	DMTESTNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbtest01.corp.chpinfo.com:5432/data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&sslmode=allow",				"postgres",	"p0stgres"),
 	DMPPRDOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"whs_viewer",	"whs_viewer"),
 	DMPPRDNEW(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5432/data_mart?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"whs_viewer",	"whs_viewer"),
 	DMPRODOLD(Rdbms.POSTGRESQL, "org.postgresql.Driver",						"jdbc:postgresql://chp-dbprp01.corp.chpinfo.com:5444/DM_PROD?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory",				"whs_viewer",	"whs_viewer"),
