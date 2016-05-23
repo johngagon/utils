@@ -4,9 +4,16 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 //import java.util.Map;
+
+import java.util.Map;
+
+import jhg.util.TextFile;
 
 import org.postgresql.core.BaseConnection;
 
@@ -14,11 +21,25 @@ import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
+
+
 //import jhg.util.TextFile;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
 
 public class DeployTool {
+	
+	private static int getMagnitude(int countResult) {
+		final int X = 20;//affects buffer/speed. 10 fast and hoggish, 100 slow and birdish
+		final int F = 10;
+		final int Y = X*F;
+		
+		int rv = X;
+		if(countResult>Y){
+			rv = (int)countResult/X;
+		}
+		return rv;
+	}	  	
 	
 	/*
 	 * D : tab delimiter
@@ -34,6 +55,11 @@ public class DeployTool {
 	private static final String dq = "\"";
 	
 	private static String Q = noq;
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+	
+	//@SuppressWarnings("unused")
+	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
 	
 	/*
 	 * 	 For data refresh only.
@@ -70,11 +96,28 @@ public class DeployTool {
 	 */
 	public static void main(String[] args){
 		//esUAT2PRD();
-		ncRestore();
+		//ncPRD();
+		//iiDEV2UAT();//fails due to hard returns in fact and paragraph   THIS CANNOT BE PROMOTED - FIX BY COPYING DM_TEST
+		
+		//mrUAT("2014u1");
+		//mrUAT("2014u2");
+		//mrPRD("2014u1");
+		mrPRD("2014u2");
+		
+		//bmUAT("mercer"); 
 	}
 	public static void testSourceAndTarget(){
 		//test(Database.DMCUST, Database.DMFRW);
 	}
+	
+	
+	/*
+	 * I2I
+	 */
+	public static void iiDEV2UAT(){
+		deploy(true, Database.DMTESTOLD, Database.DMFUAT,"fstrech");
+	}
+	
 	
 	/*
 	 * Employer Search
@@ -128,11 +171,11 @@ public class DeployTool {
 	}
 
 	public static void ncPRP(){
-		deploy(true, Database.DMFDEV, Database.DMFPRP,"whs_viewer");
+		deploy(true, Database.DMFUAT, Database.DMFPRP,"whs_viewer");
 	}
 	
 	public static void ncPRD(){
-		deploy(true, Database.DMFDEV, Database.DMFPRD,"whs_viewer");
+		deploy(true, Database.DMFUAT, Database.DMFPRD,"whs_viewer");
 	}			
 	
 	
@@ -151,13 +194,13 @@ public class DeployTool {
 	}		
 	
 	public static void bmUAT(String consultant){//hewitt,mercer,towers
-		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking_"+consultant);
+		deployPartial(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking_"+consultant);
 	}
 	public static void bmPRP(String consultant){
-		deploy(true, Database.DMTESTNEW, Database.DMPPRDNEW,"benchmarking_"+consultant);
+		deployPartial(true, Database.DMTESTNEW, Database.DMPPRDNEW,"benchmarking_"+consultant);
 	}	
 	public static void bmPRD(String consultant){
-		deploy(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking"+consultant);
+		deployPartial(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking"+consultant);
 	}			
 	
 	/*
@@ -196,6 +239,85 @@ public class DeployTool {
 		Log.pl("Finished on "+new java.util.Date()+"!");			
 	}
 
+	private static void deployPartial(boolean cleanTarget,Database source, Database target, String filename){
+		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
+		DatabaseManager sourceDatabase = new DatabaseManager(source);
+		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		sourceDatabase.connect();
+		boolean connected = sourceDatabase.test();
+		Log.pl("Connected to "+source.name()+" is connected: "+connected);
+	
+		
+		if(!connected){
+			Log.pl(EXIT_FAIL_MSG);
+			targetDatabase.close();
+			return;
+		}
+		
+		targetDatabase.connect();
+		connected = targetDatabase.test();
+		Log.pl("Connected to "+target.name()+" is connected: "+connected);		
+		if(!connected){
+			Log.pl(EXIT_FAIL_MSG);
+			targetDatabase.close();
+			return;
+		}
+		
+		
+		TextFile f = new TextFile("data/pgcfg/"+filename+".txt");
+		Map<String,String> viewTableMapping = f.getMapping();
+
+		List<String> l = new ArrayList<String>(viewTableMapping.keySet());
+		Collections.reverse(l);
+		
+		for(String sourceRelation:l){
+			String destTable = viewTableMapping.get(sourceRelation);
+		
+			if(cleanTarget){
+				cleanTable(targetDatabase,destTable);
+			}	
+		}
+		Log.pl("\n ");	
+		for(String sourceRelation:viewTableMapping.keySet()){
+			String destTable = viewTableMapping.get(sourceRelation);
+			
+			performCopy( cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+		}
+		
+		sourceDatabase.close();
+		targetDatabase.close();
+		
+		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
+		/*
+		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
+		DatabaseManager sourceDatabase = new DatabaseManager(source);
+		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		sourceDatabase.connect();
+		Log.pl("Connected to "+source.name()+" is connected: "+sourceDatabase.test());
+	
+		targetDatabase.connect();
+		Log.pl("Connected to "+target.name()+" is connected: "+targetDatabase.test());
+		
+		List<String> tables = sourceDatabase.getTables(schema);
+		
+		for(String table:tables){
+			String sourceRelation = schema+"."+table;
+			String destTable = schema+"."+table;
+			if(!"request_log".equals(table)){
+				performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+			}
+		}
+		
+		sourceDatabase.close();
+		targetDatabase.close();
+		
+		Log.pl("Finished on "+new java.util.Date()+"!");	
+		*/		
+	}
+		
+	
 	//@SuppressWarnings("boxing")
 	private static void deploy(boolean cleanTarget,Database source, Database target, String schema){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
@@ -266,32 +388,8 @@ public class DeployTool {
 				boolean first = true;
 				for(ColumnDefinition cd:cds){
 					if(!first){sb.append(D);}else{first=false;}
-					int cdcoltype = cd.getColType();
-					
-					switch (cdcoltype){
-						
-						//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-						case Types.VARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
-						case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
-						
-						case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
-						case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
-						
-						case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
-						case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
-						case Types.DATE:sb.append(Q+rs.getDate(cd.getColName())+"\"");break;
-						
-						case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
-						case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
-						case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
-						
-						//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
-						//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
-						//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
-						//TINYINT,VARBINARY,VARCHAR
-						default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-					}
-					
+					extractResultIntoStringBuilder(rs, sb, cd);
+
 				}//for(ColumnDefinition cd:cds)
 				sb.append("\n");
 				//Log.profile("    Read Record "+count+"  appending to file:"+filename);
@@ -322,6 +420,66 @@ public class DeployTool {
 	}
 
 
+	private static void extractResultIntoStringBuilder(ResultSet rs,
+			StringBuilder sb, ColumnDefinition cd) throws SQLException {
+		int cdcoltype = cd.getColType();
+		
+		switch (cdcoltype){
+			
+			//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+			case Types.VARCHAR:
+			case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+			
+			case Types.INTEGER:
+				int ival = rs.getInt(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(ival);
+				}
+				break;
+			case Types.BIGINT:
+				long lval = rs.getLong(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(lval);
+				}
+				break;
+			case Types.DOUBLE:
+			case Types.NUMERIC: 
+			case Types.DECIMAL:
+				double dval = rs.getDouble(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(dval);
+				}
+				break;
+			case Types.DATE:sb.append(Q+formatDate(rs.getDate(cd.getColName()))+"\"");break;
+			
+			
+			case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
+			case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
+			
+			//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
+			//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
+			//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
+			//TINYINT,VARBINARY,VARCHAR
+			default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+		}
+	}			
+	
+	private static String formatDate(java.sql.Date inDate){
+		String rv = "";
+		if(inDate==null){
+			rv = "null";
+		}else{
+			rv = sdf.format(inDate);
+		}
+		return rv;
+	}	
+	
 	private static void copyPostgres(DatabaseManager targetDatabase,String destTable, String s) throws SQLException {
 		CopyIn cpIN=null;
 		CopyManager cm = new CopyManager((BaseConnection) targetDatabase.getConnection());
@@ -350,13 +508,7 @@ public class DeployTool {
         return result;
     }	
     
-	private static int getMagnitude(int countResult) {
-		int rv = 10;
-		if(countResult>100){
-			rv = (int)countResult/10;
-		}
-		return rv;
-	}    
+
 	
 	//TODO move this to DatabaseManager
 	static boolean insertPostgres(DatabaseManager targetDatabase, String insertQuery, List<ColumnDefinition> cds, Object[] row) throws SQLException {
@@ -467,6 +619,11 @@ public class DeployTool {
 		//	Log.pl("Column: "+cd.getColName()+" type:"+DatabaseManager.TYPES.get(cdcoltype)+"");
 		//}		
 	}	
+	
+	
+	
+	
+	
 }
 
 
@@ -538,5 +695,33 @@ public static void testPostgresFoundation(){
 }
 public static void testSQLIDSProd(){
 	
+}
+*/					
+/*
+int cdcoltype = cd.getColType();
+
+
+switch (cdcoltype){
+	
+	//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+	case Types.VARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+	case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+	
+	case Types.INTEGER:sb.append(rs.getInt(cd.getColName()));break;
+	case Types.BIGINT:sb.append(rs.getLong(cd.getColName()));break;
+	
+	case Types.NUMERIC: sb.append(rs.getDouble(cd.getColName()));break;
+	case Types.DECIMAL: sb.append(rs.getDouble(cd.getColName()));break;
+	case Types.DATE:sb.append(Q+rs.getDate(cd.getColName())+"\"");break;
+	
+	case Types.DOUBLE:sb.append(""+rs.getDouble(cd.getColName())+"");break;
+	case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
+	case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
+	
+	//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
+	//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
+	//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
+	//TINYINT,VARBINARY,VARCHAR
+	default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
 }
 */

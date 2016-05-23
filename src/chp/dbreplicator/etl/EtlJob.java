@@ -30,6 +30,18 @@ public class EtlJob {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private static String Q = noq;	
 	
+	private static int getMagnitude(int countResult) {
+		final int X = 20;//affects buffer/speed. 10 fast and hoggish, 100 slow and birdish
+		final int F = 10;
+		final int Y = X*F;
+		
+		int rv = X;
+		if(countResult>Y){
+			rv = (int)countResult/X;
+		}
+		return rv;
+	}		
+	
 	/*
 	 * ETL Jobs:
 	 * 
@@ -39,7 +51,7 @@ public class EtlJob {
 	 * 1. Benchmarking: Hewitt			etlBenchmarkingHewitt			false
 	 * 2. Benchmarking: TowersWatson	etlBenchmarkingTowers			false
 	 * 3. Benchmarking: Mercer			etlBenchmarkingMercer			false	
-	 * 4. MarketQuest					etlMarketReports				false
+	 * 4. MarketQuest					etlMarketReports				false		MY2015 = 2014u2, CY2014 = 2014u1 (MY subtract 1 & u2, CY no change, u1)
 	 * 5. NetworkCompare 				etlNetworkCompare				false
 	 * 6. EmployerSearch 				etlEmployerSearch				false
 	 * 7. Blue Solutions Catalog		etlBlueSolutionsCatalog			false
@@ -63,8 +75,11 @@ public class EtlJob {
 		//etlBenchmarkingHewitt(true); 
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
-		//etlMarketReports(true,"2014","1");
-		etlNetworkCompare(true);
+		//etlMarketReports(true,"2014","2");
+		//etlNetworkCompare(true);
+		etlBenchmarkingMercer(true);
+		//etlTestEmployerSearch(true);
+		//etlEmployerSearch(true);
 	}
 	
 	//does this have the new tiered network in the table?
@@ -93,7 +108,7 @@ public class EtlJob {
 	}	
 	
 	/*
-	 * Add the new schema in advance.
+	 * Add the new schema in advance. e.g.:select "valuequest"."create_partition_namespace"(2014,2)
 	 * Change the year and upload in mapping file.
 	 * Insert into valuequest_2014u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2014,1,'2014-07-01','2015-06-30','2015-08-31','MY')
 	 */
@@ -104,7 +119,11 @@ public class EtlJob {
 	
 	
 	public static void etlNetworkCompare(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFUAT,"network_compare");//IDSProd on MSSQL -> dbtest/foundation_data_mart
+		etl(cleanTarget,Database.DW,Database.DMFPRD,"network_compare");//IDSProd on MSSQL -> dbtest/foundation_data_mart
+	}	
+	
+	public static void etlTestEmployerSearch(boolean cleanTarget){
+		etl(cleanTarget,Database.DWTEST,Database.DMFDEV,"employer_search");
 	}	
 	
 	public static void etlEmployerSearch(boolean cleanTarget){
@@ -236,52 +255,7 @@ public class EtlJob {
 				boolean first = true;
 				for(ColumnDefinition cd:cds){
 					if(!first){sb.append(D);}else{first=false;}
-					int cdcoltype = cd.getColType();
-					
-					switch (cdcoltype){
-						
-						//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-						case Types.VARCHAR:
-						case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
-						
-						case Types.INTEGER:
-							int ival = rs.getInt(cd.getColName());
-							if(rs.wasNull()){
-								sb.append("null");
-							}else{
-								sb.append(ival);
-							}
-							break;
-						case Types.BIGINT:
-							long lval = rs.getLong(cd.getColName());
-							if(rs.wasNull()){
-								sb.append("null");
-							}else{
-								sb.append(lval);
-							}
-							break;
-						case Types.DOUBLE:
-						case Types.NUMERIC: 
-						case Types.DECIMAL:
-							double dval = rs.getDouble(cd.getColName());
-							if(rs.wasNull()){
-								sb.append("null");
-							}else{
-								sb.append(dval);
-							}
-							break;
-						case Types.DATE:sb.append(Q+formatDate(rs.getDate(cd.getColName()))+"\"");break;
-						
-						
-						case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
-						case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
-						
-						//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
-						//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
-						//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
-						//TINYINT,VARBINARY,VARCHAR
-						default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
-					}
+					extractResultIntoStringBuilder(rs, sb, cd);
 					
 				}//for(ColumnDefinition cd:cds)
 				sb.append("\n");
@@ -303,6 +277,56 @@ public class EtlJob {
 			e.printStackTrace();
 		}//trycatch
 		Log.pl("Finished copying "+destTable+".\n\n");
+	}
+
+	private static void extractResultIntoStringBuilder(ResultSet rs,
+			StringBuilder sb, ColumnDefinition cd) throws SQLException {
+		int cdcoltype = cd.getColType();
+		
+		switch (cdcoltype){
+			
+			//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+			case Types.VARCHAR:
+			case Types.NVARCHAR:sb.append(Q+rs.getString(cd.getColName())+Q);break;
+			
+			case Types.INTEGER:
+				int ival = rs.getInt(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(ival);
+				}
+				break;
+			case Types.BIGINT:
+				long lval = rs.getLong(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(lval);
+				}
+				break;
+			case Types.DOUBLE:
+			case Types.NUMERIC: 
+			case Types.DECIMAL:
+				double dval = rs.getDouble(cd.getColName());
+				if(rs.wasNull()){
+					sb.append("null");
+				}else{
+					sb.append(dval);
+				}
+				break;
+			case Types.DATE:sb.append(Q+formatDate(rs.getDate(cd.getColName()))+"\"");break;
+			
+			
+			case Types.ARRAY:sb.append(""+rs.getArray(cd.getColName())+"");break;
+			case 1111: sb.append(""+rs.getString(cd.getColName())+"");break;
+			
+			//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
+			//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
+			//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
+			//TINYINT,VARBINARY,VARCHAR
+			default : sb.append("\""+rs.getString(cd.getColName())+"\"");break;
+		}
 	}		
 
 	private static String formatDate(java.sql.Date inDate){
@@ -319,13 +343,7 @@ public class EtlJob {
 		targetDatabase.clearTable(destTable);
 	}
 
-	private static int getMagnitude(int countResult) {
-		int rv = 100;
-		if(countResult>1000){
-			rv = (int)countResult/100;
-		}
-		return rv;
-	}	
+
 	
 	
 	private static void copyPostgres(DatabaseManager targetDatabase,String destTable, String s) throws SQLException {

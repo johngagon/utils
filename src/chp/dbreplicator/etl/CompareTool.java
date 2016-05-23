@@ -3,7 +3,6 @@ package chp.dbreplicator.etl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
 import java.util.List;
 
 import chp.dbreplicator.ColumnDefinition;
@@ -12,6 +11,9 @@ import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Log;
 
 public class CompareTool {
+	
+	private static final int RANDOMS = 20;
+	
 	//private static final String D = "\t";
 	//private static final String noq = "";
 	private static final String quot = "'";
@@ -24,26 +26,74 @@ public class CompareTool {
 		 * Compare the schemas.
 		 * Then compare the row counts for each table.
 		 */
-		
-		if(compare(Database.DMDEVNEW, Database.DMTESTNEW,"blue_solutions")){
+		//compareI2IDevTest();
+		//compareBenchmarkingDevTest();
+		//compareNetworkCompareUatProd();
+		//compareI2IDevTest();
+		compareESDevTest();
+	}
+	
+	public static void compareESDevTest(){
+		if(compare(Database.DMFDEV, Database.DMFUAT,"employer",true)){
 			Log.pl("\n\nFINAL RESULT: PASS");
 		}else{
 			Log.pl("\n\nFINAL RESULT: FAIL");			
-		}
-		
+		}		
+	}		
+
+	
+	/**
+	 * Comparing refresh of NC on UAT (Dev stage contains legacy unpublished work on alt nets)
+	 */
+	public static void compareNetworkCompareUatProd(){
+		if(compare(Database.DMFUAT, Database.DMFPRD,"whs_viewer",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}			
 	}
 	
-	public static boolean compare(Database firstDb, Database secondDb, String schema){
+	
+
+	public static void compareI2IDevTest(){
+		if(compare(Database.DMFDEV, Database.DMFUAT,"fstrech",false)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}	
+	
+	
+	public static void compareBenchmarkingDevTest(){
+		if(compare(Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}	
+	
+	/**
+	 * Test done to prove ETL to dev. The inherited 9.3 db dev to test comparison.
+	 */
+	public static void compareBlueSolutionsDevTest(){
+		if(compare(Database.DMDEVNEW, Database.DMTESTNEW,"blue_solutions",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}
+	
+	public static boolean compare(Database firstDb, Database secondDb, String schema, boolean doRandom){
 		boolean rv=true;
 		try {
-			rv = compareSchemas(firstDb,secondDb,schema);
+			rv = compareSchemas(firstDb,secondDb,schema,doRandom);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return rv;
 	}
 	
-	private static boolean compareSchemas(Database source, Database target, String schema) throws SQLException{
+	private static boolean compareSchemas(Database source, Database target, String schema, boolean doRandom) throws SQLException{
 		Log.pl("Starting Comparison of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
@@ -59,8 +109,10 @@ public class CompareTool {
 		
 		List<String> tables = sourceDatabase.getTables(schema);
 		Log.pl("");
+		
 		for(String table:tables){
 			Log.pl("\n\nComparing both schemas for table: "+table);
+			//int discrepancyCount = 0;
 			String srcTable = schema+"."+table;
 			String destTable = schema+"."+table;
 			
@@ -72,15 +124,21 @@ public class CompareTool {
 				if(!targetCols.contains(sourceCol)){
 					Log.pl("!!Column: "+sourceCol.getColName()+" in source didn't match a column in destination for table "+table);
 					passesSchemaCompare = false;
+					//discrepancyCount++; 
 				}else{
+					@SuppressWarnings("unused")
 					ColumnDefinition targetCol = targetCols.get(targetCols.indexOf(sourceCol));
-					Log.pl("Found :"+sourceCol.getColName()+ " matches "+targetCol.getColName());
+					//Log.pl("Found :"+sourceCol.getColName()+ " matches "+targetCol.getColName());
 				}
 			}
 		}
+		if(passesSchemaCompare){
+			Log.pl("\nPASS Schema Compare!\n");
+		}else{Log.pl(
+			"\nFAIL Schema Compare!\n");
+		}
 		
-		
-		boolean passesRowCounts = compareRowCounts(sourceDatabase,targetDatabase,schema);
+		boolean passesRowCounts = compareRowCounts(sourceDatabase,targetDatabase,schema,doRandom);
 		//mapping
 		//compareRandomColumns(firstDb,secondDb,schema);		
 		
@@ -98,14 +156,14 @@ public class CompareTool {
 		return passesSchemaCompare && passesRowCounts;
 	}		
 	
-	private static boolean compareRowCounts(DatabaseManager sourceDatabase, DatabaseManager targetDatabase, String schema) throws SQLException{
+	private static boolean compareRowCounts(DatabaseManager sourceDatabase, DatabaseManager targetDatabase, String schema, boolean doRandom) throws SQLException{
 		Log.pl("Comparing table counts:\n");
 		boolean passesTableCounts = true;
 		int discrepancyCount = 0;
-		int[] sourceCounts = new int[7];
-		int[] targetCounts = new int[7];
+
 		List<String> sourceTables = sourceDatabase.getTables(schema);
-		
+		int[] sourceCounts = new int[sourceTables.size()];
+		int[] targetCounts = new int[sourceTables.size()];		
 		//List<String> targetTables = targetDatabase.getTables(schema);
 		
 		int idx = 0;
@@ -125,22 +183,27 @@ public class CompareTool {
 				targetCounts[idx] = -1;
 			}
 			if(sourceCounts[idx]!=targetCounts[idx]){
-				Log.pl("Source table "+table+" count: "+sourceCounts[idx]+" was not the same in target: "+targetCounts[idx]);
-				discrepancyCount++;
+				if(!table.contains("request_log")){
+					Log.pl("FAIL : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was not the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
+					discrepancyCount++;
+				}
+			}else{
+				Log.pl("PASS : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
 			}
 			idx++;							
 		}
 		Log.pl("Discrepancy Count: "+discrepancyCount);
 		boolean pass = (discrepancyCount==0);
-		if(pass){Log.pl("\nPASS!\n");
+		if(pass){Log.pl("\nPASS Row Count Compare!\n");
 			//compareRandom(sourceDatabase,targetDatabase,schema,100);
 		}else{Log.pl(
-			"\nFAIL!\n");
+			"\nFAIL Row Count Compare!\n");
 			passesTableCounts = false;
 		}			
-		boolean passesRandom = compareRandom(sourceDatabase,targetDatabase,schema,5);
+		boolean passesRandom = (doRandom)?compareRandom(sourceDatabase,targetDatabase,schema,RANDOMS):true;
 		return passesRandom && passesTableCounts;
 	}
+	
 	
 	@SuppressWarnings("unused")
 	private static boolean compareRandom(DatabaseManager sourceDatabase, DatabaseManager targetDatabase, String schema,int limit){
@@ -163,7 +226,7 @@ public class CompareTool {
 					while(rs.next()){
 						String proofQuery = makeSelectWhere(cdefs,fqTable,rs);
 						
-						discrepancyCount += checkTarget(targetDatabase,proofQuery);
+						discrepancyCount += checkTarget(sourceDatabase,targetDatabase,proofQuery);
 					}
 				} catch (SQLException e) {
 					Log.pl("Exception in Random Query: "+ query + " e.getMessage()"+e.getMessage());
@@ -181,7 +244,7 @@ public class CompareTool {
 		return rv;
 	}
 
-	private static int checkTarget(DatabaseManager targetDatabase,String proofQuery) {
+	private static int checkTarget(DatabaseManager sourceDatabase,DatabaseManager targetDatabase,String proofQuery) {
 		int rv = 0;
 		try{
 			targetDatabase.queryThrow(proofQuery);
@@ -191,10 +254,10 @@ public class CompareTool {
 			}else{
 				ResultSet rs = targetDatabase.getResult();
 				if(rs.next()){
-					Log.pl("   PASS Rows found in target from source: query:"+proofQuery);
+					Log.pl("   PASS Rows found in target from source : query:"+proofQuery);
 				}else{
 					rv = 1;
-					Log.pl("   FAIL Rows not found using query: "+proofQuery);
+					Log.pl("   FAIL Rows not found in target ("+targetDatabase.getDatabase().name()+") using query of source ("+sourceDatabase.getDatabase().name()+"): "+proofQuery);
 				}
 				
 			}
@@ -227,7 +290,15 @@ public class CompareTool {
 			
 			//from DW: case Types.VARCHAR:sb.append("\""+rs.getString(cd.getColName())+"\"");break;
 				case Types.VARCHAR:
-				case Types.NVARCHAR:sb.append(colName+" = "+Q+removeSingleQuotes(rs.getString(cd.getColName()))+Q);break;
+				case Types.NVARCHAR:
+				case 1111:
+					String sval = rs.getString(cd.getColName());
+					if(rs.wasNull()){
+						sb.append(colName+" is null ");
+					}else{
+						sb.append(colName+" = "+Q+escapeSingleQuotes(sval)+Q);
+					}
+					break;
 				
 				case Types.INTEGER:
 					int ival = rs.getInt(cd.getColName());
@@ -255,17 +326,38 @@ public class CompareTool {
 						sb.append(colName+" = "+dval);
 					}
 					break;
-				case Types.DATE:sb.append(colName+" = "+Q+rs.getDate(cd.getColName())+Q);break;
-				
-				
-				case Types.ARRAY:sb.append(colName+" = "+rs.getArray(cd.getColName())+"");break;
-				case 1111: sb.append(colName+" = "+Q+rs.getString(cd.getColName())+Q);break;
+				case Types.DATE:
+					java.sql.Date dateVal = rs.getDate(cd.getColName());
+					if(rs.wasNull()){
+						sb.append(colName+" is null ");
+					}else{
+						sb.append(colName+" = "+Q+dateVal+Q);
+					}
+					break;
+				case Types.ARRAY:
+					java.sql.Array arrVal = rs.getArray(cd.getColName());
+					if(rs.wasNull()){
+						sb.append(colName+" is null ");
+					}else{
+						sb.append(colName+" = "+arrVal+"");
+					}
+					break;
+				 
+					
+					
 				
 				//case Types.ARRAY Types.BIGINT, BINARY, BIT, BLOB, BOOLEAN, CHAR CLOB
 				//DATALINK, DISTINCT,DOUBLE,FLOAT,JAVA_OBJECT,LONGVARCHAR,LONGNVARCHAR,LONGVARBINARY
 				//NCHAR,NCLOB,NULL,OTHER,REAL,REF,REF_CURSOR,ROWID,SMALLINT,SQLXML,STRUCT,TIME,TIME_WITH_TIMEZONE,TIMESTAMP,TIMESTAMP_WITH_TIMEZONE
 				//TINYINT,VARBINARY,VARCHAR
-				default : sb.append(colName+" = "+"\""+rs.getString(cd.getColName())+"\"");break;			
+				default : 
+					String zVal = rs.getString(cd.getColName());
+					if(rs.wasNull()){
+						sb.append(colName+" is null ");
+					}else{
+						sb.append(colName+" = "+"\""+zVal+"\"");
+					}
+					break;
 			}
 		}
 		
@@ -274,8 +366,8 @@ public class CompareTool {
 
 
 	
-	private static String removeSingleQuotes(String string) {
-		return string.replaceAll("'", "");
+	private static String escapeSingleQuotes(String string) {
+		return string.replaceAll("'", "''");
 	}
 
 	@SuppressWarnings("unused")

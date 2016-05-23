@@ -219,9 +219,14 @@ public class DatabaseManager {
 			ResultSet rs = md.getTables(catalogPattern, schema, tablePattern, types);
 			while(rs.next()){
 				String catFound = rs.getString(1);
+				
+				@SuppressWarnings("unused")
 				String schemaFound = rs.getString(2);
+				
 				String tableFound = rs.getString(3);
 				String tableType = rs.getString(4);
+				
+				@SuppressWarnings("unused")
 				String cat = "";
 				if(catFound!=null){
 					cat = catFound+".";
@@ -606,7 +611,7 @@ public class DatabaseManager {
 		try{
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			rs = stmt.executeQuery();
-			Log.pl("  Executed query:"+sql);
+			//Log.pl("  Executed query:"+sql);
 		}catch(Exception e){
 			e.printStackTrace();
 			//Log.error(e);
