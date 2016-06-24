@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Properties;
 
+import jhg.util.Log;
+import jhg.util.TextFile;
+
 public class Unicoder {
 
 	
@@ -25,6 +28,15 @@ public class Unicoder {
 		return p.getProperty("key");		
 	}
 	
+	public static final void testWithFile(){
+		String fileName = "H:\\git\\market_reports\\grails-app\\services\\com\\chpinfo\\services\\ReportDataService.groovy";
+		TextFile f = new TextFile(fileName);
+		String content = f.getText();
+		//String encoded = printUnicodeFromText(content);
+		String decoded = printTextFromUnicode(content);
+		System.out.println(decoded);
+	}
+	
 	public static final void test(){
 		String program = "public class Ugly { public static void main(String[] args){ System.out.println(\"Hello w\"+\"orld\");}}";
 		String encoded = printUnicodeFromText(program);
@@ -38,7 +50,7 @@ public class Unicoder {
 	}
 	
 	public static void main(String[] args) {
-		test();
+		testWithFile();
 
 	}
 

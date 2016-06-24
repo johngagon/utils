@@ -20,6 +20,7 @@ import org.postgresql.core.BaseConnection;
 import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
+import chp.dbreplicator.Index;
 import chp.dbreplicator.Log;
 
 public class EtlJob {
@@ -72,27 +73,31 @@ public class EtlJob {
 	public static void main(String[] args){
 		//testSourceAndTarget();
 		//compareSchemas(Database.DMCUST , Database.DMFRW , "employer");
-		//etlBenchmarkingHewitt(true); 
+		etlBenchmarkingHewitt("1019");
+		etlBenchmarkingTowers("1016");
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
 		//etlMarketReports(true,"2014","2");
 		//etlNetworkCompare(true);
-		etlBenchmarkingMercer(true);
+		//etlBenchmarkingShared(true);
+		//etlBenchmarkingMercer(true);
 		//etlTestEmployerSearch(true);
 		//etlEmployerSearch(true);
 	}
 	
 	//does this have the new tiered network in the table?
-	public static void etlBenchmarkingHewitt(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_hewitt");
+
+	
+	public static void etlBenchmarkingHewitt(String dataSet){
+		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_hewitt");
+	}	
+	
+	public static void etlBenchmarkingTowers(String dataSet){
+		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_towers");
 	}
 	
-	public static void etlBenchmarkingTowers(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_towers");
-	}
-	
-	public static void etlBenchmarkingMercer(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"benchmarking_mercer");
+	public static void etlBenchmarkingMercer(String dataSet){
+		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_mercer");
 	}
 	
 	/*
@@ -206,8 +211,42 @@ public class EtlJob {
 		Log.pl("\n ");	
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
+
+			String schema = destTable.substring(0,destTable.indexOf('.')); 
+			String table = "";
+			Log.pl("Schema: "+schema+"  , Table:"+table+" ");
+			
+			List<Index> indexes = targetDatabase.getIndexes(schema, table);
+			
+			
+			for(Index idx:indexes){
+				//Log.pl("Index: "+idx);
+				String idxName = idx.getIndexName();
+				if(!idxName.endsWith("_pkey")){
+					String ddl = "DROP INDEX "+schema+"."+idxName;
+					Log.pl("Dropping index :  '"+ddl+"'");
+					targetDatabase.execute(ddl);
+				}
+			}				
+			
 			
 			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable, year, upload);
+			
+			
+			boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
+			if(!indexesExist){
+				
+				for(Index idx:indexes){
+					String idxName = idx.getIndexName();
+					if(!idxName.endsWith("_pkey")){
+					
+						String ddl = "CREATE INDEX "+idxName+" ON "+idx.getTableSchema()+"."+idx.getTableName()+" USING btree ("+idx.getColumnName()+")";
+						targetDatabase.execute(ddl);
+					}
+						//boolean indexesExist = sourceDatabase.doesAnyIndexExist(schema, table);
+				}
+			}			
+			
 		}
 		
 		sourceDatabase.close();
@@ -216,7 +255,88 @@ public class EtlJob {
 		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
 	}		
 	
+	private static void etl(String dataSet,Database source, Database target, String filename){
+		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
+		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
+		DatabaseManager sourceDatabase = new DatabaseManager(source);
+		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		sourceDatabase.connect();
+		boolean connected = sourceDatabase.test();
+		Log.pl("Connected to "+source.name()+" is connected: "+connected);
+	
+		
+		if(!connected){
+			Log.pl(EXIT_FAIL_MSG);
+			targetDatabase.close();
+			return;
+		}
+		
+		targetDatabase.connect();
+		connected = targetDatabase.test();
+		Log.pl("Connected to "+target.name()+" is connected: "+connected);		
+		if(!connected){
+			Log.pl(EXIT_FAIL_MSG);
+			targetDatabase.close();
+			return;
+		}
+		
+		
+		TextFile f = new TextFile("data/pgcfg/"+filename+".txt");
+		Map<String,String> viewTableMapping = f.getMapping();
 
+		List<String> listSourceTables = new ArrayList<String>(viewTableMapping.keySet());
+		Collections.reverse(listSourceTables);
+		
+
+		Log.pl("\n ");	
+		for(String sourceRelation:viewTableMapping.keySet()){
+			String destTable = viewTableMapping.get(sourceRelation);
+
+			String schema = destTable.substring(0,destTable.indexOf('.')); 
+			String table = destTable.substring(destTable.indexOf('.')+1,destTable.length());
+			Log.pl("Schema: '"+schema+"'  , Table: '"+table+"' ");
+			
+			List<Index> indexes = targetDatabase.getIndexes(schema, table);
+			
+			
+			for(Index idx:indexes){
+				//Log.pl("Index: "+idx);
+				String idxName = idx.getIndexName();
+				if(!idxName.endsWith("_pkey")){
+				String ddl = "DROP INDEX "+schema+"."+idxName;
+				Log.pl("Dropping index :  '"+ddl+"'");
+				targetDatabase.execute(ddl);
+				}
+				
+			}				
+			
+			String deleteByDataSetDML = "delete from "+destTable+" where data_set = "+dataSet+"";
+			targetDatabase.execute(deleteByDataSetDML);
+			
+			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable, dataSet);
+			
+			
+			boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
+			if(!indexesExist){
+				
+				for(Index idx:indexes){
+					String idxName = idx.getIndexName();
+					if(!idxName.endsWith("_pkey")){
+					
+						String ddl = "CREATE INDEX "+idxName+" ON "+idx.getTableSchema()+"."+idx.getTableName()+" USING btree ("+idx.getColumnName()+")";
+						targetDatabase.execute(ddl);
+					}
+						//boolean indexesExist = sourceDatabase.doesAnyIndexExist(schema, table);
+				}
+			}			
+			
+		}
+		
+		sourceDatabase.close();
+		targetDatabase.close();
+		
+		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
+	}		
 
 	//@SuppressWarnings("boxing")
 	private static void performCopy(DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
@@ -247,6 +367,8 @@ public class EtlJob {
 		int count=0;
 		ResultSet rs = sourceDatabase.queryLarge(query);
 
+
+		
 		try{
 			//Log.pl("Rows:"+rs.getFetchSize());
 			StringBuilder sb = new StringBuilder();
@@ -279,6 +401,69 @@ public class EtlJob {
 		Log.pl("Finished copying "+destTable+".\n\n");
 	}
 
+	//@SuppressWarnings("boxing")
+	private static void performCopy(DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+			String sourceRelation, String destTable, 
+			String dataSet) {
+		
+		
+		List<ColumnDefinition> cds = sourceDatabase.getColumnDefsFromDbMeta(sourceRelation);
+		//for(ColumnDefinition cd:cds){
+			//int cdcoltype = cd.getColType();
+			//Log.pl("Column: "+cd.getColName()+" type:"+DatabaseManager.TYPES.get(cdcoltype)+"");
+		//}
+		String countQuery = "select count(*) from "+sourceRelation;
+		if(sourceRelation.startsWith("benchmarking.")){
+			countQuery += " where data_set="+dataSet+" ";
+		}		
+		sourceDatabase.query(countQuery);
+		int countResult = sourceDatabase.getCountResult();
+		Log.pl("Source Result Size:"+countResult);
+		int max = getMagnitude(countResult);
+		String query = "select * from "+sourceRelation;
+		
+		if(sourceRelation.startsWith("benchmarking.")){
+			query += " where data_set="+dataSet+"";
+		}
+		
+		Log.pl("Source query: "+query);
+		int count=0;
+		ResultSet rs = sourceDatabase.queryLarge(query);
+
+
+		
+		try{
+			//Log.pl("Rows:"+rs.getFetchSize());
+			StringBuilder sb = new StringBuilder();
+			while(rs.next()){
+				
+				boolean first = true;
+				for(ColumnDefinition cd:cds){
+					if(!first){sb.append(D);}else{first=false;}
+					extractResultIntoStringBuilder(rs, sb, cd);
+					
+				}//for(ColumnDefinition cd:cds)
+				sb.append("\n");
+				//Log.profile("    Read Record "+count+"  appending to file:"+filename);
+				if(count%max==0){
+					Log.pl(new Date()+" Copying data to target: "+destTable+" at count: "+count);
+					
+					copyPostgres(targetDatabase,destTable, sb.toString());
+					sb = new StringBuilder();
+				}
+				count++;
+				//progrpt.completeWork();
+			}//while(rs.next())
+			
+			copyPostgres(targetDatabase, destTable, sb.toString());
+			sb = new StringBuilder();				
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}//trycatch
+		Log.pl("Finished copying "+destTable+".\n\n");
+	}	
+	
 	private static void extractResultIntoStringBuilder(ResultSet rs,
 			StringBuilder sb, ColumnDefinition cd) throws SQLException {
 		int cdcoltype = cd.getColType();

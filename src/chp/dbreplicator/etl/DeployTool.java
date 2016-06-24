@@ -20,7 +20,10 @@ import org.postgresql.core.BaseConnection;
 import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
+import chp.dbreplicator.Index;
 import chp.dbreplicator.Log;
+
+
 
 
 //import jhg.util.TextFile;
@@ -102,9 +105,16 @@ public class DeployTool {
 		//mrUAT("2014u1");
 		//mrUAT("2014u2");
 		//mrPRD("2014u1");
-		mrPRD("2014u2");
+		//mrPRD("2014u2");
+		//bmUAT("hewitt");
+		//bmUAT("towers");
+		//bmUAT("mercer");
 		
-		//bmUAT("mercer"); 
+		bmUAT();
+		//bmPRD("hewitt");
+		//bmIndexTest();
+		//ncIndexTest();
+		//mrPRD_RL();
 	}
 	public static void testSourceAndTarget(){
 		//test(Database.DMCUST, Database.DMFRW);
@@ -157,6 +167,9 @@ public class DeployTool {
 		deploy(true, Database.DMFDEV, Database.DMFPRD,"valuequest_"+dataset);
 	}		
 
+	public static void mrPRD_RL(){
+		deployPartial(true, Database.DMTESTNEW, Database.DMPRODNEW,"market_reports_request_log");
+	}
 	/*
 	 * Network Compare
 	 */
@@ -166,9 +179,9 @@ public class DeployTool {
 		deploy(true, Database.DM, Database.DMFDEV,"whs_viewer");
 	}
 	
-	public static void ncUAT(){
-		deploy(true, Database.DMFDEV, Database.DMFUAT,"whs_viewer");
-	}
+	//public static void ncUAT(){
+	//	deploy(true, Database.DMFDEV, Database.DMFUAT,"whs_viewer");
+	//}
 
 	public static void ncPRP(){
 		deploy(true, Database.DMFUAT, Database.DMFPRP,"whs_viewer");
@@ -182,6 +195,7 @@ public class DeployTool {
 	/*
 	 * Benchmarking 		
 	 */
+	
 	
 	public static void bmUAT(){
 		deploy(true, Database.DMDEVNEW, Database.DMTESTNEW,"benchmarking");
@@ -200,7 +214,7 @@ public class DeployTool {
 		deployPartial(true, Database.DMTESTNEW, Database.DMPPRDNEW,"benchmarking_"+consultant);
 	}	
 	public static void bmPRD(String consultant){
-		deployPartial(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking"+consultant);
+		deployPartial(true, Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking_"+consultant);
 	}			
 	
 	/*
@@ -282,44 +296,85 @@ public class DeployTool {
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
 			
+			//Indexes not used.
 			performCopy( cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+			
+			
 		}
 		
 		sourceDatabase.close();
 		targetDatabase.close();
 		
 		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
-		/*
-		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
+		
+	}
+		
+	@SuppressWarnings("unused")
+	private static void bmIndexTest(){
+		indexTest(Database.DMDEVNEW,"benchmarking");
+	}
+	@SuppressWarnings("unused")
+	private static void ncIndexTest(){
+		indexTest(Database.DMFUAT,"whs_viewer");
+
+	}	
+	
+	//@SuppressWarnings("boxing")
+	private static void indexTest(Database source, String schema){
+		Log.pl("Reading Indexes of "+source.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
-		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+			
 		sourceDatabase.connect();
 		Log.pl("Connected to "+source.name()+" is connected: "+sourceDatabase.test());
-	
-		targetDatabase.connect();
-		Log.pl("Connected to "+target.name()+" is connected: "+targetDatabase.test());
 		
 		List<String> tables = sourceDatabase.getTables(schema);
-		
+		/*
+		 * 		//readIndexes(sourceDatabase,schema);
+				dropIndexes(sourceDatabase,schema);
+				doIndexesExist(sourceDatabase,schema);
+				recreateIndexes(sourceDatabase,schema);
+		 */
 		for(String table:tables){
-			String sourceRelation = schema+"."+table;
-			String destTable = schema+"."+table;
+			String relation = schema+"."+table;
+			
 			if(!"request_log".equals(table)){
-				performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+				List<Index> indexes = sourceDatabase.getIndexes(schema, table);
+				
+				
+				for(Index idx:indexes){
+					Log.pl("Index: "+idx);
+					
+					//String ddl = "DROP INDEX "+idx.getIndexName();
+					//Log.pl("Dropping index :  '"+ddl+"'");
+					//sourceDatabase.execute(ddl);
+					
+				}
+				//performCopy
+				boolean indexesExist = sourceDatabase.doesAnyIndexExist(schema, table);
+				if(!indexesExist){
+					
+					for(Index idx:indexes){
+						String ddl = "CREATE INDEX "+idx.getIndexName()+" ON "+idx.getTableSchema()+"."+idx.getTableName()+" USING btree ("+idx.getColumnName()+")";
+						sourceDatabase.execute(ddl);
+						//boolean indexesExist = sourceDatabase.doesAnyIndexExist(schema, table);
+					}
+				}
+				
+				String analyze = "ANALYZE "+relation+" ";
+				sourceDatabase.execute(analyze);
+				
 			}
 		}
 		
 		sourceDatabase.close();
-		targetDatabase.close();
 		
-		Log.pl("Finished on "+new java.util.Date()+"!");	
-		*/		
-	}
 		
+		Log.pl("Finished on "+new java.util.Date()+"!");			
+	}	
 	
 	//@SuppressWarnings("boxing")
-	private static void deploy(boolean cleanTarget,Database source, Database target, String schema){
+	private static void deploy(boolean cleanTarget, Database source, Database target, String schema){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
@@ -336,7 +391,44 @@ public class DeployTool {
 			String sourceRelation = schema+"."+table;
 			String destTable = schema+"."+table;
 			if(!"request_log".equals(table)){
+				List<Index> indexes = targetDatabase.getIndexes(schema, table);
+				
+				
+				for(Index idx:indexes){
+					//Log.pl("Index: "+idx);
+					String idxName = idx.getIndexName();
+					if(!idxName.endsWith("_pkey")){
+					String ddl = "DROP INDEX "+idxName;
+					Log.pl("Dropping index :  '"+ddl+"'");
+					targetDatabase.execute(ddl);
+					}
+					
+				}
+				
 				performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+				
+				
+				boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
+				if(!indexesExist){
+					
+					for(Index idx:indexes){
+						String idxName = idx.getIndexName();
+						if(!idxName.endsWith("_pkey")){
+						
+							String ddl = "CREATE INDEX "+idxName+" ON "+idx.getTableSchema()+"."+idx.getTableName()+" USING btree ("+idx.getColumnName()+")";
+							targetDatabase.execute(ddl);
+						}
+							//boolean indexesExist = sourceDatabase.doesAnyIndexExist(schema, table);
+					}
+				}
+				
+				String analyze = "ANALYZE "+destTable+" ";
+				targetDatabase.execute(analyze);				
+				
+				
+				
+				
+				
 			}
 		}
 		

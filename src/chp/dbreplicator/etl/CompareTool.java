@@ -27,11 +27,39 @@ public class CompareTool {
 		 * Then compare the row counts for each table.
 		 */
 		//compareI2IDevTest();
+		//compareBenchmarkingTestProd();
 		//compareBenchmarkingDevTest();
 		//compareNetworkCompareUatProd();
 		//compareI2IDevTest();
-		compareESDevTest();
+		//compareESDevTest();
+		//compareESDevProd();
+		//compareESTestProd();
+		compareMRDevTest();
 	}
+	
+	public static void compareMRDevTest(){
+		if(compare(Database.DMFDEV, Database.DMFUAT,"valuequest",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}	
+
+	public static void compareESTestProd(){
+		if(compare(Database.DMFUAT, Database.DMFPRD,"employer",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}		
+	
+	public static void compareESDevProd(){
+		if(compare(Database.DMFDEV, Database.DMFPRD,"employer",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}	
 	
 	public static void compareESDevTest(){
 		if(compare(Database.DMFDEV, Database.DMFUAT,"employer",true)){
@@ -71,6 +99,14 @@ public class CompareTool {
 			Log.pl("\n\nFINAL RESULT: FAIL");			
 		}		
 	}	
+	
+	public static void compareBenchmarkingTestProd(){
+		if(compare(Database.DMTESTNEW, Database.DMPRODNEW,"benchmarking",true)){
+			Log.pl("\n\nFINAL RESULT: PASS");
+		}else{
+			Log.pl("\n\nFINAL RESULT: FAIL");			
+		}		
+	}		
 	
 	/**
 	 * Test done to prove ETL to dev. The inherited 9.3 db dev to test comparison.
@@ -168,29 +204,31 @@ public class CompareTool {
 		
 		int idx = 0;
 		for(String table:sourceTables){
-			String fqTable = schema+"."+table;
-			String query = "select count(*) from "+fqTable;
-			sourceDatabase.query(query);
-			if(sourceDatabase.haveResult()){
-				sourceCounts[idx] = sourceDatabase.getCountResult();
-			}else{
-				sourceCounts[idx] = -1;
-			}
-			targetDatabase.query(query);
-			if(targetDatabase.haveResult()){
-				targetCounts[idx] = targetDatabase.getCountResult();
-			}else{
-				targetCounts[idx] = -1;
-			}
-			if(sourceCounts[idx]!=targetCounts[idx]){
-				if(!table.contains("request_log")){
-					Log.pl("FAIL : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was not the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
-					discrepancyCount++;
+			if(!"request_log".equals(table)){
+				String fqTable = schema+"."+table;
+				String query = "select count(*) from "+fqTable;
+				sourceDatabase.query(query);
+				if(sourceDatabase.haveResult()){
+					sourceCounts[idx] = sourceDatabase.getCountResult();
+				}else{
+					sourceCounts[idx] = -1;
 				}
-			}else{
-				Log.pl("PASS : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
+				targetDatabase.query(query);
+				if(targetDatabase.haveResult()){
+					targetCounts[idx] = targetDatabase.getCountResult();
+				}else{
+					targetCounts[idx] = -1;
+				}
+				if(sourceCounts[idx]!=targetCounts[idx]){
+					if(!table.contains("request_log")){
+						Log.pl("FAIL : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was not the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
+						discrepancyCount++;
+					}
+				}else{
+					Log.pl("PASS : Source ("+sourceDatabase.getDatabase().name()+") table "+table+" count: "+sourceCounts[idx]+" was the same in target ("+targetDatabase.getDatabase().name()+"): "+targetCounts[idx]);
+				}
+				idx++;
 			}
-			idx++;							
 		}
 		Log.pl("Discrepancy Count: "+discrepancyCount);
 		boolean pass = (discrepancyCount==0);
@@ -213,32 +251,33 @@ public class CompareTool {
 		List<String> targetTables = targetDatabase.getTables(schema);	
 		
 		for(String table:sourceTables){
-			
-			int discrepancyCount = 0;
-			String fqTable = schema+"."+table;
-			Log.pl("Randomly checking "+fqTable+" with "+limit+" samples.");
-			List<ColumnDefinition> cdefs = sourceDatabase.getColumnDefsFromDbMeta(fqTable);
-			String query = "select * from "+fqTable+" order by random() limit "+limit;
-			sourceDatabase.query(query);
-			if(sourceDatabase.haveResult()){
-				ResultSet rs = sourceDatabase.getResult();
-				try {
-					while(rs.next()){
-						String proofQuery = makeSelectWhere(cdefs,fqTable,rs);
-						
-						discrepancyCount += checkTarget(sourceDatabase,targetDatabase,proofQuery);
+			if(!"request_log".equals(table)){
+				int discrepancyCount = 0;
+				String fqTable = schema+"."+table;
+				Log.pl("Randomly checking "+fqTable+" with "+limit+" samples.");
+				List<ColumnDefinition> cdefs = sourceDatabase.getColumnDefsFromDbMeta(fqTable);
+				String query = "select * from "+fqTable+" order by random() limit "+limit;
+				sourceDatabase.query(query);
+				if(sourceDatabase.haveResult()){
+					ResultSet rs = sourceDatabase.getResult();
+					try {
+						while(rs.next()){
+							String proofQuery = makeSelectWhere(cdefs,fqTable,rs);
+							
+							discrepancyCount += checkTarget(sourceDatabase,targetDatabase,proofQuery);
+						}
+					} catch (SQLException e) {
+						Log.pl("Exception in Random Query: "+ query + " e.getMessage()"+e.getMessage());
+						//e.printStackTrace();
 					}
-				} catch (SQLException e) {
-					Log.pl("Exception in Random Query: "+ query + " e.getMessage()"+e.getMessage());
-					//e.printStackTrace();
+					
+				}else{
+					Log.pl("No results for: "+query);
 				}
-				
-			}else{
-				Log.pl("No results for: "+query);
-			}
-			Log.pl("Discrepancy count for "+table+" : "+discrepancyCount+"\n\n");
-			if(discrepancyCount>0){
-				rv = false;
+				Log.pl("Discrepancy count for "+table+" : "+discrepancyCount+"\n\n");
+				if(discrepancyCount>0){
+					rv = false;
+				}
 			}
 		}
 		return rv;

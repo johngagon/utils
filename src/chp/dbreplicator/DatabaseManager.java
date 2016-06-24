@@ -207,6 +207,25 @@ public class DatabaseManager {
 		}
 		return defs;		
 	}
+	public List<Index> getIndexes(String schema,String table){
+		List<Index> list = new ArrayList<Index>();
+		try{
+			DatabaseMetaData md = conn.getMetaData();
+			String catalogPattern = null;
+			ResultSet rs = md.getIndexInfo(catalogPattern, schema, table, false, false);
+			while(rs.next()){
+				Index idx = new Index(rs);
+				if(idx.isValid()){
+					list.add(idx);
+				}
+			}
+		}catch(Exception e){
+			Log.error(e);
+			return new ArrayList<Index>();
+		}
+		return list;		
+	}
+	
 	
 	public List<String> getTables(String schema){
 		List<String> list = new ArrayList<String>();
@@ -427,7 +446,27 @@ public class DatabaseManager {
 		}
 		return rv;
 	}
-	
+	public boolean doesAnyIndexExist(String schema, String table) {
+		boolean rv = false;
+		//split if contains .
+		//String schema = null;
+		
+		Log.pl("Checking if any indexes exists on "+schema+" - '"+table+"'");
+		try{
+			DatabaseMetaData md = conn.getMetaData();
+			ResultSet rs = md.getIndexInfo(null,schema,table,false,false);//.getTables(null, schema, table.toLowerCase(), null);
+			
+			while(rs.next()) {
+				rv = true;
+				break;
+			}
+			rs.close();
+			
+		}catch(Exception e){
+			e.printStackTrace();//Log.error(e);
+		}
+		return rv;
+	}	
 	
 	public void connect(){
 		try{

@@ -82,7 +82,6 @@ public class Attribute {
 			sourceDataType = rs.getShort(Field.SOURCE_DATA_TYPE.ordinal());
 			
 		} catch (SQLException e) {
-			
 			e.printStackTrace();
 		}
 		

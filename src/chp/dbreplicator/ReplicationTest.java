@@ -96,43 +96,43 @@ public class ReplicationTest {
 		Log.pl("\n1. Running query job on employer.");
 		String employerSchema = "CREATE SCHEMA employer";
 		
-		Index companiesParentsParentIndex = new Index("companies_parents_parent_index",        "COMPANIES_PARENTS","parents");
-		Index companiesEmpCtTotalIndex = new Index("companies_employee_counts_total_index",    "COMPANIES_EMPLOYEE_COUNTS","employees_total");
-		Index companiesFortuneRankIndex = new Index("companies_fortune_1000_rank_index",       "COMPANIES_FORTUNE_1000","rank");
-		Index naicsNatlindustryIndustryIndex = new Index("naics_natl_industry_industry_index", "NAICS_NATIONAL_INDUSTRIES","industry");
-		Index naicsIndustryGroupIndex = new Index("naics_industries_group_index",              "NAICS_INDUSTRIES","group");
-		Index naicsGroupsSubSectorIndex = new Index("naics_groups_subsector_index",            "NAICS_GROUPS","subsector");
-		Index naicsSubsectorsSectorIndex = new Index("naics_subsectors_sector_index",          "NAICS_SUBSECTORS","sector");
-		Index sicMajorGroupsDivisionIndex = new Index("sic_major_groups_division_index",       "SIC_MAJOR_GROUPS","division");
-		Index companiesUsaAddressesStateIndex = new Index("companies_usa_adds_state_index",    "COMPANIES_USA_ADDRESSES","state");
+		IndexSimpleInfo companiesParentsParentIndex = new IndexSimpleInfo("companies_parents_parent_index",        "COMPANIES_PARENTS","parents");
+		IndexSimpleInfo companiesEmpCtTotalIndex = new IndexSimpleInfo("companies_employee_counts_total_index",    "COMPANIES_EMPLOYEE_COUNTS","employees_total");
+		IndexSimpleInfo companiesFortuneRankIndex = new IndexSimpleInfo("companies_fortune_1000_rank_index",       "COMPANIES_FORTUNE_1000","rank");
+		IndexSimpleInfo naicsNatlindustryIndustryIndex = new IndexSimpleInfo("naics_natl_industry_industry_index", "NAICS_NATIONAL_INDUSTRIES","industry");
+		IndexSimpleInfo naicsIndustryGroupIndex = new IndexSimpleInfo("naics_industries_group_index",              "NAICS_INDUSTRIES","group");
+		IndexSimpleInfo naicsGroupsSubSectorIndex = new IndexSimpleInfo("naics_groups_subsector_index",            "NAICS_GROUPS","subsector");
+		IndexSimpleInfo naicsSubsectorsSectorIndex = new IndexSimpleInfo("naics_subsectors_sector_index",          "NAICS_SUBSECTORS","sector");
+		IndexSimpleInfo sicMajorGroupsDivisionIndex = new IndexSimpleInfo("sic_major_groups_division_index",       "SIC_MAJOR_GROUPS","division");
+		IndexSimpleInfo companiesUsaAddressesStateIndex = new IndexSimpleInfo("companies_usa_adds_state_index",    "COMPANIES_USA_ADDRESSES","state");
 		//Index xxxxxxxx01 = new Index("xxxxxx","yyyyyyy","zzzzzzz");
 
-		Index carrierCarriersTypeIndex = new Index("carriers_carriers_type_index",             "CARRIERS_CARRIERS","type");
-		Index carriersGroupIndex = new Index("carriers_group_index",                           "CARRIERS_CARRIERS","group");
-		Index carrierTypeNameIndex = new Index("carriers_types_name_index",                    "CARRIERS_TYPES","name");
-		Index branchDunsIndex = new Index("branch_duns_index",                                 "COMPANIES_BRANCHES","duns_number");
-		Index companiesBranchIndex = new Index("companies_branch_carriers_index",              "COMPANIES_BRANCH_CARRIERS","branch_duns_number, carrier");
-		Index branchCarriersBranchIndex = new Index("companies_branch_carriers_branch_index",  "COMPANIES_BRANCH_CARRIERS","branch_duns_number");		
-		Index branchCarriersCarrierIndex = new Index("companies_branch_carriers_carrier_index","COMPANIES_BRANCH_CARRIERS","carrier");
-		Index branchLocBbIndex = new Index("branch_locations_bb_index",                        "COMPANIES_BRANCH_LOCATIONS","building_block");
-		Index companyCarriersIndex = new Index("company_carriers_index",                       "COMPANIES_COMPANY_CARRIERS","duns_number,carrier");
-		Index companyCarriersIndex2 = new Index("company_carriers2_index",                     "COMPANIES_COMPANY_CARRIERS","carrier");
-		Index companiesDomesticUltIndex = new Index("companies_du_index",                      "COMPANIES_COMPANIES","domestic_ultimate");
-		Index companiesNaicsIndex = new Index("companies_companies_naics_index",               "COMPANIES_COMPANIES","naics_national_industry");
-		Index companiesPurchOptIndex = new Index("companies_purchase_opt_index",               "COMPANIES_COMPANIES","purchase_option");
-		Index companiesSicIndex = new Index("companies_companies_sic_index",                   "COMPANIES_COMPANIES","sic_industry");
-		Index geoBgTractIndex = new Index("geo_bg_tract_index",                                "GEOGRAPHY_BLOCK_GROUPS","census_tract");
-		Index geoBbsGrpIndex = new Index("geo_bbs_grp_index",                                  "GEOGRAPHY_BUILDING_BLOCKS","block_group");
-		Index geoTractsCountyIndex = new Index("geo_tracts_county_index",                      "GEOGRAPHY_CENSUS_TRACTS","county");
-		Index geoCountiesStateIndex = new Index("geo_counties_state_index",                    "GEOGRAPHY_COUNTIES","state");
-		Index naicsIndex = new Index("naics_index",                                            "REFER.NAICS","naics,naics_industry_code");
-		Index sicIndex = new Index("sic_index",                                                "REFER.SIC","sic_industry_code");
-		Index sicIndGrpIndex = new Index("sic_industries_group_index",                         "SIC_INDUSTRIES","industry_group");
-		Index sicMajorGrpIndex = new Index("sic_industry_groups_majorgrp_index",               "SIC_INDUSTRY_GROUPS","major_group");
+		IndexSimpleInfo carrierCarriersTypeIndex = new IndexSimpleInfo("carriers_carriers_type_index",             "CARRIERS_CARRIERS","type");
+		IndexSimpleInfo carriersGroupIndex = new IndexSimpleInfo("carriers_group_index",                           "CARRIERS_CARRIERS","group");
+		IndexSimpleInfo carrierTypeNameIndex = new IndexSimpleInfo("carriers_types_name_index",                    "CARRIERS_TYPES","name");
+		IndexSimpleInfo branchDunsIndex = new IndexSimpleInfo("branch_duns_index",                                 "COMPANIES_BRANCHES","duns_number");
+		IndexSimpleInfo companiesBranchIndex = new IndexSimpleInfo("companies_branch_carriers_index",              "COMPANIES_BRANCH_CARRIERS","branch_duns_number, carrier");
+		IndexSimpleInfo branchCarriersBranchIndex = new IndexSimpleInfo("companies_branch_carriers_branch_index",  "COMPANIES_BRANCH_CARRIERS","branch_duns_number");		
+		IndexSimpleInfo branchCarriersCarrierIndex = new IndexSimpleInfo("companies_branch_carriers_carrier_index","COMPANIES_BRANCH_CARRIERS","carrier");
+		IndexSimpleInfo branchLocBbIndex = new IndexSimpleInfo("branch_locations_bb_index",                        "COMPANIES_BRANCH_LOCATIONS","building_block");
+		IndexSimpleInfo companyCarriersIndex = new IndexSimpleInfo("company_carriers_index",                       "COMPANIES_COMPANY_CARRIERS","duns_number,carrier");
+		IndexSimpleInfo companyCarriersIndex2 = new IndexSimpleInfo("company_carriers2_index",                     "COMPANIES_COMPANY_CARRIERS","carrier");
+		IndexSimpleInfo companiesDomesticUltIndex = new IndexSimpleInfo("companies_du_index",                      "COMPANIES_COMPANIES","domestic_ultimate");
+		IndexSimpleInfo companiesNaicsIndex = new IndexSimpleInfo("companies_companies_naics_index",               "COMPANIES_COMPANIES","naics_national_industry");
+		IndexSimpleInfo companiesPurchOptIndex = new IndexSimpleInfo("companies_purchase_opt_index",               "COMPANIES_COMPANIES","purchase_option");
+		IndexSimpleInfo companiesSicIndex = new IndexSimpleInfo("companies_companies_sic_index",                   "COMPANIES_COMPANIES","sic_industry");
+		IndexSimpleInfo geoBgTractIndex = new IndexSimpleInfo("geo_bg_tract_index",                                "GEOGRAPHY_BLOCK_GROUPS","census_tract");
+		IndexSimpleInfo geoBbsGrpIndex = new IndexSimpleInfo("geo_bbs_grp_index",                                  "GEOGRAPHY_BUILDING_BLOCKS","block_group");
+		IndexSimpleInfo geoTractsCountyIndex = new IndexSimpleInfo("geo_tracts_county_index",                      "GEOGRAPHY_CENSUS_TRACTS","county");
+		IndexSimpleInfo geoCountiesStateIndex = new IndexSimpleInfo("geo_counties_state_index",                    "GEOGRAPHY_COUNTIES","state");
+		IndexSimpleInfo naicsIndex = new IndexSimpleInfo("naics_index",                                            "REFER.NAICS","naics,naics_industry_code");
+		IndexSimpleInfo sicIndex = new IndexSimpleInfo("sic_index",                                                "REFER.SIC","sic_industry_code");
+		IndexSimpleInfo sicIndGrpIndex = new IndexSimpleInfo("sic_industries_group_index",                         "SIC_INDUSTRIES","industry_group");
+		IndexSimpleInfo sicMajorGrpIndex = new IndexSimpleInfo("sic_industry_groups_majorgrp_index",               "SIC_INDUSTRY_GROUPS","major_group");
 		
 		
 		
-		Index[] indexes = {companyCarriersIndex,companiesBranchIndex,sicIndex,naicsIndex,branchDunsIndex,branchCarriersBranchIndex,branchCarriersCarrierIndex,carrierCarriersTypeIndex,carrierTypeNameIndex,companiesPurchOptIndex,companiesDomesticUltIndex,carriersGroupIndex,companiesSicIndex,sicIndGrpIndex,sicMajorGrpIndex,branchLocBbIndex,geoBbsGrpIndex,geoBgTractIndex,geoTractsCountyIndex,geoCountiesStateIndex,companiesParentsParentIndex,companiesEmpCtTotalIndex,companiesFortuneRankIndex,naicsNatlindustryIndustryIndex,naicsIndustryGroupIndex,naicsGroupsSubSectorIndex,naicsSubsectorsSectorIndex,sicMajorGroupsDivisionIndex,companiesUsaAddressesStateIndex};
+		IndexSimpleInfo[] indexes = {companyCarriersIndex,companiesBranchIndex,sicIndex,naicsIndex,branchDunsIndex,branchCarriersBranchIndex,branchCarriersCarrierIndex,carrierCarriersTypeIndex,carrierTypeNameIndex,companiesPurchOptIndex,companiesDomesticUltIndex,carriersGroupIndex,companiesSicIndex,sicIndGrpIndex,sicMajorGrpIndex,branchLocBbIndex,geoBbsGrpIndex,geoBgTractIndex,geoTractsCountyIndex,geoCountiesStateIndex,companiesParentsParentIndex,companiesEmpCtTotalIndex,companiesFortuneRankIndex,naicsNatlindustryIndustryIndex,naicsIndustryGroupIndex,naicsGroupsSubSectorIndex,naicsSubsectorsSectorIndex,sicMajorGroupsDivisionIndex,companiesUsaAddressesStateIndex};
 
 		String createCompanyLevelsTable = "CREATE TABLE "+COMPANY_LEVELS+" (duns_number varchar(10), depth integer, global_ultimate varchar(10))";
 		String queryCompanyLevels = getCompanyLevelsQuery();
@@ -217,7 +217,7 @@ public class ReplicationTest {
 		
 	
 		
-		for(Index index:indexes){
+		for(IndexSimpleInfo index:indexes){
 			if(!localDatabase.doesIndexExist(index.getIndexName(),index.getTable())){
 				Log.pl("Creating Index:"+index.getIndexName()+":"+index.sql());
 				localDatabase.execute(index.sql());

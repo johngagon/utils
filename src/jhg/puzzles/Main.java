@@ -16,8 +16,17 @@ public class Main {
 	
 	
 	public static void main(String[] args) {
-		testPuzzle_23();
+		testC();
 	}
+	public static void testC(){
+		char a = 'H';
+		int d = 0;
+		for(int i=0;i<1000;i++){
+			d = d + a;
+		}
+		System.out.println(d);
+	}
+	
 	public static void testPuzzle_23(){
 		Random rnd = new Random();
 		StringBuffer word = null;

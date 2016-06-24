@@ -14,7 +14,7 @@ public class Numbers {
 		Double z = (360.0/7.0);
 		
 		Double[] values = {e,pi,g,z};
-		Double[] values2 = values;
+		//Double[] values2 = values;
 		
 		
 		for(Double x:values){
