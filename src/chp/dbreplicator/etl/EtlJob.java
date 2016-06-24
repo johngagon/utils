@@ -25,6 +25,7 @@ import chp.dbreplicator.Log;
 
 public class EtlJob {
 
+	
 	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
 	private static final String D = "\t";
 	private static final String noq = "";
