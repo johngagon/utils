@@ -194,7 +194,11 @@ public class FormatUtil {
 		 * % [flags] [width] [.precision] conversion-character ( square brackets denote optional parameters )
 		 */
 		//test1();
-		test2();
+		//test2();
+		
+		System.out.format("Hello %s, %s, %s and %s!\n","John",250.9,"Joe","Sue");
+		System.out.format("Your total is $%,.2f: ",250.32988);
+		
 	}
 	private static void test2(){
 		

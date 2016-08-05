@@ -26,6 +26,7 @@ import chp.dbreplicator.Log;
 
 
 
+
 //import jhg.util.TextFile;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -98,26 +99,86 @@ public class DeployTool {
 	 *  handle						: not used anywhere, very generic way of converting ResultSet ot Object[]s
 	 */
 	public static void main(String[] args){
+		
+		//handleArgs(args);
+		
 		//esUAT2PRD();
-		//ncPRD();
+		ncPRD();
 		//iiDEV2UAT();//fails due to hard returns in fact and paragraph   THIS CANNOT BE PROMOTED - FIX BY COPYING DM_TEST
 		
 		//mrUAT("2014u1");
 		//mrUAT("2014u2");
 		//mrPRD("2014u1");
 		//mrPRD("2014u2");
+		
 		//bmUAT("hewitt");
 		//bmUAT("towers");
+		//bmPRD("hewitt");
 		//bmUAT("mercer");
-		
-		bmUAT();
+		//bmUAT();
 		//bmPRD("hewitt");
 		//bmIndexTest();
 		//ncIndexTest();
 		//mrPRD_RL();
 	}
+	
+	@SuppressWarnings("unused")
+	private static void handleArgs(String[] args){
+		
+		List<String> arg1List = Arrays.asList(new String[]{"esUAT","esPRD","mrUAT","mrPRD","bmUAT","bmPRD","ncPRD","bscUAT","bscPRD"});
+		List<String> hasParamList = Arrays.asList(new String[]{"mrUAT","mrPRD","bmUAT","bmPRD"});
+		if(args==null || args.length<1 || args.length >2){
+			usage();
+		}else{
+			String arg1 = args[0];
+			
+			if(arg1List.contains(arg1)){
+				
+				if(hasParamList.contains(arg1)){
+					
+					if(args.length<2){
+						usage();
+						return;
+					}
+					String arg2 = args[1];
+					
+					switch(arg1){
+						case "bmUAT": bmUAT(arg2);break;
+						case "bmPRD": bmPRD(arg2);break;
+						case "mrUAT": mrUAT(arg2);break;
+						case "mrPRD": mrPRD(arg2);break;
+						default: usage();break;
+					}
+					
+				}else{
+
+					switch(arg1){
+						case "esUAT": esUAT();break;
+						case "esPRD": esPRD();break;
+						case "ncPRD": ncPRD();break;
+						case "bscUAT": bscUAT();break;
+						case "bscPRD": bscPRD();break;
+						default: usage();break;
+					}
+					
+				}//param arg or not
+				
+				
+			}else{
+				usage();
+			}//proper arg
+		
+		}//have args
+	}
+	
+	private static void usage(){
+		
+		System.out.println("Usage: deployFoundation [esUAT|esPRD|ncUAT|ncPRD|bscUAT|bscPRD] | [mrUAT|mrPRD] <dataset> | [bmUAT|bmPRD] <consultant>");
+	}
+	
 	public static void testSourceAndTarget(){
 		//test(Database.DMCUST, Database.DMFRW);
+		mrPRD_RL();
 	}
 	
 	
@@ -168,7 +229,7 @@ public class DeployTool {
 	}		
 
 	public static void mrPRD_RL(){
-		deployPartial(true, Database.DMTESTNEW, Database.DMPRODNEW,"market_reports_request_log");
+		deployPartial(true, Database.DM, Database.DMFPRD,"market_reports_request_log");
 	}
 	/*
 	 * Network Compare
@@ -282,16 +343,16 @@ public class DeployTool {
 		TextFile f = new TextFile("data/pgcfg/"+filename+".txt");
 		Map<String,String> viewTableMapping = f.getMapping();
 
-		List<String> l = new ArrayList<String>(viewTableMapping.keySet());
+		List<String> l = new ArrayList<String>(viewTableMapping.keySet());//FIXME isn't this supposed to be values (used in etl)
 		Collections.reverse(l);
 		
-		for(String sourceRelation:l){
-			String destTable = viewTableMapping.get(sourceRelation);
+		//for(String sourceRelation:l){
+		//	String destTable = viewTableMapping.get(sourceRelation);
 		
-			if(cleanTarget){
-				cleanTable(targetDatabase,destTable);
-			}	
-		}
+			//if(cleanTarget){
+			//	cleanTable(targetDatabase,destTable);
+			//}	
+		//}
 		Log.pl("\n ");	
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
@@ -469,7 +530,8 @@ public class DeployTool {
 		int countResult = sourceDatabase.getCountResult();
 		Log.pl("Source Result Size:"+countResult);
 		int max = getMagnitude(countResult);
-		String query = "select * from "+sourceRelation;
+		String query = "select * from "+sourceRelation  ;
+		//FIXME if database is benchmarking and source is networks, add in the where data_set part or modify that here to avoid errors
 		Log.pl("Source Reading rows:"+query);
 		int count=0;
 		ResultSet rs = sourceDatabase.queryLarge(query);

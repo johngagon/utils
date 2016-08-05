@@ -29,15 +29,15 @@ public class CompareTool {
 		//compareI2IDevTest();
 		//compareBenchmarkingTestProd();
 		//compareBenchmarkingDevTest();
-		//compareNetworkCompareUatProd();
+		compareNetworkCompareUatProd();
 		//compareI2IDevTest();
 		//compareESDevTest();
 		//compareESDevProd();
 		//compareESTestProd();
-		compareMRDevTest();
+		//compareMRDevUat();
 	}
 	
-	public static void compareMRDevTest(){
+	public static void compareMRDevUat(){
 		if(compare(Database.DMFDEV, Database.DMFUAT,"valuequest",true)){
 			Log.pl("\n\nFINAL RESULT: PASS");
 		}else{

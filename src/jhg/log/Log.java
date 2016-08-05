@@ -2,6 +2,8 @@ package jhg.log;
 
 public class Log {
 
+	
+	
 	/*
 	 * centralize all the log utils here. fix references. combine the best of all of them.
 	 * 
@@ -86,4 +88,111 @@ public class Log {
 	 * Can store logging and output the channel
 	 * 
 	 */
+	
+	
+	public static void main(String[] args){
+		Category cat = Log.addCategory("database","DB");
+		cat.addSubCategory("errorTrace","DB.EX");
+		cat.addSubCategory("errorMessage","DB.XM");
+		cat.addSubCategory("sql","DB.SQL");
+		cat.addSubCategory("success","DB.EXEC");
+		cat.addSubCategory("count","DB.C");
+		cat.addSubCategory("result","DB.R");
+		cat.addSubCategory("connect","DB.CX");
+		cat.addSubCategory("transact","DB.TX");
+		cat.addSubCategory("setParameter","DB.PAR");
+		cat.addSubCategory("ddl","DB.DDL");            //The max will determine fixed width (+1 space, pad right/align left
+		Log.addField("database.connect","user");
+		Log.setDelimitersOnOutput('|');
+		
+		Log log = new Log();
+		
+		log.enable("database.count");
+		log.disable("database.sql");//default is disable so usually not necessary.
+		log.out("database.sql","select * from employees");
+		log.out("database.count","50");
+		log.memoryOn();
+		log.performanceOn();
+		///log memory on, log. performance on
+		log.prefixTimeStamp("database.sql");
+		log.start("start");
+		
+		log.out("database.connect","message").set("user","joeBlow");
+		log.stop("stop");
+		log.performanceOff();
+		log.memoryOff();
+	}
+
+	private static void setDelimitersOnOutput(char c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private Log out(String cat, String m) {
+		/*
+		 * parse cat
+		 */
+		return this;
+	}
+	private Log set(String field, String value){
+		//TODO impl
+		return this;
+	}
+
+	private Log prefixTimeStamp(String string) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log memoryOff() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log performanceOff() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log performanceOn() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log memoryOn() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log stop(String string) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log start(String string) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log disable(String string) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+	private Log enable(String string) {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+
+	//creates a root category
+	private static Category addCategory(String catName, String label) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private static void addField(String string, String string2) {
+		// TODO Auto-generated method stub
+		
+	}	
 }

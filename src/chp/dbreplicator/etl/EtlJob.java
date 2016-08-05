@@ -74,12 +74,17 @@ public class EtlJob {
 	public static void main(String[] args){
 		//testSourceAndTarget();
 		//compareSchemas(Database.DMCUST , Database.DMFRW , "employer");
-		etlBenchmarkingHewitt("1019");
-		etlBenchmarkingTowers("1016");
+		
+		
+		//etlBenchmarkingHewitt("1019");
+		//etlBenchmarkingTowers("1016201607");
+		
+		
+		
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
 		//etlMarketReports(true,"2014","2");
-		//etlNetworkCompare(true);
+		etlNetworkCompare(true);
 		//etlBenchmarkingShared(true);
 		//etlBenchmarkingMercer(true);
 		//etlTestEmployerSearch(true);
@@ -125,7 +130,7 @@ public class EtlJob {
 	
 	
 	public static void etlNetworkCompare(boolean cleanTarget){
-		etl(cleanTarget,Database.DW,Database.DMFPRD,"network_compare");//IDSProd on MSSQL -> dbtest/foundation_data_mart
+		etl(cleanTarget,Database.DW,Database.DMFUAT,"network_compare");//IDSProd on MSSQL -> dbtest/foundation_data_mart
 	}	
 	
 	public static void etlTestEmployerSearch(boolean cleanTarget){
