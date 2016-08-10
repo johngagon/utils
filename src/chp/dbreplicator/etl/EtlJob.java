@@ -84,15 +84,20 @@ public class EtlJob {
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
 		//etlMarketReports(true,"2014","2");
-		etlNetworkCompare(true);
+		//etlNetworkCompare(true);
 		//etlBenchmarkingShared(true);
 		//etlBenchmarkingMercer(true);
 		//etlTestEmployerSearch(true);
 		//etlEmployerSearch(true);
+		
+		etlBenchmarkingHewittDev("1019");
 	}
 	
 	//does this have the new tiered network in the table?
 
+	public static void etlBenchmarkingHewittDev(String dataSet){
+		etl(dataSet,Database.DWDEV,Database.DMDEVNEW,"benchmarking_hewitt");
+	}	
 	
 	public static void etlBenchmarkingHewitt(String dataSet){
 		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_hewitt");

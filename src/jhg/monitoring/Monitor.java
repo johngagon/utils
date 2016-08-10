@@ -14,7 +14,7 @@ import org.apache.http.impl.client.HttpClients;
 public class Monitor {
 
 	
-	public static void main(String[] args){
+	public static void serverLevelMonitoring(){
 		Map<String,String> websiteFoundTokenMap = new Hashtable<String,String>();
 		
 		websiteFoundTokenMap.put("https://chp-pidprod01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://sso.chpinfo.com&TargetResource=https%3A%2F%2Fwww.chpmarketquest.com%2Fportal%2FSSOServlet","MarketQuest is a highly secure platform");
@@ -58,7 +58,11 @@ public class Monitor {
 					}
 				}
 			}
-		}
+		}		
+	}
+	
+	public static void main(String[] args){
+
 	}
 	
 }

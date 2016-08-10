@@ -1,0 +1,278 @@
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+Profile:
+? Have around 12 years of IT experience in analysis, design, development, Testing, and roll-out of application
+software mostly in Telecom, Financial domain and banking sectors.
+? Hands on team design software architecture, development support and delivery of different modules within the
+common enterprise platform.
+? Hands on experience on designing, implementing, customizing Oracle Service Bus (OSB).
+? Strong programming and design experience on using Struts, JSF,Spring , Hibernate, JPA, Servlets, JMS,MDB.
+? Strong programming experience on using all latest frontend Technologies Angular,React,Node,bootstrap
+,DOJO,jquery,jquery UI, HTML,DHTML,CSS3.
+? Strong experience on selecting JEE design pattern.
+? Hands on experience on SOAP/RESTFUL,JERSEY Web services.
+? Strong experiencing using,configuring,customizing web/application servers as Weblogic,
+Webspher,JBOSS,Tomcat.
+? Sound RDBMS concepts and extensively worked with Oracle 10g, 11g, Sybase.
+? Experienced with Unix, Linux operating system and their underlying architecture, setting up services, jobs and
+writing/maintaining complex scripts.
+? Hands on Experience on Magic Draw, Microsoft Visio to Generate Class Diagrams and Sequence Diagrams.
+? Dedicated, hardworking,self motivated with good communication and interpersonal skills.
+Academic Qualification:
+Fairfield University CT
+Masters of Science in Software Engineering (2005-2007).
+Technical Skills:
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+PLATFORM/FRAMEWORK &LANGUAGES Java, J2EE, Struts, JSF,MVC, Spring, JSP, Servlet
+FRONTEND TECHNOLOGIES HTML,CSS,CSS3,JQUERY,JQUERY UI ,Angular, Bootstrap,
+Node, react, JS
+DEBUGGER TOOL Firebug, IE Developer Tool
+ORM TOOL Hibernate, Open JPA
+TESTING JUNIT, Code Coverage
+J2EE DESIGN PATTERN Session Facade, JDO, DAO, MVC,FRONT CONTROLLER,
+Factory, Observer
+SCRIPT Unix Shell Script (Bash).
+TECHNICAL&WEB DESIGNING TOOLS Dreamweaver, Eclipse, Net Beans, RAD
+VERSION CONTORL CVS, SVN, Clear Case, GIT.
+BUILD TOOL ANT, Maven
+WEB SERVICES XML, XSL, SOAP, WSDL, SOAP UI,RESTFUL
+SOFTWARE METHODOLOGIES Rational Unified Process (RUP), Object Oriented
+Analysis/Design/Programming
+PROCESS/VISUALMODELING TOOLS UML, Rational Rose, MS Visio, Magic Draw
+WEB & APPLICATION SERVERS Apache Tomcat , BEA Web Logic ,WEB SPHERE
+MICROSOFT WINDOW SERVERS Microsoft Windows Server (2000/2003)
+DATABASES Oracle, Sybase, MS Access, MS SQL, My SQL
+Server2000/2005/2008,SSIS,DTS.
+NETWORKING CCNA,LAN/WAN,TCP/IP
+OTHER LANGUAGES/FRAME WORK C#, C, C++, .Net Framework.
+MS TOOL MS Office, Word, Excel, PowerPoint, and MS Visio.
+PROFESSIONAL EXPERIENCE:
+HighPoint Solution Inc. Jan 2016-current
+Project: Content Wizard (Content Management System)
+Role: Sr. Java/Web Center Developer
+The Content Wizard will leverage the Universal Content Management Contributor (UCMC) application, to provide
+functionality to support the life cycle, from creation, to deployment, of Marketplace content scripts.
+This script development tool will provide the interface to CMS script writers who can log into system, create the script
+for CSR(Customer service representative).
+1. Designed/Implemented responsive User interface using Angular js for Script writer to create script.
+2. Designed/Implemented nodejs file system for script reading and loading into content management.
+3. Refactored the existing jQuery code and converted them to Angular.
+4. Wrote IDocScript, services, queries, templates in web center.
+5. Created/Modified IdocService, Queries in web center.
+6. Designed and implemented a track change system that allows writer to see what changes have been made by
+others on the content of the script.
+7. Worked closely with product managers, back-end web center developers, and CMS writer to implement elegant
+and easy to use front-end applications
+Environment: Weblogic, Oracle 11g, Angular 1.3, node js, Ajax, bootstrap, Webcenter, UCMC, Git, Stash, Linux.
+ActioNet, Inc. June 2014-Dec 2015
+Baltimore, MD
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+Project: CPC(Comprehensive Primary Care)
+Role: Sr.java developer
+The Comprehensive Primary Care (CPC) initiative is a multi-payer initiative fostering collaboration between public and
+private health care payers to strengthen primary care. Medicare will work with commercial and State health insurance
+plans and offer bonus payments to primary care doctors who better coordinate care for their patients. Primary care
+practices that choose to participate in this initiative will be given resources to better coordinate primary care for their
+Medicare patients.
+1. Architected/Designed/Implemented a report framework based on spring cron scheduler, hibernate, spring
+batch.
+2. Designed/Implemented upload/download file system with Spring.
+3. Report interface is capable of generating report on Jasper/Excel.
+4. Use of Dependency injection and inversion control to make application loosely coupled, flexible and elegant.
+5. Designed/Implemented JSP custom tag to maximize the reusability to take care of lot of page navigation and
+menu item.
+6. Worked on redesign of UI using jQuery, CSS3, Bootstrap, Spring, MVC.
+7. Code reviews, refactored as per design artifacts.
+Daily Activities: work with QA teams for defect tracking, Scrum, CP6 Production support, JPA entities mapping, maintain
+Reference data, DBCR, Unit Testing of each defects for the Release, Code reviews.
+Environment: Websphere 8.0, Oracle 11g, JQuery, bootstrap, Spring, MVC, Spring AOP, Target process, Scrum,
+Hibernate, Maven. Jasper.
+ActioNet, Inc.
+Project: FIVS(Financial Voucher System)
+Role: Sr.Ja va/Oracle Service Bus(OSB) developer Lead
+FIVS is Financial Information Voucher System tool used by CMS management to provide Quality Improve Organizations
+(QIOs) with a means of entering and managing monthly invoice information. In addition FIVS provides CMS with the
+ability to review and verify/deny the invoice.
+1. Lead a small team with task allocations, provide supervision and help whenever needed.
+2. Designed and architected OSB domain within the underlying design principle of CMS (HealthCare).
+3. Implemented oracle service bus to support FIVS to communicate in CMS Service oriented Architecture.
+4. Refactored/updated the existing web service client to communicate to OSB.
+5. Implemented error handling, message flow.
+6. Tooke a leadership on design and implement Proxy service and business services.
+7. Configured and implemented OSB Routing from proxy to multiple business services.
+8. Package the OSB customization and handed over to client middleware team to deploy the OSB package into
+their environment.
+9. Designed/Implemented JSF filter implements Servlet Filter to handle business for various users/roles for
+different navigation.
+10. Implemented various custom JSF validators, composite component.
+Environment: JBOSS, JSF 2.0, Oracle 11g, OSB 11.1.1.7, XPath, JSF, Jasper report, Ajax, JQuery, DOJO, JSF tag.
+Lockheed Martin Sept 2011-June 2014
+Baltimore MD
+Project: DCPS(Disability Case Processing System)
+Role: Sr. Java/J2EE developer Lead
+The main goal of the project is to create a web-based claims processing system for all states that is fully integrated with
+current SSA processes. Until now, the SSA has had to maintain separate systems for 54 different sites, both state and
+federal. The streamlining, upgrading, and integration of these sites will allow for greater speed in processing cases, with
+a total goal of 4 million cases annually. By centralizing their disability case processing systems, the Social Security
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+Administration expects to save money spent on system maintenance and upkeep.
+? Lead the dashboard team to design/implement the dashboard of the whole application DCPS.
+? Participated on design, code reviews, and performances.
+? Design a complete low level design for Dashboard and To-do list interface.
+? Used RAD for all UML related activities that includes class diagram, sequence diagram.
+? Used Factory design pattern as a design approach for dashboard interface.
+? Enhanced/refactored the Case Transfer interface which is implemented on MDB(Message Driven Bean),JAXB
+for the History, Auto accept/rejection, follow up.
+? Implemented Timer based dashboard interface, which keeps polling the database at given interval upon
+activation.
+? Designed a Todo List that displays the logged in user of their daily work, upon completion of To-do item, the
+item will go to completed if completed or remain in pending if due date of To-do item is changed to any future
+date.
+? To-do list will be dynamically populated by each business.
+? Took the ownership of loading References data for Dashboard, UAT and To-do list.
+? Developed Frontend using Custom Tags, JSP, HTML, AJAX, JQUERY, Date Picker, JQUERY UI, Themes, JQUERY
+Data tables, JQUERY Tab, JQuery Accordion.
+? Implemented JQuery layout using jQuery, CSS.
+? Used Struts2 MVC to handle HttpRequest, HttpResonse and mapping.
+? Developed and customized the input control for 508 compliances including but NOT limited to HTML Grid
+table, JQuery Tab, JQuery Accordion.
+? Used Business Delegate Design pattern with Session Bean, Open JPA, EJB 3.0
+? Implemented some business logic with the Drools Rules Engine for some interfaces wherever it is required.
+? Used DB2 as primary database.
+? Used JUNIT and Code coverage.
+? Used HP Quality center as Defect tracking system.
+Daily Activities: Fixing defects, Scrum, 508 Validation, IE Developer tool, Production support, create/update Entities
+Mapping for JPA, taking care of Reference data loading, DBCR, Unit Testing of each defects for the Release.
+Environment: 508,Jaws, Java 5.0, JSP, Java Scripts, HTML,JQUERY,DB2,IBM WEBSPHERE,RAD 8.0,SVN Subversion, MKS,
+Java Annotations, Drools, EJB 3.0.,Struts 2, Session Bean, Message Driven Bean.
+JPMorgan Chase May 2010-Sept 2011
+Newark DE
+Project: Stars MBS
+Role: Java Development/Production Support Lead
+STARS MBS is a Fixed Income Mortgage backed securities application where we support the front office and middle
+office of MBS trading live application. This application supports different products like Pools, TBAs, ARMS and CMOS. We
+have interaction with lots of other applications. It’s a heavy data centric application where millions of trades are entered
+on a daily basis. Early morning feeds are received and end of day reports are sent to other applications. Also involves on
+call production support which involves resolving production issues of traders and others at the earliest.
+? Lead a small development team for managing daily software life cycle including scrum, production support
+ticket and assign to right resources.
+? Designed, Enhanced and developed new multiple business front end interfaces using JSP, HTML, AJAX, and
+JQUERY.
+? Provide Production Support on a rotation basis.
+? Execute query, generate report, monitoring production logs in Sybase/Unix environment.
+? Used Struts as a MVC and JQUERY/JQGRID for client side design.
+? Used ClearCase/RCS as a version control tool.
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+? Used Spring core, Hibernate Annotations, JPA for new Ticket Booking Application for the new enhanced
+application.
+? Fixed bugs for Shell/Perl script.
+? Used SOAP UI to test the Web Service.
+? Performed thorough Unit testing for each Bug fixing, enhancement
+? Complete assigned and agreed upon deliverables for monthly Stars MBS release.
+Activities: Daily Production support, scrum, development status, JIRA fixes, Monitoring production logs, run SQL query
+to resolve issues, deploy the build on production on monthly release, Compile all SQL changes and hand over to DBA.
+Functional Testing of each JIRAs for the Release.
+Environment: Java 5.0, JSP, Java Scripts, JQUERY, HTML, Sybase, Apache Tomcat ,6.0,Unix,ClearCase,Jquery,Shell, Perl,
+SQL Spy, BCP, ISQL, JIRA, Spring core, Hibernate Annotations, SVN Tortoise, Axis, RCS
+Verizon Jan 2009- May 2010
+Tampa, FL
+Project: VEGA (Verizon Enterprise Geospatial Application).
+Role: Java Development/Production Support
+The Verizon Enterprise Geospatial Application (VEGA) vision was to create a ubiquitous, open, and pure Web-based
+application in support of Telecommunications OSP (Outside Plant) business needs and additionally leveraging that
+environment for other, non-engineering related business opportunities. R&D was carried out during 2006.
+Development, using eSpatial’s iSMART, started in earnest in 2007 to address OSP planning functions in support of
+Verizon’s FiOS program to provide voice, high-speed internet and video services in a pure fiber network, connected
+directly to consumers residence. This tool was deployed late 2007 and is fully available for all Verizon FiOS markets
+today.
+Responsibilities:
+? Developed an Interface that takes millions of address as input from USPS and updates the Address base of Vega
+Application that runs on a monthly basis(Cron Scheduler).
+? Used Struts as a MVC framework including all features Struts Validator framework, DynaActionForm,
+DispatchAction, Struts Tiles.
+? Developed JSP, HTML pages using JavaScript and Ajax.
+? Wrote Stored Procedure ,Queries/subqueries that perform DML operation deletes/updates the different tables
+? Used SQLLDR to load the millions of business data into database.
+? Used the IR tracking tool to monitor all the Issues and involved in fixing them.
+? Helped Quality Assurance Team to test the backend job in different environment namely SIT(System Integration
+Testing),UAT(User Acceptance Testing).
+? Monitor all the Logs/Exceptions and report to Manager.
+? Debug for Errors/Exception and get it fixed.
+? Run the SQL script in UNIX environment using SQLPLUS command for DML operations.
+? Used CVS as a version control tool.
+? Used heavily SFTP, SSH Client for file transfer between different servers.
+? Used commands for manipulation directories and files as well as Cron utility to schedule jobs to run on a
+regular basis
+? Bouncing server/scheduler in UNIX environment.
+? Middleware Installation and brought all the servers UP and Running for development, SIT and UAT.
+Daily Activities: Fixing Bugs, taking responsibility to fix bugs, helped UAT (User Acceptance Testing) testing, Monitor
+logs/exceptions in different servers, generating report, run SQL scripts, setting up Cron Jobs
+Environment: Java 5.0, JSP, Java Scripts, HTML, Oracle 10g, BEAWeblogic 8.1/10.3,PL-SQL,Oracle Sql Developer Tool,
+POI, CVS, UNIX, Remedy Tracker,CVS,Struts1.2.
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+JPMorganChase June 2007-Dec 2008
+Tampa,FL
+Project: Debt Summary(Intranet application).
+Role: Java/j2ee Developer
+The primary goal of this project is to automate the monthly report with a front-end interface to the Outstanding Debt
+Database(OSD) that allows Sales and Customer Service to easily access data, enter comments and feedback and develop
+a history of OSD client behavior.
+TS (Treasury Service) Billing Operations creates statements and bills, processes payments and provides support and data
+to the markets when clients are delinquent in paying their account analysis (CAP)bills.
+Sales contacts clients regarding past due accounts and requests billing operations assistance as required to research
+situations as appropriate. Actions are reported and tracked manually through Sales and Operations.
+Development Responsibilities:
+? Worked in tandem for gathering requirements with the Business Analysis team and the end users.
+? Designed the Object model and UML flow diagram using Microsoft Visio.
+? Implemented whole application based on Agile Methodologies.
+? Used THML goodies, JAVASCRIPT for making Menu Scripts, Calendar, Table widgets, Sortable Columns,
+Highlight table rows, AJAX, SCRIPT, Extjs, JQUERY, Prototype for Dynamic Client lookup and for other HTML
+element like(selecting dropdown box, click on check boxes etc.).
+? Used heavy external CSS files to give nice look and feel for all JSP pages.
+? Developed the application using Spring Web MVC.
+? Worked on Data Access Layer using JDBC Template.
+? Used Abstract Excel View and Abstract PDF View for generating reports as Spread Sheet and PDF.
+? Used Web 2.0 by using DWR library for implementing AJAX functionality in the application.
+? Used Subversion for Version Control.
+? Provided production support by interacting with the end-users and fixing bugs.
+? Used JUNIT for Unit Testing.
+? Used Log4j for application logging.
+Environment: Java 5.0, JSP, Spring MVC Framework, Java Scripts, HTML, Unix, and UML, Oracle 10g, BEAWeblogic
+10.0,PL-SQL,TOAD,DWR library, POI library, JSTL, Eclipse
+Healthcare Subrogation Group Sept 2006-May 2007
+Westport,CT
+Project: Claim Recovery.
+Role: Java Developer(Internship)
+HealthCare Subrogation Group is a healthcare cost management company focused solely on subrogation claims
+recovery. Subrogation is the recovery, from a third party, of medical costs that were originally paid by a benefits plan.
+Responsibilities:
+? Involved in design and development of Servlets and JSPs using Apache Struts framework.
+? Designed and developed forms for submitting queries, form validations.
+? Modified the queries for report as per requirement.
+? Prepared Technical design document.
+WORLD LINK COMMUNICATION May 2002- Dec 2004
+Role: Java/j2ee Developer
+World Link is the Internet Service Provider in Nepal. It offers various kind of data networks services including LAN, WAN,
+Broadband services etc. The project involved in enabling the Internet Service Providers (ISP) to offer free Internet access
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Niren Bhattarai
+to their subscribers. This application dynamically captures and updates Subscribers profile and pushes online ads to their
+screen based on their profile information. The ISPs get their revenue from the advertisers. This offers the advertisers an
+effective marketing tool as the ads are pushed only to a specific set of people.
+Responsibilities:
+? Developed the presentation and controller layers, which consists of Forms and Visual Objects using JSP.
+? Used Swing, Collection, JDBC, and Applets, Threading for the entire application.
+? Used JDBC, Data Sources and Connection Pooling to interact with the Oracle 7i database.
+Environment: Java, J2EE, JSP, Struts, Servlets, JDBC, XML, Oracle 7i, Windows XP, (UNIX).

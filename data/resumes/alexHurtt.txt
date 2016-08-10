@@ -1,0 +1,74 @@
+Professional Summary and Objectives
+Alex Hurtt, Senior Solutions Lead, is an experienced developer of 20 years focusing on distributed multiple tier applications and web technologies with deep knowledge in many facets of the Java platform and OOP design and implementation. He is a highly resourceful self-starter with unparalleled analytical and problem solving abilities and the written and oral interpersonal communication skills crucial to fostering team cohesion and client understanding. Possessing the technical knowledge and business acumen necessary to formulate requirements from business needs and then actualize software, he will be a valuable asset to any organization seeking to grow its business and deliver winning solutions. Currently he is seeking a lead/senior developer role at a growing, small to medium sized company in a challenging industry where he can apply his talents and experience toward utilizing technology to provide solutions to real world business problems. The ideal position should also provide the opportunity for him to acquire industry expertise along with increased technical expertise with modern web and enterprise solution technologies.
+
+Skills
+•	Java 8
+•	SOA and Web Services implementation with SOAP, WS-Security, and REST
+•	XML processing with SAX, DOM, StAX, JAXB, and XSLT
+•	Apache Server and IBM HTTP Server
+•	UML modeling of sequence, class, activity, process, and collaboration diagrams with Rational Software Architect
+•	Servlets, JSP, Apache Struts and MVC
+•	Unit testing with JUnit for Java, NUnit for C#
+•	Comfortable working in large or small agile teams with configuration management and version control systems such as Rational ClearQuest, Microsoft VSS, Git	•	HTML, CSS, JQuery, Javascript, JSON, AJAX, XML, XML Schema, and cross-browser compatibility issues.
+•	PNG, GIF, JPEG Graphic editing and optimization with GIMP, Photoshop
+•	ANT, Maven, Continuous Integration
+•	Eclipse, NetBeans, IntelliJ IDEA, Visual C# 2010 IDEs
+•	WebSphere, Tomcat, JBoss application servers
+•	JDBC and ORM with JPA/Hibernate
+•	IoC and DI with CDI and Spring
+•	Java Swing
+•	Comfortable working in development, test, and production environments with mixed Unix/Windows/Linux based infrastructure.
+
+Employment History
+Senior IT Specialist - Team Lead
+RNSolutions/Dovel Technologies - Rockville, MD	04/2013 - Present
+Senior Team Lead
+•	Lead a team of five junior to mid-level Java developers in an agile/scrum work environment.
+•	Conduct daily standup status and compile work progress reports for management for all of the teams assigned work packages.
+•	Analyze business requirements and user stories to come up with technical design and implementation strategies including UML modeling, ERD for data design, estimate work effort and duration, and work closely with business analyst team to resolve questions and clarify vague/ambiguous requirements.
+•	Hands on execution of solution development working in all tiers from front-end UI layer through middle tier business logic and on to the backend/data tier.
+•	Regularly analyze and troubleshoot code, performance, and configuration problems in multiple environments from development to production.
+•	Constantly mentor new and junior team members to help the acclimate to the environment and understand our standard operating procedures for code management and release to ensure deployments across different environments contain correct content and features.
+•	Conduct team code reviews providing positive feedback as well as constructive criticism where necessary.
+•	Regularly conduct new candidate interviews for open development team seats and make hire/no-hire recommendations to management and HR.
+
+IBM Public Sector - Federal - Gaithersburg, MD	03/2004 - 02/2013
+Senior Team Lead
+•	Helped the IRS achieve their congressional and GAO e-filing mandates as a senior developer and team lead on Modernized e-File (MeF), a large scale, multi-year Enterprise Java based CMMI level 5 contract to modernize the United States Internal Revenue Service e-File electronic income tax return processing system.
+•	Promoted to Senior Team Lead after overseeing a cross-platform team of 5 Java and .NET developers in the design, implementation, and successful delivery of a secure SOAP web services based SDK enabling state tax offices and individual electronic federal tax return transmitters to easily interface the IRS Modernized e-File (MeF) system. Ensured consistent API design and user experience as much as possible within the norms and conventions of the respective platforms. Technologies utilized include Java Swing, JAX-WS, WSDL, .NET WSE 3.0, WS-Security, SAML, PKI/X509v3 security.
+•	Provided technical consultation and guidance to client based on customer feedback and industry best practices to ensure customer satisfaction, business continuity, and foster a trusted advisor relationship with client.
+•	Analyzed new client work requests and change requests to assess scope and impact, derived both functional and nonfunctional requirements when necessary, estimated hours for completion, and identified architectural and development resources necessary to implement work.
+•	Actively administered, monitored, and configured automated nightly build system for MeF solution codebase of over 300 individual projects and produced regular metrics reports utilizing both freely available and custom developed tools on an ongoing basis resulting in a significantly smoother build and delivery process.
+•	Designed and implemented solution utilizing WebSphere Process Server, IBM MQ, EJB, Hibernate, and JAXP for ensuring proper sequencing by MeF of invocation of downstream IRS system interfaces in accordance with IRS business processes resulting in increased accuracy and timeliness of fraud detection.
+
+Senior IT Specialist
+•	Implemented business rule validation logic for corporate and individual federal tax returns in accordance with IRS tax code and calculated and generated permutations of sample data in order to ensure correctness of business rule logic and accurate processing of electronic tax returns.
+•	Designed and implemented a solution for transforming select XML tax return forms into PDF format utilizing JAXB and iText PDF library.
+•	Designed, implemented, and maintained a large, complex web based solution used by IRS help desk and error resolution system employees for visualization of XML electronic tax return data aggregated from multiple data sources with extensive use of Apache Struts including validator and tiles frameworks, Java servlets, JSP, HTML, CSS, Javascript, XML, AJAX, XSLT, Hibernate, and JDBC.
+•	Regularly analyzed, debugged, tested, and resolved defect reports from both client and internal system test teams in a multi-staged deployment promotion environment with multiple release code bases in various stages of the build promotion process ongoing concurrently.
+
+IBM Centers for eBusiness Innovation - Washington, DC	05/2000 - 02/2004
+Senior IT Specialist
+•	Promoted to Senior IT Specialist after leading the successful delivery and subsequent production launch for web-based online healthcare benefits enrollment and management application for Blue Cross Blue Shield of Rhode Island.
+	Advisory IT Specialist
+•	Developed web based claims processing management interface for National Account Services Corporation (NASCO).
+•	Developed interface for an online medical triage engine including live chat capabilities for Roche Pharmaceutical corporation.
+•	Designed and developed a successful WebSphere Portal based prototype for Naval Inventory Control Point (NAVICP) to help unify various US Navy supply chain organizations.
+________________________________________
+Enterprise Java Solutions, Contractor at IBM Centers for e-Business Innovation
+Sykes Enterprises - Atlanta, GA	03/1999 - 04/2000
+•	Developed front end presentation tier as well as business tier logic for Hertz Car Rental web based online reservation system with extensive utilization of Java servlets, JSP, JDBC, and cross-browser HTML, CSS, and Javascript.
+•	Developer on team for Java applet based live online leaderboard application for Augusta Masters golf tournament.
+________________________________________
+Web Development and Production Specialist
+THINK Interactive, Inc. - Atlanta, GA	08/1997 - 02/1999
+•	Implemented designs and managed publishing of regular updates for web sites of non-profit as well as major corporate clients such as BellSouth, SunTrust, IBM, CARE, Orkin Pest Control, and others.
+•	Coded cross-browser HTML/DHTML, CSS, and JavaScript. Prepared web optimized graphics from Photoshop art files created by graphic designers and deployed prepared websites on staging servers for test and review by clients.
+•	Helped the company better track, manage, and collaborate on the sales pipeline by developing a custom in-house web based sales pipeline and lead tracking application for use by internal account and project management personnel leading to both better internal communication and higher client satisfaction. Utilized Java, JDBC/SQL, MSSQL, HTML, Javascript.
+•	Occasionally worked with ASP, Flash, and Adobe Illustrator.
+
+Education
+BA in Telecommunications - Digital Media Studies
+University of Georgia, United States of America, 1997
+
+References furnished upon request at time of interview.

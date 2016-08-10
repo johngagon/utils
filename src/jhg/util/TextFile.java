@@ -7,7 +7,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,6 +47,17 @@ public class TextFile {
 		}
 		return strings;
 	}
+	public Set<String> getWordsLowerCase(){
+		Set<String> strings = new TreeSet<String>();
+		Pattern pattern = Pattern.compile("[\\w']+");	
+		Matcher m = pattern.matcher(content);
+		String word = "";
+		while ( m.find() ) {
+			word = content.substring(m.start(),m.end());
+			strings.add(word.toLowerCase());
+		}
+		return strings;
+	}	
 	
 	public static boolean write(String filename, String data) {
 		BufferedWriter writer = null;
@@ -122,6 +135,8 @@ public class TextFile {
 		String[] lines = this.getLines();
 		return parseMapping(lines);
 	}
+	
+
 	
 	public static void testRead(){
 		TextFile f = new TextFile("data/notes.txt");

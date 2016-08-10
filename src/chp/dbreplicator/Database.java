@@ -10,6 +10,7 @@ public enum Database {
 	DW(     Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://sqlprod01.corp.chpinfo.com:1433;databaseName=IDSProd",	"app_transfer",		"4pp_+ransf3r"),
 	DWP(    Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=IDSPreProd",	"app_transfer",		"4pp_+ransf3r"),
 	DWTEST( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=IDStest",	"app_transfer",		"4pp_+ransf3r"),
+	DWDEV(  Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=IDSDev",	"app_transfer",		"4pp_+ransf3r"),	
 	
 	DWF( Rdbms.SQLSERVER,	"com.microsoft.sqlserver.jdbc.SQLServerDriver",	"jdbc:sqlserver://chp-sqldev02.corp.chpinfo.com:1433;databaseName=Foundation_App_Logic;integratedSecurity=true",	"jgagon",		                                                            JG.WPASS()),
 
