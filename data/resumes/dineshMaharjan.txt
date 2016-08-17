@@ -1,0 +1,198 @@
+DINESH MAHARJAN
+Seeking challenges as a Java Developer position in building Enterprise software products
+ Over 5+ years of experience in software industry involving in the design, development,
+testing, deploy, optimization and implementation of various software applications
+ Excellent programming skills in JAVA and J2EE technology, including JDBC, Enterprise Java Beans,
+Servlets, JSP, JSF, JMS, XML, Web Services
+ Good knowledge of Web application development technologies such as HTML, HTML5, JavaScript,
+jQuery, CSS, LESS, SASS, AJAX, JSON
+ Experience in using the latest approaches, including MVC, MVP, event-driven applications
+ Strongly experienced in developing large internet related applications using Spring, GWT, Struts,
+Hibernate, Maven, Ant
+ Substantial familiarity in Service Oriented Architecture (SOA) using the Java Web Services protocols
+like REST, SOAP, WSDL and UDDI
+ Expertise in databases like Oracle, Teradata, DB2, SQL Server, MySQL and MS Access
+ Experience in web servers like Tomcat, WebLogic, JBoss, GlassFish and WebSphere
+ Experienced in the analysis and design of applications using OOAD techniques, Rational Rose Use
+Cases and Design Patterns
+ Goal Driven Developer with comprehensive understanding of various software development
+approaches such as Agile, Iterative, Spiral, TDD and Waterfall
+ Expertise in tools like Toad, SqlDeveloper, jUnit, Log4j , CVS, SVN, ClearCase, Report Generator
+ Experienced in using Integrated Development Environment (IDE) like Eclipse, NetBeans, JDeveloper
+Studio, IntelliJ, MyEclipse, Talend Integration Suite, Spring Tool Suite
+ Extensive use of documentation tools like Confluence and bug tracking tools like Jira and QC
+ Experienced in working on different operating systems like Windows, Linux and Unix
+ Strong team player with good interpersonal skills and communication abilities
+ Multi-cultured Team Player with complete flexibility to work independently as well as in a team and
+have quick grasping capabilities to work with the newly emerging technologies
+Technical Skills:
+Languages: Java, C, C++, C#, SQL and PL/SQL
+Java Technologies: JDK7, J2EE, JDBC, Servlets, JSP, JSF, JMS, Java Beans
+Web Technologies:HTML5, CSS3, JavaScript, jQuery, JSON, AJAX
+Framework:AngularJs, NodeJs
+Debugging Tools:Firebug, Chrome Debugger Tools
+Java Frameworks: SpringMVC, Struts, GWT, Hibernate, JUnit, Ant, Maven
+Databases: Oracle, DB2, MS SQL Server, MYSQL and Teradata
+IDE/Development Tools: Eclipse, NetBeans, JDeveloper
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Dinesh Maharjan
+Web/Application Servers: Tomcat, WebLogic, IBM WebSphere, JBoss, GlassFish
+Version Controls:SVN, CVS, ClearCase
+Operating Systems: Microsoft Windows, Linux and UNIX
+Education
+Masters of Science, Computer Science2014
+Maharishi University of ManagementFairfield, IA
+Bachelors in Information Management2007
+Tribhuvan UniversityKathmandu, Nepal
+Professional Experience:
+GENERAL DYNAMICS INFORMATION TECHNOLOGY, Towson, MD
+Nov 2014 – Jun 2016
+Sr. Java Developer
+General Dynamics Information Technology (GDIT) is the leading IT Solution provider for the US Government
+and other business organizations. The major software solutions covers domain of Defense, Next Generation
+911 and Health Care. I was involved in one of its Health Care project – Fraud, Waste and Abuse Prevention.
+This application helps government to control fraud that occurs in Health Insurance where Health Care
+providers may charge knowingly or unknowingly. STARS-Informant is the part of the solutions suite where I
+was involved to build the tool to generate report based on huge data across the country. The whole
+development process happened in the secure environment.
+Role:
+ Involved in exploring the legacy application built in PowerBuilder
+ Get the requirements to convert this legacy application to new web-based application
+ Extensive use of Scrum to keep development process highly efficient
+ Wrote Scrum stories for the development requirements
+ Coded the Login, Diagnosis code look up, registration, authorization, and export report for customers
+using jQuery, AJAX, JSP, HTML5, CSS, and JavaScript
+ Coding new JSPs, modifying existing JSPs as per the design and updating the web.xml
+ Worked with session time out issue in AJAX call
+ Use Java EE as backend service along with Spring Framework for Dependency injection
+ Used EJBs in the application and developed Session beans to house business logic at the middle tier level
+ Used the light weight container of the Spring Framework to provide architectural flexibility for
+inversion of controller (IOC)
+ Used Spring AOP for cross cutting concerns and IOC for dependency injection.
+ Merged codes on Branches and trunk using SVN
+ Use Teradata as database to store huge amount of data
+ Use STARS widget – JavaScript library build exclusively for this project
+ Use JBOSS as application server
+ Extensive use of AJAX calls to get data and HTML for frontend
+ Used GRUNT.js for JavaScript automation
+ Used Model-View-Controller (MVC) architecture
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Dinesh Maharjan
+ Implementing Angular JS and MVC Framework for data access and rendering in templates
+ Involved in helping team members to debug issues with the application and designed and prepared Unit
+test case using JUnit and Log4j, and removed the maximum bugs before passing on the application to the
+QA team
+ Documented design and development procedures
+Environment:
+ JavaScript, jQuery, Angular JS, HTML, CSS, JAVA EE, Teradata, JBOSS, Spring Framework, jUnit,
+EhCache, Maven, Eclipse, SVN, Windows 2007, UNIX as server
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Dinesh Maharjan
+MERCEDES-BENZ RESEARCH AND DEVELOPMENT NORTH AMERICA, Sunnyvale, CA
+Jun 2012 – Oct 2014
+Java Developer
+MBRDNA is the part of Multinational company Daimler, the owner of Mercedes-Benz. MBRDNA residing in
+Silicon Valley CA is the center point of talents doing research and development for its high-end cars. As a part
+of Application Development Group, I was involved in acquiring, developing and delivering high-end apps for
+Mercedes-Benz cars of all class. Now, Mercedes-Benz cars are being enjoyed with all infotainment needs such
+as weather, internet radio, facebook, stocks, flight status to all kinds of apps including parking, traffic camera,
+restaurant search, hotel search.
+Role:
+ Finding needs of the end users in their high-end cars
+ Acquiring service from Content Provider to deliver high-tech service
+ Build framework using Java EE and Spring Framework to accommodate all apps into web project
+ Involved in Integration of Modules
+ Design apps specification and HMI
+ Participated in estimating the hours for the project
+ Designed and developed User Interface of application modules using HTML, CSS and JavaScript,
+JQuery, and AJAX
+ Designed and Developed Business Process layer components and integrated with Spring Framework
+ Spring framework’s dependency injection and AOP features were extensively used
+ Developed apps in MVC pattern with controllers, services and database objects
+ Wrote code to fetch data from REST APIs in NodeJs, using AJAX via JSON response and updating the
+HTML pages
+ Responsible for creating the screens with table less design following W3C standards Developed XSL
+Style sheets using XSLT and XPath for web publishing of the XML based content
+ Junit testing of all functionalities within each app
+ Used GWT for front end debugging
+ Used maven to build Application
+ Managed source repository using SVN for version control tool
+ Used Log4J to create log files to debug as well as trace application
+ Documenting each part of the code for reference
+ Prepared documentation and participated in preparing user’s manual for the application
+ Optimized the apps performance after delivery of the products
+ Ongoing improvements and maintenance
+Environment:
+Java, STS IDE, WSO2 IDE, Spring, Microsoft SQL Server, Tomcat, Maven, SVN, XML, AJAX, CSS, Javascript,
+GWT, RESTful web service, Node.js, SOAP web service, Windows, CentOS
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Dinesh Maharjan
+PEARSON EDUCATION, Upper Saddle River, NJ
+Sep 2011 – May 2012
+Java Developer
+Pearson Education is one of the leading book publisher companies in the world. It has branches all over the
+world. Pearson Education has number of intranet and internet web applications for its day-to-day activities. I
+was involved in DIA (Data Integration Architecture) Project which is my second project in this company. This
+project is all about data integration hub that supports integration of high data volumes from heterogeneous
+data sources in different formats through various communication protocols, and accurately preparing data
+for reliable consumption by multiple consumer systems. DIA is implementing the ETLD; Extract (E), Transform
+(T), Load (L), and Deliver (D) architectural pattern for data integration. DIA uses Talend Integration Suite for
+data extraction and transform, Oracle database for loading data and JMS for guaranteed message delivery to
+various consumer systems using publish-subscribe model.
+Role:
+ Development of web-based search functionality of data using struts
+ Wrote extensive XHTML, CSS3 and JavaScript code to build dynamic pages using Eclipse.
+ Used AJAX & JSON communication for accessing Restful web services data payload.
+ Designed a single-page website that uses BackboneJS for front end which passes JSON data back.
+ Involved in Talend jobs development using Java and J2EE, and export using Talend Open Studio.
+ Deployment of code in Deployment Server using Ant.
+ Testing Deployed code using different input data.
+ Use of Bamboo to build and deploy the code.
+ Use of Oracle Database and tools such as SQL Developer, SQLplus to verify data load in database
+using stored procedure.
+ Extensive use of complex queries to insert, update, delete and find data in database.
+ Involved in documentation of Code Development and Deployment.
+ Preparing Deployment Plan in Production Environment.
+ Use of JMS and Weblogic for message delivery.
+ Extensive use of XML and XSLT for message delivery to various consumer systems.
+Environment:
+Java, Talend Open Studio and Talend Integration Suite, Ant, JMS, WebLogic Application Server 11g, Oracle
+11g, Struts, CSS3, JavaScript, Backbone.js, XML, XSLT, Eclipse Indigo, Clearcase, Windows XP, Windows Server
+2003, UNIX.
+PEARSON EDUCATION, Upper Saddle, River, NJ
+Mar 2011 – Aug 2011
+Java Developer
+Pearson Education is one of the leading book publisher companies in the world. It has branches all over the
+world. Pearson Education has number of intranet and internet web applications for its day-to-day activities. I
+was involved in Argos Project which provides Single-Sign-On (SSO) to all of the web-based applications within
+Pearson. For this project, we use Oracle as database for storing user information and RSA Cleartrust for
+identity and access management. Involved in developing customized framework in which each of the
+applications has their own look and feel for Single Sign On.
+Role:
+ Participated in development of a well responsive single page application
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Dinesh Maharjan
+ Involved in the analysis & design of the application using UML with Rational Rose
+ Object Oriented Analysis and Design using UML include development of class diagrams, Sequence
+diagrams, and State diagrams and implemented these diagrams in Microsoft Visio.
+ Developed the customized framework with Java EE to handle the requests and responses.
+ Designed and developed JSP pages with Websphere.
+ Involved in writing client side validations using JavaScript.
+ Wrote code to ensure that the application is cross browser compatibility (IE7+ and Firefox) as per
+the requirements.
+ Involved in the design of the Referential Data Service module to interface with various databases
+including DB2 as central database using JDBC.
+ Responsible for creating web service using WSDL for maintaining users’ information between central
+database and application database as Identity Management.
+ Involved in agent installation and configuration in different web servers for Access Management
+ Developed and configured using Tomcat and Apache HTTP.
+ Involved in designing test plans, test cases and overall Unit testing of the system.
+ Prepared documentation and participated in preparing user manual for the application.
+Environment:
+Java, JSP, JDBC, EJB, DB2, RSA Cleartrust, HTML, Javascript, CSS, XML, UML, Rational Rose, Eclipse 3.5, JUnit,
+JIRA, SVN, Websphere, Windows XP, Windows 2003 Server, Microsoft Visio, Uni

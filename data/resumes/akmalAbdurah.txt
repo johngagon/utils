@@ -1,0 +1,82 @@
+Akmal Abdurah
+OBJECTIVE:
+I have more than a decade of experience in software development. Experience includes building applications
+for web, desktop and mobile platforms. Full stack engineer with extensive application engineering experience
+at all layers (database, services, business, and user interface). Strong in software design and coding and
+proficient in multiple programming languages and technologies. Highly adaptable in changing technical
+environments and shifting priorities with strong organizational and analytical skills.
+EDUCATION:
+ 9/2000 - 12/2002Computer Science, Temple UniversityUS-Philadelphia
+Master's Degree
+ 9/1990 - 6/1996Addis Ababa University
+Bachelor's Degree
+SKILLS:
+Skill NameSkill Level
+C#Intermediate
+Javascript Intermediate
+AJAX (jQuery) Intermediate
+XMLIntermediate
+SQLIntermediate
+ASP.NET MVCIntermediate
+Web ServicesIntermediate
+C++Intermediate
+JavaIntermediate
+Spring MVCIntermediate
+.NetIntermediate
+AngularJSIntermediate
+NodeJSIntermediate
+EXPERIENCE:
+Company Confidential: Senior Software Engineer 5/2015 - Present
+Industry: Computer/IT Services
+Architected a web based survey collection application and lead its implementation. App is used by the
+department of education to conduct nationwide teacher's assessment of reading, writing, math and science
+subjects. Has rich user interface and optimized for all major device types and platforms. Highly responsive
+web app built using latest web technologies (AngularJs, HTML5/CSS3, ASP.Net Web API). Was personally
+responsible for the implementation of the following major components and sub-systems. The item viewer
+component which is responsible for rendering a questionnaire's content based on item meta data. The backend
+restful services which are used for accessing survey meta data and content.
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Akmal Abdurahman
+Comscore, Inc.: Lead Software Engineer7/2014 - 5/2015
+Industry: Internet Services
+Worked as a technical lead in building the back-end services for the company’s key web analytics products.
+Lead the development of the sample management service which analyzes advertisement exposure data from
+various sources. Service runs on a cluster and processes about a terabyte of data every day. Lead the
+development of a highly customizable survey analysis engine which analyzes survey data collected from
+various sources.
+Naveos: Senior Software Engineer 5/2013 - 6/2014
+Industry: Computer Software
+Lead the design and implementation of a customizable data analytics engine which aggregates and analyzes
+data from various sources the results of which are subsequently used by data mining tools and reports.
+Added major enhancements to the company’s core SaaS product including new data mining tools and
+reports.
+J. Spargo and Associates: Sr. Web Developer 12/2010 - 4/2013
+Industry: Business Services - Other
+Lead a team of developers in building a flexible and customizable web based enterprise event management
+system. System is used by users to setup events, manage various event related activities, and publish
+customized public facing websites through which attendees can register for events and make hotel
+reservations. Implemented the templating engine used for rendering customized UI components based on
+public facing website configuration. Helped coordinate development efforts among local and offshore
+developers.
+REI Systems: Sr. Software Engineer 11/2009 - 12/2010
+Industry: Computer Software
+Worked as a technical lead in the enhancements and maintenance of a large scale enterprise web based
+grants management application. Lead the enhancement and streamlining of two major modules of the
+system. Designed and implemented various re-usable components used across multiple applications.
+Siemens Medical Solutions: Software Engineer 10/2006 - 11/2009
+Industry: Healthcare Services
+A key developer in the syngo radiology workflow and imaging product group. Participated in the design and
+implementation of two major releases of the syngo product suite. Designed and implemented the integration
+of the workflow system with third party Imaging and voice recognition systems.
+Gateway Applied Systems: Software Developer 11/2002 - 10/2006
+Industry: Biotechnology/Pharmaceuticals
+Help develop a suite of software products for automating the acquisition, analysis and management of EKG
+data during clinical trials??? Designed and implemented major enhancements to the EKG acquisition and
+analysis module, a soft real-time program used for reading and analyzing a continuous stream of EKG waves.
+??? Developed an EKG analysis module used in statistical analysis of large sets of EKG data collected from
+multiple sources over an extended period of time. Developed an EKG Inspection module used to review, edit
+and reanalyze existing EKG data. Built a web application for managing and setting up clinical trials
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Akmal Abdurahman

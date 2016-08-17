@@ -1,0 +1,48 @@
+TECHNICAL SKILLS:
+Java, Oracle SQL and PL/SQL, JavaScript, jQuery, AJAX, JMS, ActiveMQ, Tomcat, HTML, JSP, JSF, PrimeFaces, Spring, Subversion, Maven, JIRA, JIRA/Agile, Drools, TOAD, IntelliJ IDEA
+
+EXPERIENCE:
+2013 to		EDAPTIVE SYSTEMS, LLC - Owings Mills, MD	
+Present		Senior Software Engineer	
+FDA CDRH Center Submission Tracking and Reporting (CSTAR) Program, Rockville, MD
+	Java server and JSP, HTML, with client JavaScript, jQuery, and AJAX interactions, and SQL development for the Center for Devices and Radiological Health (CDRH) Center Tracking System (CTS). 
+	Development technologies include Ant, Maven, Subversion, Tomcat, ActiveMQ JMS, Oracle database, IntelliJ IDEA, TOAD, JIRA and JIRA/Agile.
+	Formulated Drools decision table rules and code to use them in the CTS server and client portions.
+	Java server and client development for the CDRH Document Entry System (CEntry). Technologies include Java, PrimeFaces Java Server Faces (JSF) framework and managed beans, Spring configuration and context, and Hibernate.
+	Developed RESTful web services interface in the context of the CTS application to make submission attribute information available to other customer applications.
+	Led CTS application deployments, working with FDA and supporting contractors including HP and TKC.
+	Served as back-up for technical lead and scrum master as needed for team including seven developers, two testers, and four business analysts.
+	Worked in an agile framework with the FDA SDLC.
+	Provided support to helpdesk, business analysts, and the end users.
+	Worked with the FDA’s Office of Surveillance and Biometrics (OSB) in the Center for Devices and Radiological Health (CDRH) to create a Study Data Navigator Java client desktop application. Gathered requirements and iteratively prepared and demonstrated prototypes for the client. This resulted in a desktop application with a JavaFX graphical interface, an H2 in memory database, and reports created with JasperReports was delivered.
+	Assisted with the MedDra-based Adverse Event Diagnostic Service (MAED) project, a Computational Science Center (CSC) application to perform adverse event analysis, for the Center for Drug Evaluation and Research (CDER). This is a Java server application utilizing JSP, HTML, JavaScript, jQuery, Spring, and JMS. Aided in development, testing, and troubleshooting in a combined Windows and Solaris environment.
+	Security Clearance: Public Trust, HHS/FDA, Granted 2013
+
+2007 to		MCGRAW-HILL FINANCIAL - Bethesda, MD	
+2013		Senior Software Engineer	
+	Analyzed, designed, and implemented features in the ABSXchange and AOD (Analytics on Demand) structured finance Java web applications. This included changes to server side Java classes and JSPs, adding user interface features, and adding AJAX interactions using Dojo and jQuery frameworks.
+	Coordinated and led the development effort to migrate the web application deployment from a local single server environment to a data center utilizing multiple servers. This included upgrading the building, packaging, and configuration process for the new environment. It also included modifying the data acquisition and transformation processes involving a custom mix of shell scripts, SQL, and custom programs to both interact with the new environment and to operate in the new environment. Worked with the system administration team on automating the environment configuration and testing the applications in the new environment.
+	Designed and implemented enhancements to the C++ cash flow modeling engine used by the web applications, data feed generation, and client API library.
+	Maintained the data feed generation process consisting of Java programs, scripts, and delivery configuration and tools. Assisted clients in integrating the data feed and API library into their business processes.
+	Provided installation and problem resolution assistance to clients utilizing a custom installation of the AOD web application.
+
+2004 to		VERTICALNET LLC/B2EMARKETS -Rockville, MD	
+2007		Software Engineer	
+	Integrated the AdaptiveTrade optimization modeling application into the collaborative sourcing suite web application to assist the purchasing client in evaluating and selecting submitted proposals.
+	Designed and implemented functionality in the web application utilizing JSP, Struts, HTML, servlets, SQL, Java web tier and EJB, JNDI, JMS, XML and XSLT in the WebLogic application server environment.
+	Created a sourcing optimization model generating engine using Java and ILOG CPLEX used to evaluate custom sourcing events for clients.
+
+2000 to		ADAPTIVETRADE, INC - Gaithersburg, MD	
+2004		Software Engineer	
+	Participated in the analysis, design, and implementation of the AdaptiveTrade optimization product. This included Java client-server programming, framework infrastructure development, third party library evaluation and integration, ILOG CPLEX modeling, custom optimization language development and modeling, XML and XSLT, object and relational database programming, object-relational mapping, and web application development including JSP, JMS, and the JBoss and Tomcat application servers. 
+	Small team project management. 
+
+
+EDUCATION:
+Oral Roberts University		
+Bachelor of Science Degree	
+
+AGILE TRAINING AND CERTIFICATIONS:
+	Agile (Scrum) Workshop	2013
+	Certified Scrum Master	2016
+

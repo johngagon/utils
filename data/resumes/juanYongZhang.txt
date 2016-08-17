@@ -1,0 +1,282 @@
+Juanyong Zhang
+SUMMARY:
+11 years of versatile experience in the field of Information Technology, Proficiency in Requirement Analysis, Designing & Developing
+Internet applications using different programming techniques and Object Oriented Analysis. Eager and highly motivated to master
+new technologies and gain new skills.
+Github Profile: https://github.com/JuanyongZhang/
+SKILLS:
+ High-End Application Software:
+Websphere Portal, Liferay Portal, Alfresco CMS system
+ Java: Spring, Boot, Seam, JEE, Web Services, Hibernate, JPA
+ UI: AngularJS, Anglar2, TypeScript, jQuery
+ Microsoft: PowerShell, DSC
+ PaaS: Bluemix, CloudFoundry, AWS,
+DOCKER:
+ Cognitive: IBM Watson
+ Build Tools: MAVEN, Gradle, Ant, Nexus, Hudson, Jenkins, UML, ER-Diagram, jBPM, Gulp, NPM, WebPack
+ Middleware: Webshpere, WebLogic, Glassfish, Tomcat, JBoss
+ Database: DashDB, Oracle, DB2, SQL Server, MongoDB
+ BigData: Hadoop, Spark
+ SCM: SVN, CVS, GIT
+ Testing: JUnit, Selenium, Testing
+WORKING EXPERIENCE:
+Perficient: Lead Tech Consultant 2014/7 - Present
+Project- PacificLife: Lead Tech Consultant
+ Provisioning Pacificlife WebSphere Portal (WP) and Form Experience Builder (FEB) Server Environments for Pacificlife
+Straighup project. The automation of provisioning Pacificlife WP and FEB server environments will based on the following
+platforms:
+ PowerShell Desired State Configuration (DSC) based scripting for implementing the automation for provisioning their
+WCM/FEB environments
+ Jenkins as orchestration engine and central point to launch the automation tasks, which will be able to build (GIT PS/DSC
+code), package (copy/paste PS/DSC code to target node), deploy (run PS/DSC code on target node) either by browser GUI
+ Project is open sourced on Github, Forking and Commitment is Welcomed https://github.com/JuanyongZhang
+ Developing DSC modules for Provisioning and configuring WebSphere/Portal/Form ExpBuilder/DB2
+ Developing Provisioning Script in PowerShell
+ Configure the Jenkins Groovy Pipeline Jobs and Slave nodes
+ Documentation and Production support
+Environment:
+Powershell5, DSC, Jenkins, Groovy, WebSphere, WebSphere Portal, WCM, Forms ExpBuilder, git
+Project- IBM Jan 16 - May 16
+Nielsen IBM Watson: Lead Tech Consultant
+ The Nielsen Watson aims to provide Brand Managers with a fast and convenient way to get insight into their market and
+store level, structured data for their brands. Brand managers can ask Watson about their Brands, Sub-brands, Regions,
+Channels, Retailers and Stores to see how they are growing or declining or to identify trends among similar characteristics.
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Juanyong Zhang
+Brand Managers can also ask questions that derive from data from an external service, Insights for Twitter, which provide
+unstructured/structured data from a social outlet.
+ Design and developed Orchestration layer in Microservices Pattern
+ Developed Data Access layer with Watson/Alchemy/Insign API in Data repository pattern
+ Develop Spark python script for data drilling
+ Dockerized the Orchestration App, Eureka registry, Console Application.
+ Project is deployed and hosted in Bluemix with bluemix and cloudfoundry commands.
+Environment:
+User Interface: Angular2, D3, TopoJSON, WebPack
+Orchestration (OL): Microservices, Docker, Bluemix, Spring-Boot, Spring framework, Cloudfoundry. Cognitive: IBM Watson Dialog and
+NLC, DashDB, Insights for Twitter
+Project- Florida BCBS July 15 - Jan 2016
+MWS - Member Web Services: Lead Tech Consultant
+ Member Web Services is new designed responsive web portal, which serves FL blue's member.
+ It is hosted by IBM WebSphere Portal, and WCM. Implemented by AngularJS, Boostrap, Foundation, Springframework,
+JSR286, Script Portlet.
+ Designed 3 layers AngularJS application with TypeScript
+ Developed interceptor for populating the restful request header
+ Encapsulated the Angular-Resource layer for restful CURD calls
+ Encapsulated the Angular2 application in IBM Script Portlet
+ Developed Restful Services with Springframework.
+Project- Kaiser Permanente May 15 - July 15
+ACAA - Access Care Anywhere Anytime: Lead Tech Consultant
+ Access Care Anywhere Anytime is the next generation Member Portal of KP.org, it is targeting for providing better user
+experience and responsive display.
+ The Responsive web application is using AngularJS, jQuery and Bootstrap, programming in TypeScript, built by Npm and
+Gulp, dependencies are managed by Bower, TDD is implemented by Jasmine/Karma
+ The SOA Service application is utilizing Spring framework and Jersey.
+ Designed 3 layers AngularJS application with TypeScript
+ Developed interceptor for populating the restful request header
+ Developed the Jasmine test cases.
+ Encapsulated the Angular-Resource layer for restful CURD calls
+ Developed Gulp script which features with live reload, environment configuration, flexible bower dependencies
+management.
+Project- HCSC Jul 14 - May 15
+CAEP - Customer Advocate Portal: Lead Tech Consultant
+ Customer Advocate Portal is an add-on application of HCSC's SIEBEL system, which provides all-in-one dashboard to
+address caller's information and provider facility for customer representatives to document and note call log.
+ Designed and developed JSR 286 compliant portlets
+ Designed and developed the Generic Type JAX-RS JSON client with Apache Wink(IBM Embedded)
+ Designed and developed the Restful Portlet with Spring framework
+ Implemented WebSphere Portal 8.5 theme
+ Utilizing BackboneJS, UnderscoreJS, HandlebarJS, and jQuery for client side scripting
+ Asynchronous portlet loads using REST services returning JSON
+Cognizant Technology Solution: J2EE/Portal Specialist Dec 05 – July 14
+Project- CareFirst, Inc. Nov 10 - Jul 14
+Shared Business Services, SBS: Tech Leader/Architect
+ SBS is serving as an Enterprise Gap service in CareFirst. In the front end, it provides SOAP and JSON services for Member
+Portal, Provider Portal, Employer Portal, Hipaa BlueExchange, CareFirst Direct and Mobile Application; for the back end, it
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Juanyong Zhang
+has webservice access for Facets, Fep and internal Tibco services, JMS access for Nasco, and traditional hibernate access
+layer for the MD, DE, and Flexx data in DB2.
+ SBS is developed using Spring framework, JAX-WS, JSON, ehcache, Hibernate, JMS, Maven; SBS is a multi-tiers application
+running on IBM WebSphere Application Server.
+ Be responsible for overall SBS initiatives.
+ Requirement gatherings by participating in fusion meetings along with the Business analysts and mapping them to the
+technical implementations.
+ Estimations, Timelines, resource management, release management and testing support planning and execution.
+ Development of applications using Spring IOC, AOP, JAX-WS.
+ Developing the client interface using Spring MVC, Web and WS.
+ Integrated Application to consume SOAP services.
+ Used Maven for building the application.
+ Hudson is utilized for continuous integration build, and staging release.
+ Sonatype Nexus is used for release artifacts repository.
+ Tracking and managing defects by HP Quality Center.
+ Peer review of the development and release maintenance of all the artifacts.
+ Handling Change management and enhancement tracks for production changes.
+Environment: IBM Websphere Application Server, JAX-WS, DB2, DBVisualizer, IBM Rational Application Developer
+Project- Member Portal www.carefirst.com: Tech Leader/Architect
+ Member Portal is a set of WebSphere Portal Applications supporting CareFirst Members, which provides the
+functionalities of member eligibilities, coverage, benefit, claims, accumulations and etc...
+ Member Portal is developed using Spring framework, Soap, JSON, JSP, JMS, and Maven.
+ Actively involved in Member Portal Application Development and Enhancement Projects
+ Designing and Development of JSR-286 WebSphere Portlets by using Spring Portlet MVC framework.
+ Developing the client interface using JSP, Servlets, jQuery, ext-js server side code
+ Designed and developed a set of JSON parser for consuming the JSON and XML responses
+ Integrated the Frontend Portal Applications with backend Services
+ Used Maven for building the application.
+ Hudson is utilized for continuous integration build, and staging release.
+ Sonatype Nexus is used for release artifacts repository.
+ Tracking and managing defects by HP Quality Center.
+ Peer review of the development and release maintenance of all the artifacts.
+ Handling Change management and enhancement tracks for production changes.
+Environment: IBM Websphere Portal, Spring WS Client, IBM Rational Application Developer
+Project- Build Automation: Tech Leader/Architect
+ Build Automation project is targeting at:
+ Migrating WebSphere J2EE Applications and WebSphere Portal Applications' builders from Ant to Maven.
+ Utilizing the Hudson for scheduled and on-demand build tasks, programmatic workflow of build and deploy to staging
+environment.
+ Design and develop the CareFirst enterprise POM structures.
+ Define and develop the on-demand CareFirst Achetypes.
+ Using the Nexus for the release artifact repository.
+ Adapting and enforcing the sonatype suggested release workflow.
+ Replace the commercial Rational Application Developer with Eclipse, for each license one year saving is $3,500
+ Design and customize the continuous integration strategy based on CareFirst situation.
+ Define and the CareFirst Release Procedure, and conducting the training sessions.
+ Design and develop the websphere-portal-plugin, which could deploy WebSphere J2EE applications and WebSphere Portal
+Applications.
+ Customize the eclipse: install the m2e plugin, setup the m2e with CareFirst in house nexus and archetype catalogs
+ Created? the one-key script, which will setup developer's IDE and developing environment
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Juanyong Zhang
+Environment: Maven, Hudson, Nexus, IBM XML Access, WebSphere ANT
+Project- Role Lifecycle Management: Tech Leader/Architect
+ The Role Life Cycle is an online WebSphere Portal applications which helps you create and manage your team's
+ Mandatory Role and Functional Roles. These terms are explained in the related PowerPoint presentation. Keep in mind that
+this tool is only for managing the role definitions, not for managing user access. Therefore, you can only use this tool to
+define and submit the Roles. Once the Roles are submitted, the Information Security team will review the roles and deploy
+them into the security system (in the Production environment). Only then will these roles take effect and be available for
+the manager to request assignment of such roles.
+ RLCM is implemented by WebSphere Portal compliance Portlet technologies, Spring Framework, SOAP WebServices,
+ Architectured and designed a series of JSR268 standard Websphere portlet applications
+ Designing and Development of JSR-286 WebSphere Portlets by using Spring Portlet MVC framework.
+ Discuss with Business Analyst and finalized the System Design Document
+ Developed a series of portlet projects in form of maven multi module project
+ Developing the client interface using JSP, Servlets, jQuery server side code
+ Automated the entire build process by developed Websphere portal maven plugin thereby saving 90% of the time taken by
+the manual process
+ Designed and implemented an ActionCenter component that could flexibly address the access control in conditions of
+different process period, user role, and global settings
+ Utilized the Flying Saucer and iText to generate the HTML like PDFs
+Environment: IBM Websphere Portal, Spring WS Client, IBM Rational Application Developer
+Project- Wellpoint, Inc.: J2EE Developer Nov 09 - Nov 10
+ Employer Portal is Web Portal Application for supporting Wellpoint Employer customers, it handles of the functionalities of
+account management, add/modify consultant users, bill and invoice inquire.
+ Designed and developed a Websphere portlets with Spring, hibernate, Webservices and JMS
+ Designed and implemented services result wrapper, which is being used as part of their roll-out of J2EE applications.
+ Managing the enhancement and bug fixing of online applications
+ Participles in daily development
+ Created scripts for Clearcase branch initiative and merge
+ Instrumental for release cycle and production deployment
+Environment: Websphere Portal 6.1, JMS, JAX-RPC, JSR168/268, Spring MVC, Spring IOC, RAD
+Project- RISI, Inc.: Tech Leader Apr 08 - Nov 09
+ Conference Website is a press release website for RISI inc's conference, the website is served by Apache http server, and
+web content and template is managed by Alfresco WCM.
+ Developed a website in compliance with Web 2.0 standards using Alfresco WCM (web content management)
+ Created XSLT for press release content template
+ Developed the on demand wizard for compose and publish content
+ Configured Alfresco WCM with Apache http server for deployment
+Environment: Alfresco WCM, XSLT, Apache http server, UNIX
+Project- Company Profile: Tech Leader
+ Company profile is a spring MVC web application for managing and publish the profile of timber/wood related business
+companies, this is a 3 tier Web Application and implemented by JSP/jQuery, Spring MVC, and hibernate.
+ Architectured and designed Spring-Hibernate web application in three tier architecture
+ Development of application using Spring MVC, IOC, and Hibernate Framework
+ Design and create the generic hibernate DAO layer with hibernate annotation
+ Developing the client interface using JSP and jQuery
+Environment: Tomcat, MySQL, eclipse
+Project- EAP - Economic Analyst Portal: Architect
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Juanyong Zhang
+ Economic Analyst Portal is the web version of RISI's Economic Forecast Products offering their customers comprehensive
+news, pricing, competitor information and analysis to support strategic and tactical decision-making. By utilizing the
+Web2.0 technologies EAP provides the more enhanced features of Contextually data table and charts:
+ Chart Comments - The chart comments show how the economic factors influence each element graphed
+ Dynamic Graph - The new graphs are clickable so users do not have to look through the table to see the exact graphed value
+for each point.
+ Customer Graph - User is allow to favite the graphs and customer graph on demand
+ Data Formats - The user can view the changed data in four formats.
+ Download XLS - Every format of the table is downloadable, so the user can have the data the way they want.
+ Related Content - For each data table, graph there is a link to the commentary that describes the economic climate
+impacting the table
+ Architectured and designed a website in compliance with Web 2.0 standards using Alfresco ECM(enterprise content
+management)
+ Wrote the System Design Document
+ Developed on demand wizard for composing, preview, pre-release, and release the Portal website
+ Created and define the custom model and it's behavior in separated qName
+ Created a set of JSR170 annotation to access java content repository, in same manner as Hibernate annotation to database
+ Developed Freemarker template for rendering the portal page with Alfresco content
+ Create a data access layer for query the Sungurad FAME database (Time series database) with TimeIQ api
+ Modeled the TimeIQ formula and persistent them in the database for reuse
+Environment: Alfresco CMS, Spring, Hibernate, XML/XSL, JSR-170, Lucene, JQuery, Freemarker, MySQL, Fame, Tomcat5.5, Unix
+Project- Timber Transaction Price Services: Tech Leader
+ Timber Transaction Price Services is a spring MVC web application for querying timber transaction prices , this is a 3 tier
+Web Application and implemented by JSP/jQuery, Spring MVC, and hibernate.
+ Architectured and designed Spring-Hibernate Java web application in three tier architecture
+ Create a sophisticate up-down spring hibernate scaffold, that creates Hibernate command object with pagination, and
+sorting and criteria model info from page form data and URL parameters
+ Implemented with Spring MVC and IOC
+ Implemented hibernate annotation
+ Create generic hibernate data access object
+Environment: Tomcat, MySQL, eclipse, UNIX
+Project- Thomson FindLaw, Inc.: UI Developer/Automated Tester Jul 07 - Apr 08
+ FirmSite Content Editor is web tool supporting Findlaw's lawyer firm customer to design, build and publish their firm
+website.
+ Developed web application pages, dynamic HTML, CSS style sheets, AJAX style, jQuery, YUI
+ Setup Continuous Integration environment on Curious control, that collaborates with Ant, junit testcase, selenium testcase,
+bugzilla track system
+ Designed and model of Jackrabbit repository, defined the data store, file system, search index, security in repository.xml
+ Create data access layer to java content repository by JSR170 api
+ Convert static website prototypes to website templates by Freemarker
+ Use Lucene to build index of data repository, and implement keyword search by Lucene search APIs
+ Designed and created selenium testcases for UI integration testing
+Environment: Spring, Spring MVC, Hibernate, YUI, Jackrabbit, JSR-170, Lucene, Ant, JUnit, Selenium, XQuery/XPath, DOM/SAX,
+Velocity
+Project- HealthNet, Inc. Dec 06 - Jun 07
+MTM - Medicine Therapy Management: Tech Leader
+ Health Net's MTM program helps its Medicare members who have multiple chronic diseases and multiple chronic
+medication prescriptions to improve how they take their drugs and potentially decrease their pharmacy expenses.
+The application is J2EE web application which implemented by Struts, EJB, iBatis.
+This resume submitted by Lauren Manago
+949.783.3638 | Lauren.Manago@CyberCoders.com
+Juanyong Zhang
+ Designed the architectured the Struts, EJB Session bean, iBatis Java web application with 3 three tiers
+ Designed a hierarchy of Struts actions, the super action provides the common functions like security check, error page
+handle, login redirect, lookup an assembler to create a business object from request and etc., these function will be
+performed by an aspect sequence.
+ Implemented 2 pivot module as a practice of part programming
+ Programming in the EJB2, code generated by xdoclet
+ Using dynamic iBatis scripts to access the Oracle database
+ Implement the business call by session beans
+Environment: Struts, Weblogic, Oracle, JSP, XDoclet, iBatis, EJB2
+Project- Cendant Corp. Jul 06 - Nov 06
+Content Master Database: Java Developer
+ Content Master Database, aka CMDB, is an online web application for Cendant's real estate agents to manage, share and
+publish their property information.
+ The application is implemented by Struts, Session beans, and JDBC.
+ Implemented web layer using Struts MVC framework with Tiles and Menu plugins
+ Implemented the business services by EJB Session bean
+ Developed the properties’ stream media resource management module
+ Developed data access layer with JDBC
+Environment: Struts, Weblogic, JDBC, Oracle, JSP
+Project- 3M China Dec 05 - May 06
+Point of Sale: J2EE Developer
+ Implemented web layer using Struts MVC framework with Tiles and Menu plugins
+ Developed the warranty inquire module
+ Encapsulated the JDBC in a command pattern
+Environment: Struts, WebShpere application server, windows server 2003, JDBC, JSP, SQL Server
+CERTIFICATIONS & AWARDS:
+IBM Certified Solution Developer - WebSphere Portal 7.0 Cognizant Above & Beyond Award 2011
+EDUCATION:
+Shanghai University - Electric Engineering 2001-2005

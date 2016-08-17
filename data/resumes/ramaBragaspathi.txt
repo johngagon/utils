@@ -1,0 +1,117 @@
+Ramathilagam Bragaspathi
+	
+Work Authorization
+•	Citizen of United States
+Summary
+•	12+ years of professional experience in complete software development lifecycle including Analysis, Agile and Scrum Methodologies, Design, Development, Testing and Implementation of Client/Server, web based applications using Java/J2EE
+•	Comprehensive experience in design and development of various government web applications using J2EE and Lotus Notes technologies.
+•	Expertise in various open source frameworks like Struts, Spring, Wicket and Web development technologies like AJAX and Object Relational Mapping Technology like Hibernate.
+•	Extensive experience with Spring along with Hibernate for managing the Database Transactions.
+•	Exposure to OOAD methodologies, UML and J2EE Design Patterns such as Singleton, Data Access Objects and MVC architectural design patterns in application design and development.
+•	Adept in Application Development with IBM WebSphere, and Apache Tomcat.
+•	Expertise in using Version control systems like Tortoise SVN, Subversion and CVS.
+•	Strong experience in management of RDBMS systems like Oracle10g, DB2 and SQL Server 2008.
+•	Used ANT scripts for build creation and to push onto various environments.
+•	Knowledge in XML related technologies like DTD, XSD, DOM, SAX and JAXB.
+•	Competence in using Java IDE tools of RAD, and My Eclipse to develop dynamic web applications.
+•	Hands on experience in using JUnit, Log4J for debugging and testing the applications.
+•	Strong Analytical, Problem Solving and debugging skills with excellent understanding of system development metrics, techniques and tools. Worked in design, development, unit testing and deployment of complex J2EE applications.
+•	Good knowledge in Government sector projects.
+•	Solid experience in communicating with clients, customers, managers and other teams in the enterprise at all levels. 
+•	A very good team player with the ability to work independently with minimal supervision.  
+Work Experience
+Information Technology Specialist 3 Programming
+New York Office of State Comptroller. Albany, NY	Jun 2006 - Present
+VendRep System: Design and developed various UML diagrams for functional specification document. VendRep system is an online, secure, role based system which contains various questionnaire. Involved in developing standardized questionnaire, vendor certification, and email notification modules. The vendors, state agencies, and OSC are main users of this system. Developed using Java / J2EE technologies with Spring and Hibernate framework with Oracle database.
+LGSA Tax Limit and Tax Cap System: Design and developed wizard pages in the User module in Tax Limit and Tax Cap applications. Created various validation in wizard pages. participated in development and testing of email notification features. This system is an online, secure, role based scalable application that consists of an enrollment process, municipality enters assessed value into the system and make OSC staff review the data. The main users of this system are municipality and OSC. This is system developed using Java, wicket, Spring, Html, CSS, Hibernate, with oracle database.   
+GASB System: Developed and supported NYSLRS (New York State & Local Retirement System) GASB (Governmental Accounting Standards Board) system using Lotus Notes Technologies.  This system improves financial reporting by State and local governmental pension plans and participating employers.  Updated, monitored and managed Retirement Internet Reporting system.  
+●	Gathered, analyzed and documented business and functional requirements and data specifications.
+●	Analyzed and developed use case documents and mock-up pages.
+●	Presented demo applications and acquired acceptance from business users.
+●	Design and developed user interfaces, client and server side validations, database and core Java programs for all business rules and workflows.
+●	Utilized Wicket, Struts, Spring, and Hibernate frameworks, Toad and Oracle database, RAD and Eclipse IDEs for the applications development.
+●	Created various test cases and tested the application.
+●	Prepared the document for the build and deployment process.
+●	Utilized SCRUM methodology for managing the entire development. 
+●	Environment: Java 1.5, JSP, Servlet, Wicket, Struts1.3, Spring, Hibernate, XML, IBM WebSphere Portal Server, IBM Web Sphere Application Server, Oracle 10g, Ant, Subversion, Lotus Notes, HTML, Visio.
+
+Web Producer / Editor 
+Focus Center, Rensselaer Polytechnic Institute, Troy, NY	Apr, 2005 - May, 2006
+Created and updated web pages for sub-centers, faculties and their labs. Focus Center at RPI focuses on discovery and invention of new solutions for US semiconductor industries.    Center’s web pages including Faculty and Lab web pages were updated and added new pages using Dreamweaver MX, and Flash MX.
+●	Developed, updated and maintained web pages (www.rpi.edu/dept/cie , www.rpi.edu/cfes )
+●	Gathered requirement with the team and prepared the Wire Framing Document.
+●	Involved in the design and development of new graphics and layouts.
+●	Participated in the testing of the application.
+●	Involved in the maintenance of the existing system.
+●	Ensured readability, presentation, and reusability with clear, concise comments. 
+●	Environment: ASP.NET, Dreamweaver, MX and Flash MX, Windows XP 
+Consultant  
+CardioMag Imaging Inc,, Schenectady, NY	Jan, 2003 - Jun,2003
+Designed and developed pattern recognition tools using C++, Matlab, LibSVM, Torch, and Linux.  Aim of this project is to identify the heart disease patients from their Magneto-cardiographs (MCG) using a machine-learning tool such as Support Vector Machine.  Direct kernel method is used to separate abnormal MCG patterns from normal ones.  
+●	 Design and developed a pattern recognition tool to identify the heart disease patients from their MCG patterns
+●	Analyzed, tuned and obtained optimized prediction.
+●	Risk analyses were carried-out by false negative and false positive calculations.
+●	Participated in writing reports, reviewing test plans, test cases and testing results.
+●	Environment: Matlab, ASP.NET,LibSVM , Window XP
+Computer Programmer   
+Technion – Israel Institute of Technology, Haifa, Israel	2000 - 2001
+Created and optimized three different models i.e., Camera calibration, Object corner detection and optical flow, using C++ and MatLab for Visual Robot Navigation. In Visual Robot Navigation, computer vision has been used to help robots perform their tasks.  A camera is mounted on the robot.  The robot is given an additional image and the algorithm guides the robot to the position and orientation from where the image was taken. The visual Robot Navigation system estimates the object’s pose with respect to the camera. 
+●	Develop camera calibration tool to identify the distance of the object that helps robot to perform the task.
+●	 Developed object corner detection and optical flow model using C++ and Matlab.
+●	Presented test plans, test cases and testing results.
+Environment: C, C++, ASP.NET,MatLab, Windows XP
+
+Educational Qualification
+Java and Java enterprises, Perl 
+Rensselaer Polytechnic Institute	2003
+Troy, NY, USA
+Master of Computer Applications 
+Madurai Kamaraj University	1998
+Madurai, TN, India
+Bachelor of Science 
+Madurai Kamaraj University	1995
+Madurai, TN, India
+Skills
+Language:
+
+Web Technology:
+Microsoft Techs:
+OOAD:	Java, J2EE, EJB, Lotus Notes, HTML, DHTML, XML, XSLT, DB2, COBAL, PL/SQL,  C, C++, Power Builder
+Servlet, JSP, Tag Libraries, JavaScript, Struts 1.3, Spring 3.2, Wicket1.5
+ASP, VB.net
+UML, Use Cases, Class Diagrams, Sequential Diagrams
+GUI/IDE Tools:	IBM Rational Application Developer(RAD), Eclipse 3.1, CVS, SVN, TOAD, Visio, XML Spy, Junit
+Database:
+Scripting Language:
+ORM:	Oracle, MYSQL, MS Access, PL/SQL
+Java Script, Perl, Lotus Script
+Hibernate 3.0
+Build Tools:	Ant
+Application Server:
+
+Operating Systems:	IBM Web Sphere Portal server, IBM WebSphere Application server, Apache Tomcat, IIS
+Windows 95, Windows NT 4.0, Windows 2000, Windows XP, Linux and Solaris.
+Methodology:	Agile (Scrum)
+Professional Training
+Wicket - Wicket Training
+Jeremy Thomerson 	2013
+Albany
+XML for Website Management
+MicroKnowledge Inc	2009
+Albany
+JavaScript Fundamentals 
+New Horizons	2008
+Albany
+Custom Java 
+New Horizons	2007
+Albany
+IBM Rational Application Developer V6 Portlet Application Development and Portal Tools 
+New Horizons	2007
+Albany
+Java 2 Enterprise Edition 
+New Horizons	2007
+Albany
+Java Programming - Server Side
+Verhoef Training	2006
+Albany
+	

@@ -1,0 +1,145 @@
+Professional Summary
+Ambitious Software Engineer specializing in web application development with over 10 years of progressive experience
+in managing all facets of software development lifecycle for public sector agencies such as Department of Housing and
+Urban Development, Social Security Administration, and National Oceanic and Atmospheric Administration (NOAA).
+Expertise in analyzing business requirements and designing, developing, testing, implementing, and enhancing J2EE
+applications. Seeking to leverage expertise to take next career step in a challenging position with an organization
+offering opportunities for professional growth.
+Highlights
+Requirements Gathering and Documentation	System Architecture
+Software Development Lifecycle (SDLC)		Java 2 Platform, Enterprise Edition (J2EE)
+Technical Writing
+Experience
+
+VALIDATEK, Washington, DC – 2015 to Mar 2016.  
+Department of housing and urban development( HUD)
+
+Senior Developer 
+Provided engineering support  to a team of five to support iNtegrated Assessment Subsystem – Public Housing
+Assessment System (NASS-PHAS) for Department of Housing and Urban Development (HUD).
+Delivered engineering support when building, deploying, configuring, and supporting systems.
+
+Collaborated with Senior QA Lead and product owner to design, develop, document, test, debug, and add new
+features to J2EE application.
+
+Evaluated operational feasibility by examining project analysis, identifying problem, defining and gathering
+requirements, and proposing and developing solutions.
+
+Created technical specifications based on conceptual design and business requirements.
+
+Used JMS queue to send messages between distributed applications, and used SQL to create stored procedures
+and scripts for data manipulation and retrieval.
+Achievements 
+Added utility tool to NASS-PHAS to allow NASS administrators to produce PHAS scores during financial and
+management score generation exceptions.
+
+Implemented stored procedures to classify audited/unaudited financial submission types, determine
+audited/unaudited approval for given fiscal year, and query field office email addresses dynamically from
+database.
+
+Environment: Java, J2EE, ibatis, weblogic, JSP, Spring, Struts 2.0, JMS queue, Oracle, PL/Sql, webservice, jasper report 
+                                        
+
+Data Transformation Corp., Silver Spring, MD — 2014 to 2015
+ 
+Senior Developer  
+Provided engineering support to J2EE collection and litigation system application with CDI web framework and
+JPA technologies.
+
+Rewrote application to refactor source code and run on JBOSS 7 while achieving compliance with Java 7 and
+JPA requirements.
+
+Upgraded financial module and added new feature to allow users to correct and modify original debt amounts in
+accounts after initiation of collection activities.
+worked with development team to debug application and complete application module enhancement.
+
+Environment: Java, J2EE,JPA, JBOSS, JSP, Servlet, CDI, EJB,JMS queue, Postgres, SQL, CSS, Display Tag, Jasper report
+
+EARTH RESOURCES TECHNOLOGY, Silver Spring, MD — 2012 to 2014
+National Oceanic and Atmospheric Administration(NOAA)
+ 
+Senior Developer  
+Collaborated with government IT staff to create two scientific dynamic web applications to support Center for
+Operational Oceanographic Products and Services (CO-OPS) at National Oceanic and Atmospheric
+Administration (NOAA).
+
+Designed and developed NOAA Current Prediction website offering expanded tidal predictions for stations in
+NOAA's published tide and current tables; created plot generating module and dataset download link for website.
+
+Converted static website showing sea level trend plots to US and global stations to data driven dynamic website;
+produced Spring framework-based website, used Bootstrap to create mobile ready website interface, and wrote
+SQL and stored data procedures to retrieve data used to generate plots embedded on website.
+
+Environment: Java, J2EE,Spring JBDC template,Spring, Struts, JSP, Servlet, hibernate,Sybase, bootstrap,Tomcat, SQL, CSS, Display Tag, Rest web services 
+
+
+MEDICAL SCIENCE & COMPUTING, Bethesda, MD — 2012 to 2012
+ National Library of Medicine (NLM)
+
+Software Engineer 
+Coordinated with four developers and a project manager to support RxNorm system used to generate normalized
+names for clinical drugs; worked with project manager, two database developers, and a senior Java developer to
+add enhancements and debug application.
+Delivered operational support and ran RRF file to generate weekly RxNorm release files.
+Maintained and added new features to J2EE application used by National Library of Medicine (NLM).
+
+Environment: Java, J2EE,EJB2, JSP, Ajax,Servlet, SQL, CSS, Display Tag, Tomcat, Jrun, Oracle
+
+RESOLVIT LLC, Washington, DC — 2011 to 2012
+ DC Courts 
+
+Senior Developer, DC Courts 
+Led all facets of software development lifecycle to add new features to three web voucher systems for Court of
+Appeals, Superior Court, and Multi-Door Dispute Resolution.
+Implemented enhancements to applications using Struts 1.3 and TopLink.
+Enhanced Superior Court's user interface by adding menu using JQuery and Ajax.
+
+ Environment: Java, J2EE,Toplink, Weblogic,Jquery JSP, Struts,Oracle, Ajax, SQL, CSS, Display Tag
+
+
+ADVANCED TECHNOLOGY SYSTEMS COMPANY, Rockville, MD — 2006 to 2011
+ National Cancer Institute (NCI-NIH)
+
+Software Developer Consultant 
+Provided production support during development of new J2EE websites and complex and critical applications for
+National Cancer Institute (NCI).
+Participated in requirement analysis, modeling, development, and testing of web application in Java/J2EE
+environment.
+Collaborated with project manager and architect to rewrite intramural application to improve performance and
+eliminate dependency on LDAP to query intramural research personnel information.
+Maintained intramural J2EE application used by NCI internal scientists in Cancer Epidemiology and Genetics
+(DCEG) Department to document research and generate annual reports for National Institutes of Health (NIH).
+Developed and re-architected application to meet business objectives and requirements.
+Designed J2EE application to support Paperwork Reduction Act (PRA) support various divisions within NIH.
+Devised enhanced use lease (EUL) based on user requirements using Discoverer Administrator; resolved
+issues with Discoverer reporting tool.
+Environment :Java, J2EE,SOAP Webservice,Hibernate, LDAP, Discoverer, JDBC, Struts 1, Struts 2, Spring, Jrun, JSP, Servlet, SQL, CSS, Display Tag, Oracle
+
+LOCKHEED MARTIN, Baltimore, MD — 2005 to 2006
+ Social Security Administration (SSA)
+
+Software Engineer 
+Analyzed user requirements and worked with usability team to design and develop prototype application for Social
+Security Administration (SSA) using Struts framework and WebSphere Application Server, and produced internet
+standards reference guides for other developers within SSA.
+
+Partnered with usability team to test prototype application accessibility for developers with physical disabilities.
+Executed object-oriented analysis and object-oriented design of existing systems.
+ Environment:  Java, J2EE,Sql Server, Websphare , SQL, CSS, ASP, Struts
+
+
+Education
+Bachelor of Computer Science : Software Engineering
+University of Windsor - Windsor, ON
+
+IBM Certified Specialist – Rational Unified Process v2003 
+
+How to Gather and Document User Requirements, TwentyEighty Strategy Execution and The George Washington
+University School of Business and Public Management
+Building XML Web Services with Java: Hands-On, Learning Tree International
+Technical Skills
+J2EE, J2SE, Multitier/N-Tier Architecture, Hibernate, Spring, Struts 1 and 2, Lightweight Directory Access Protocol
+(LDAP), Relational Database Management System (RDBMS), SQL Server, Apache Tiles, Apache Web Server, Oracle
+10g/11g, Oracle Database, Oracle Discoverer, Oracle Designer, UNIX, RUP, JRUN/Tomcat, JavaScript, HTML, XML,
+XSD, DTD, CSS, Eclipse, JDeveloper, NetBeans, UML Diagrams, Subversion (SVN), CVS, Clearquest, iBATIS,
+JBOSS 7, Bootstrap, JFreeChart, Sybase, Postgres

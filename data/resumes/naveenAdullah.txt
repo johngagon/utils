@@ -1,0 +1,167 @@
+ 
+Naveen Addulla
+
+
+SUMMARY:
+	13 years of IT experience in Java Application Development, Distributed Application development, Object Oriented Programming, Internet/Intranet based Database Applications and also developing, testing and implementing of application Environment using Java (Servlets, JSP, Struts, Spring, Web Services, Java Beans, EJB, JDBC, RMI, XML, Java Networking) DB2 and Oracle.
+	Experience in full System Development Life Cycle (Proposal, Process Engineering, Design, Development, Testing, Deployment and Support) 
+	Knowledge of bigdata technologies like Hadoop, Hbase, MapReduce, YARN, Hive, Pig, Oozie and Hue.
+	Experience conducting team meetings, and interacting with clients on regular basis to understand requirements and document the progress.
+	Experience with Agile, Scrum and Waterfall project management methodologies.
+	Good domain knowledge in Healthcare, Federal, Insurance, and Billing. 
+	Proper working knowledge of MVC technologies like Struts 1.x/2.x and Spring 2.0
+	Expertise and thorough knowledge of web based concepts and frameworks like JSP, Servlets, EJB, JMS, JDBC, HTML, Java Beans, JavaScript, JQUERY, AJAX and XML (SAX and DOM) technologies. 
+	Expertise in  ORM technologies OpenJPA, Hibernate and iBATIS
+	Hands on experience with service oriented technologies, like JAX-WS, JAX-RPC and proper understanding of Restful (JAX-RS) Web services and Jersey Frame work.
+	Experience with complete development process of web applications using the Java 6 Platform, Enterprise Edition (J2EE) Technologies and designing them with UML. 
+	Extensive experience in designing and architecture of J2EE based large applications. 
+	Development experience on different servers: WebSphere 7/8.x, BEA Web Logic 8.1, JBOSS and Tomcat 5.0 web server.
+	Hands on Experience using various IDE’S such as RSA, RAD, Eclipse, and Net Beans. 
+	Experience with using various source code controls: MKS, CVS, Serena Dimensions, IBM Clearcase
+	Exceptional ability to master new technologies and deliver outputs in short deadlines. 
+	Ability to work both independently and in a team. Versatile team player with strong analytical and problem solving skills and excellent communication/inter personal skills. 
+	Excellent communication skills and good experience in giving demos and presentations.
+ 
+TECHNICAL SKILLS:
+Technologies: J2EE, VXML, XML, JAX-WS, JAX-RPC, RESTful Services,  EJB2.0, Struts 2/1.x, Spring1.3,  JSP, JQUERY, AJAX, Servlets, JPA 1.0/2.0, JDBC, Java Beans, JAXB, log4j, JMS, JavaScript, HTML, ANT, Maven, MQ Series, Hibernate 3.0, Apache POI,JFC/Swing, Applets, Maven, Jenkins, Apache Hadoop 2.0, Pig 0.11, Sqoop 1.4, Hive 0.10, Flume, Oozie 3.0
+Servers: Web Sphere Application Server 6.1/7.0/8.x, BEA Web logic /5.x/6.x/7.0/8.1, JBOSS5.x, Tomcat 5.x
+Languages: JAVA, C++, C, PL/SQL, SQL
+Databases: Oracle 10g/9i, SQL Server 2000, DB2, MySQL, MS Access.
+IDE: Rational Software Architect 8.5, Rational Application Developer 8.0, Eclipse 3.x, NetBeans, JDeveloper, JBuilder, SOAPUI, DB Visualizer, TOAD
+Source Code control: MKS, CVS, Clearcase, Serena Dimensions
+Bug Tracking: Quality Center, ALM, Clearquest
+Operating Systems: Windows, Sun Solaris 2.3, HP-UX 11.11, UNIX, MS DOS
+
+ 
+EXPERIENCE:
+02/11 to		LOCKHEED MARTIN INFORMATION TECHNOLOGY
+Present		Team Lead/Subject Matter Expert
+Responsibilities: 
+	Conducted and involved in gathering requirements, design and brainstorming sessions, with client as well as team.
+	Currently leading the team comprising of 5 members, and using SCRUM methodology to track progress on a daily basis.
+	Actively participated in meetings with the client in designing and developing strategies for the application.
+	Used Struts1.2 (VIPR) and Struts2.0 (ITOPSS/eBB/RASR) as the MVC framework for the applications.
+	Used JSPs, Servlets, AJAX, CSS, and JQUERY along with the organization’s custom internal frameworks (UEF and DCS) for developing the front end.
+	Used EJB 3.0 for the implementation of the business logic and transaction management.
+	Used OpenJPA2.0 as ORM technology to interact with DB2 database. 
+	Used JAX-WS, SAX, MIME type attachments to provide and consume web services and also created independent application named Global Services. 
+	Developed domain objects and JPA entities using OpenJPA1.0/2.0 for communication with the DB2 database.
+	Created queues and connection factories to work with the MDB to listen the messages.
+	Created and deployed EJB timers and scheduled interval based tasks needed for notifications.
+	Used SQOOP to import the data from RDBMS to Hadoop Distributed File System (HDFS) and later analyzed the imported data using Hadoop Components
+	Established custom MapReduce programs in order to analyze data and used Pig Latin to clean unwanted data.
+	Involved in loading and transforming large sets of Structured, Semi-Structured and Unstructured data and analyzed them by running HIVE queries and PIG scripts
+	Developed transformations and aggregated the data for large data sets using MR, Pig and Hive scripts.
+	Developed the workflow jobs using OOZIE services to run the MR, Pig and Hive jobs and created scripts to run Oozie jobs.
+	Involved in the deployment and migration of the application on Websphere7.0/8.5 
+	Actively involved in the integration of different use cases and code reviews.
+	Coding and Testing (Includes Unit Testing, Integration/System Testing) and performance tuning.
+	Used MAVEN for deployment and JENKINS to schedule the builds.
+	Involved in writing JUnit test cases for unit testing data access layer.
+	Used Apache Cactus Framework for unit testing the application.
+	Prepared functional and technical documentation, demos and presentations.
+Environment:  Java 1.5/1.6, J2EE, JQUERY, Struts 1.x/2.x,  Servlets, JSP2.0, AJAX, XML, XML Schema, Apache Hadoop 2.0.0, Pig 0.11, Hive 0.10, MapReduce, Sqoop 1.4.3, Oozie 3.0, log4j, DOM/SAX, DB2, Websphere Application Server 7.0/8.5, Rational Application Developer 7.0/ Rational Software Architect 8.5, OpenJPA1.0/2.0, Apache Cactus, Maven 3.3, Jenkins 1.6, Quality Center, ALM
+
+10/09 to		WELLPOINT INC. (ANTHEM BCBS)	
+02/11		Sr. Programmer Analyst
+Voice Self Service (VSS) Channel Systems
+Interactive Voice Response (IVR) - This is a call center application used to service calls from customers regarding their queries related to their health insurance. The customers include Federal, National and Senior members. The application aims at serving the customers interactively through voice and key press responses before forwarding the call to a customer service representative. The application is aimed at providing quality service to customers with minimum amount of time regarding queries related to claims, benefits, bill payments etc. 
+Responsibilities:
+	Involved in the design and development using Spring dependency injection.
+	Communication of UID (User Interface Design) and BID (Backend Interface Design) takes place using Struts.
+	Involved in using RUP (Rational Unified Process) methodologies in design and implementation of the application.
+	Involved in the exposing web services(Member Verification, HIPAA Verification, Benefits etc) using JAX-WS, that would be used by the Viecore system (after it receives a voice XML document from the Genesys box which in turn is linked to the PBX)
+	Used VXML 2.0 and JSP for front end which interacts with the NSGN browser.
+	Designed, Developed and deployed audio and grammar files.
+	Web services were used for communication between IAS layer and BID layer.
+	Used authentication techniques for implementing Web services security.
+	Used SOA architecture for communication between business entities.
+	Extensive use of WSDL and XML files were used for the application.
+	Involved in writing code to consume data related services provided by the IAS layer for Senior Facets, FEP and National healthcare systems using MQ Series.
+	Used JAXB for converting XML data to Java objects and vice versa.
+	Involved in preparing test cases using JUNIT for testing the application. 
+	Involved in creating tables, stored procedures for Oracle 10g and DB2 databases.
+	Involved in the development of DAO classes using Hibernate to access data from the databases.
+	Involved in the deployment of application on Websphere 6.0.
+	Involved in the production support of the application.
+	Clearcase was used as version control system for the application. 
+	Used ClearQuest for logging and tracking defects.
+Environment:  JDK1.5, Struts 2.0, Spring 2.0, VXML 2.0, Eclipse 3.5, Websphere 6, Servlets 2.3, JAX-WS, Hibernate 3.0, MQ Series, log4j, Oracle 10g, DB2, Clearcase, ClearQuest
+
+02/08 to		CAREFIRST BLUE CROSS BLUE SHIELD
+10/09		Client/Server Application Developer
+Responsibilities:
+	Involved in the design and development using J2EE and Web services.
+	Involved in using RUP (Rational Unified Process) methodologies in design and implementation of the application.
+	Developed the application using Struts.
+	Involved in the exposing web services(Member Verification, HIPAA Verification, Benefits etc) using RAD 7.5, that would be used by the Viecore system (after it receives a voice XML document from the Genesys box which in turn is linked to the PBX)
+	Used VXML and JSP for front end which interacts with the NSGN browser.
+	Designed, Developed and deployed audio and grammar files.
+	Web services were used for communication between front end and backend.
+	Used authentication techniques for implementing Web services security.
+	Used SOA architecture for communication between business entities.
+	Extensive use of WSDL and XML files were used for the application.
+	Involved in writing code to consume data related services provided by the TIBCO layer for Facets and FEP healthcare systems using SOAP protocol.
+	Used JAXB for converting XML data to Java objects and vice versa.
+	Involved in preparing test cases using JUNIT for testing the application. 
+	Involved in creating tables, stored procedures for SQL Server 2000, Oracle 10g and DB2 databases.
+	Involved in the development of DAO classes using Hibernate to access data from the databases.
+	Serena Dimensions was used as version control system for the application. 
+	Involved in the design and development of application using EJBs and Servlets.
+	Provided various health care services to the Viecore framework using XML over HTTP methodologies.
+	Used VXML and JSP for front end which interacts with the NSGN browser.
+	Designed, Developed and deployed audio and grammar files.
+	Involved in the migration of code from WSAD5.1/WAS 5.1 to RAD 7.0/WAS 6.1.
+	Used MQ Series to connect to NASCO healthcare system for data.
+	Involved in preparing test cases using JUNIT for testing the application. 
+	Involved in creating tables, stored procedures for Oracle 10g and DB2 databases.
+	Involved in the deployment of application on WAS 5.1 / WAS 6.1.
+Environment:  JDK1.5, Struts 1.2, Rational Application Developer (RAD) 7.0/7.5, VXML 2.0,  Websphere Application Server 6.1, Servlets 2.3, EJB 2.0, Web Services, Hibernate 2.1, MQ Series, SQL Server 2000, Oracle 10g, DB2, Serena Dimensions, CVS, Mercury Quality Center, Cygwin
+
+
+01/07 to		LOCKHEED MARTIN INFORMATION TECHNOLOGY
+02/08		Senior Java Consultant
+Responsibilities: 
+	Involved in requirement gatherings.
+	Involved in Analysis, Design, Coding, Testing and Maintenance.
+	Used EJBs for the business implementation of the business logic.
+	Used JSPs and Servlets for the front end view.
+	Involved in the development of custom tags used by application.
+	Used CSS for the JSPs throughout the application.
+	Used MQ Series to communicate with EFI(Electronic Folder Interface) application.
+	Implemented service layer to access model layer from web layer. 
+	Extensively used JavaScript to create a tree like structure for navigation links and automatic data saving framework for in between page navigation.
+	Used MKS for version control.
+	Actively involved in the integration of different use cases and code reviews.
+	Coding and Testing (Includes Unit Testing, Integration/System Testing) and performance tuning
+	Helped in initial installation/configuration, migration of the application from WSAD 5.1 to RAD 6.
+	Involved in writing JUnit test cases for unit testing data access layer
+	Prepared functional and technical documentation.
+Environment:  Java 1.4, XML, J2EE, JDBC, Servlets, JSP2.0, XML, XML Schema, DOM/SAX, Custom Tags, DB2, Websphere Application Server 5.1, Rational Application Developer 6.0, UML, Windows XP. 
+
+03/03 to		CONVERGYS INFORMATION MANAGEMENT GROUP, Lake Mary, FL	
+01/07		Senior Java Consultant
+Responsibilities: 
+	Designed and created components for company's object framework using best practices and design patterns such as Model-View-Controller 2 (MVC) and used Struts framework integrating Servlets, EJB's, Tiles Framework and JSP's. 
+	Implemented various J2EE design patterns like Singleton, Facade, Service Locator, Data Transfer Objects and Business Delegate. 
+	Used Java Messaging Service (JMS) for sending and receiving Events (messages) from third party Number Management System. 
+	Involved in Developing Message Driven Beans (MDB) to process asynchronous Events.
+	Developed EJB's to handle business logic implementation and deployed them in Web Logic application server.
+	Developed Entity beans for persistence transaction. Designed, developed and deployed session beans. 
+	Developed XML parsers [SAX/DOM] using Xerces and used XML to store and communicate data between different tiers. 
+	Implemented Date Access Objects (DAO) using JDBC to access data from Oracle database.
+	Involved in all the 3-tiers of the architecture consisting of Data service layer, Business Object layer and presentation layer (front frameworks). 
+	Created Java Server Pages (JSP), which route submittals to the appropriate Enterprise Java Bean (EJB) components and render retrieved information.
+	Log4j is used for logging different types of messages to write on to the proprietary log model.
+	Unit testing was performed by creating Test Suites using JUnit Framework 
+	Helped in initial installation/configuration, migration from staging to production. 
+Environment:  Java [JDK1.5], Struts [1.1], Servlets, Web Logic [8.X], EJB [2.0/3.0], JDBC, JNDI, Oracle10G, UML, Eclipse [3.X], Xerces, Xpath, JMS, Junit, Solaris OS 10. 
+
+EDUCATION:
+Master of Computer Science, University of Central Florida
+Bachelor of Computer Science & Engineering, Visveswariah Technological University
+
+CERTIFICATIONS:
+Sun Certified Java Programmer
+Sun Certified Web Component Developer
+Certified Professional Scrum Master
