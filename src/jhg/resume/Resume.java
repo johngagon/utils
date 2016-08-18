@@ -16,11 +16,20 @@ public class Resume {
 	}	
 	public String read(){
 		TextFile f = new TextFile(filename);
-		return f.getText().toLowerCase();
+		if(!f.hasContent()){
+			return "";
+		}else{
+			return f.getText().toLowerCase();
+		}
 	}
 	public Set<String> getWords(){
 		TextFile f = new TextFile(filename);
-		return f.getWordsLowerCase();
+		if(f.hasContent()){
+			return f.getWordsLowerCase();
+		}else{
+			return new HashSet<String>();
+		}
+		
 	}
 
 }

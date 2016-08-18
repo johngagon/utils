@@ -10,7 +10,7 @@
 2:javascript:javascript,ecmascript,ecma,node,node.js
 1:html:html,dhtml,xhtml
 1:css:css,css3,cascading style sheets
-1:advancedjs:jquery,ajax,node,node.js,angular,react,d3,svg,charts
+1:advancedjs:jquery,ajax,node,node.js,angular,angularjs,backbone,backbonejs,react,d3,svg,charts
 1:xml:xml,soap,wsdl,web services,rest
 1:json:json,csv,fixed width
 1:sqlserver:mssql,sql server,sqlserver,ms sql
@@ -18,21 +18,21 @@
 2:datamart:datamart,datamarts,data mart,data warehouse,cube,ssis,etl
 1:datamodel:data modeling,erd,data models,data model
 1:oo:oo,ood,ooa,object oriented,object-oriented,uml,design patterns,factory,singleton,facade
-2:agile:agile,xp,scrum,kanban,rational rose,rup,disciplined
+2:agile:agile,xp,scrum,kanban,rational rose,rup,disciplined agile,unit tests,unit test,sprint,product owner
 1:ant:ant
 1:maven:maven
 2:git:git
 1:eclipse:eclipse
 1:tomcat:tomcat,jboss,application server,servlet container
-1:linux:linux,unix
+1:linux:linux,unix,centos
 2:jira:jira,atlassian,stash,bamboo,confluence
 2:ha:high availability,ha
 1:security:security,encryption,PKI,secure,secured,security clearnace,secret
-1:privacy:privacy,secure,encryption,public key,PKI,HIPPA,HIPAA
+1:privacy:privacy,secure,encryption,public key,pki,hippa,hipaa
 2:health:healthcare,insurance,medical,medicine,hospital,primary care
 1:sales:sales,marketing,branding,sale
 2:bi:bi,in memory,business intelligence,qlik,qliksense,qlikview
 1:architecture:architecture,architectural,architected
 1:fullstack:full stack,end to end,lifecycle,stage,stages,staged,deploy,deployment,war file,war files
-2:sdlc:all stages,software development life cycle,software development lifecycle,testing,deployment,qa,uat,production
+2:sdlc:all stages,software development life cycle,software development lifecycle,testing,deployment,qa,uat,production,cvs,svn
 2:the:the

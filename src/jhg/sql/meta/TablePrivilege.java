@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class TablePrivilege {
 	
 	public static enum Field{
@@ -12,6 +15,60 @@ public class TablePrivilege {
 		PRIVILEGE,
 		IS_GRANTABLE;//TriFlag		
 	}	
+	
+	private String tableCat,tableSchem,tableName,grantor,grantee,privilege,isGrantable;
+	
+	public TablePrivilege(ResultSet rs){
+		try{
+			tableCat = rs.getString(Field.TABLE_CAT.ordinal());
+			tableSchem = rs.getString(Field.TABLE_SCHEM.ordinal());
+			tableName = rs.getString(Field.TABLE_NAME.ordinal());
+			grantor = rs.getString(Field.GRANTOR.ordinal());
+			grantee = rs.getString(Field.GRANTEE.ordinal());
+			privilege = rs.getString(Field.PRIVILEGE.ordinal());
+			isGrantable = rs.getString(Field.IS_GRANTABLE.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTableCat() {
+		return tableCat;
+	}
+
+	public String getTableSchem() {
+		return tableSchem;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public String getGrantor() {
+		return grantor;
+	}
+
+	public String getGrantee() {
+		return grantee;
+	}
+
+	public String getPrivilege() {
+		return privilege;
+	}
+
+	public String getIsGrantable() {
+		return isGrantable;
+	}
+
+	@Override
+	public String toString() {
+		return "TablePrivilege [tableCat=" + tableCat + ", tableSchem="
+				+ tableSchem + ", tableName=" + tableName + ", grantor="
+				+ grantor + ", grantee=" + grantee + ", privilege=" + privilege
+				+ ", isGrantable=" + isGrantable + "]";
+	}
+	
+	
 	
 /*
 Each privilige description has the following columns:

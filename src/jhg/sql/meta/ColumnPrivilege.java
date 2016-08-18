@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ColumnPrivilege {
 	
 	public static enum Field{
@@ -16,6 +19,66 @@ public class ColumnPrivilege {
 	}
 	@SuppressWarnings("unused")
 	private String tableCatalog,tableSchema,tableName,columnName,grantor,grantee,privilege,isGrantable;
+
+	public ColumnPrivilege(ResultSet rs){
+		try{
+			tableCatalog = rs.getString(Field.TABLE_CAT.ordinal());
+			tableSchema = rs.getString(Field.TABLE_SCHEM.ordinal());
+			tableName = rs.getString(Field.TABLE_NAME.ordinal());
+			columnName = rs.getString(Field.COLUMN_NAME.ordinal());
+			grantor = rs.getString(Field.GRANTOR.ordinal());
+			grantee = rs.getString(Field.GRANTEE.ordinal());
+			privilege = rs.getString(Field.PRIVILEGE.ordinal());
+			isGrantable = rs.getString(Field.IS_GRANTABLE.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTableCatalog() {
+		return tableCatalog;
+	}
+
+	public String getTableSchema() {
+		return tableSchema;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getGrantor() {
+		return grantor;
+	}
+
+	public String getGrantee() {
+		return grantee;
+	}
+
+	public String getPrivilege() {
+		return privilege;
+	}
+
+	public String getIsGrantable() {
+		return isGrantable;
+	}
+
+	@Override
+	public String toString() {
+		return "ColumnPrivilege [tableCatalog=" + tableCatalog
+				+ ", tableSchema=" + tableSchema + ", tableName=" + tableName
+				+ ", columnName=" + columnName + ", grantor=" + grantor
+				+ ", grantee=" + grantee + ", privilege=" + privilege
+				+ ", isGrantable=" + isGrantable + "]";
+	}
+	
+	
+
+	
 	
 /*
 Each privilige description has the following columns:

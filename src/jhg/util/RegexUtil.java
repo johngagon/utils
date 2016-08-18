@@ -9,6 +9,8 @@ public class RegexUtil {
 		super();
 	}
 	
+	public static final String NUMBER = "^[0-9]+$";
+	
 	/**
 	 * lowercase, digits, underscore, hyphen 
 	 * length: 3-15
@@ -89,7 +91,8 @@ public class RegexUtil {
 	public static boolean match(String patternString, String toTest){
 		Pattern pattern = getPattern(patternString);
 		Matcher matcher = pattern.matcher(toTest);
-		return matcher.matches();
+		boolean rv = matcher.matches();
+		return rv;
 	}
 	
 	public static void test2(){
@@ -113,6 +116,7 @@ public class RegexUtil {
 	}
 	public static void main(String[] args){
 		testISBN10();
+		
 	}
 }
 /*

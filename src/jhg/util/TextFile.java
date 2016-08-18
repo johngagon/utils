@@ -21,14 +21,27 @@ import java.util.regex.Pattern;
 public class TextFile {
 
 	private String content;
+	private boolean hasContent;
 	
 	public TextFile(String fileName) {
 		try {
-			this.content = new String(readAllBytes(get(fileName)));
+			byte[] bytes = readAllBytes(get(fileName));
+			if(bytes.length==0){
+				hasContent = false;
+			}else{
+				this.content = new String(bytes);
+				hasContent = true;
+			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			hasContent=false;
+			Log.println("File not found: '"+fileName+"'");
+			//e.printStackTrace();
 		}		
 	}
+	public boolean hasContent(){
+		return this.hasContent;
+	}
+	
 	public String getText(){
 		return content;
 	}

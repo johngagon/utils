@@ -51,6 +51,10 @@ public class Attribute {
 	private Nullable nullable;
 	private short sourceDataType;
 	
+	public Attribute(DatabaseMetaData dbmd, String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern) throws SQLException{
+		this(dbmd.getAttributes(catalog, schemaPattern, typeNamePattern, attributeNamePattern));
+	}
+	
 	public Attribute(ResultSet rs){
 		/*
 		 * Preconditions: 

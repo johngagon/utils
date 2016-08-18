@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class UserDefinedTypes {
 	
 	public static enum Field{
@@ -12,7 +15,62 @@ public class UserDefinedTypes {
 		REMARKS,
 		BASE_TYPE;
 
-	}	
+	}
+	private String typeCat,typeSchem,typeName,className,remarks;
+	private int dataType;
+	private short baseType;
+	
+	public UserDefinedTypes(ResultSet rs){
+		try{
+			typeCat = rs.getString(Field.TYPE_CAT.ordinal());
+			typeSchem = rs.getString(Field.TYPE_SCHEM.ordinal());
+			typeName = rs.getString(Field.TYPE_NAME.ordinal());
+			className = rs.getString(Field.CLASS_NAME.ordinal());
+			remarks = rs.getString(Field.REMARKS.ordinal());
+			dataType = rs.getInt(Field.DATA_TYPE.ordinal());
+			baseType = rs.getShort(Field.BASE_TYPE.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTypeCat() {
+		return typeCat;
+	}
+
+	public String getTypeSchem() {
+		return typeSchem;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public int getDataType() {
+		return dataType;
+	}
+
+	public short getBaseType() {
+		return baseType;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDefinedTypes [typeCat=" + typeCat + ", typeSchem="
+				+ typeSchem + ", typeName=" + typeName + ", className="
+				+ className + ", remarks=" + remarks + ", dataType=" + dataType
+				+ ", baseType=" + baseType + "]";
+	}
+	
+	
 	
 /*
 TYPE_CAT String => the type's catalog (may be null)

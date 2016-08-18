@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class PseudoColumn {
 	
 	public static enum Field{
@@ -17,6 +20,87 @@ public class PseudoColumn {
 		CHAR_OCTET_LENGTH,
 		IS_NULLABLE;//TriFlag
 	}	
+	private String tableCat,tableSchem,tableName,columnName,columnUsage,remarks,isNullable;
+	private int dataType;
+	private int columnSize,decimalDigits,numPrecRadix,charOctetLength;
+	
+	public PseudoColumn(ResultSet rs){
+		try{
+			tableCat = rs.getString(Field.TABLE_CAT.ordinal());
+			tableSchem = rs.getString(Field.TABLE_SCHEM.ordinal());
+			tableName = rs.getString(Field.TABLE_NAME.ordinal());
+			columnName = rs.getString(Field.COLUMN_NAME.ordinal());
+			columnUsage = rs.getString(Field.COLUMN_USAGE.ordinal());
+			remarks = rs.getString(Field.REMARKS.ordinal());
+			isNullable = rs.getString(Field.IS_NULLABLE.ordinal());
+			dataType = rs.getInt(Field.DATA_TYPE.ordinal());
+			columnSize = rs.getInt(Field.COLUMN_SIZE.ordinal());
+			decimalDigits = rs.getInt(Field.DECIMAL_DIGITS.ordinal());
+			numPrecRadix = rs.getInt(Field.NUM_PREC_RADIX.ordinal());
+			charOctetLength = rs.getInt(Field.CHAR_OCTET_LENGTH.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTableCat() {
+		return tableCat;
+	}
+
+	public String getTableSchem() {
+		return tableSchem;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getColumnUsage() {
+		return columnUsage;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public String getIsNullable() {
+		return isNullable;
+	}
+
+	public int getDataType() {
+		return dataType;
+	}
+
+	public int getColumnSize() {
+		return columnSize;
+	}
+
+	public int getDecimalDigits() {
+		return decimalDigits;
+	}
+
+	public int getNumPrecRadix() {
+		return numPrecRadix;
+	}
+
+	public int getCharOctetLength() {
+		return charOctetLength;
+	}
+
+	@Override
+	public String toString() {
+		return "PseudoColumn [tableCat=" + tableCat + ", tableSchem="
+				+ tableSchem + ", tableName=" + tableName + ", columnName="
+				+ columnName + ", columnUsage=" + columnUsage + ", remarks="
+				+ remarks + ", isNullable=" + isNullable + ", dataType="
+				+ dataType + ", columnSize=" + columnSize + ", decimalDigits="
+				+ decimalDigits + ", numPrecRadix=" + numPrecRadix
+				+ ", charOctetLength=" + charOctetLength + "]";
+	}
 	
 /*
 Only column descriptions matching the catalog, schema, table and column name criteria are returned. They are ordered by TABLE_CAT,TABLE_SCHEM, TABLE_NAME and COLUMN_NAME.

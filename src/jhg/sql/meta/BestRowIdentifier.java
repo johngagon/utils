@@ -1,6 +1,12 @@
 package jhg.sql.meta;
 
 import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+
+
 
 /*
  * FIXME add constructor with ResultSet, make getters and toString() and test out.
@@ -13,7 +19,7 @@ public class BestRowIdentifier {
 		bestRowSession(DatabaseMetaData.bestRowSession);
 		private int code;
 		private Scope(int scope){
-			scope = code;
+			code = scope;
 		}
 		public static Scope from(int c){
 			for(Scope n:Scope.values()){
@@ -56,6 +62,60 @@ public class BestRowIdentifier {
 	String columnName,typeName;
 	int dataType,columnSize,bufferLength;
 	short decimalDigits;
+	
+	public BestRowIdentifier(ResultSet rs){
+		//typeCatalog = rs.getString(Field.TYPE_CAT.ordinal());
+		try{
+			scope = Scope.from(rs.getInt(Field.SCOPE.ordinal()));
+			columnName = rs.getString(Field.COLUMN_NAME.ordinal());
+			typeName = rs.getString(Field.TYPE_NAME.ordinal());
+			dataType = rs.getInt(Field.DATA_TYPE.ordinal());
+			columnSize = rs.getInt(Field.COLUMN_SIZE.ordinal());
+			bufferLength = rs.getInt(Field.BUFFER_LENGTH.ordinal());
+			decimalDigits = rs.getShort(Field.DECIMAL_DIGITS.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public Scope getScope() {
+		return scope;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public int getDataType() {
+		return dataType;
+	}
+
+	public int getColumnSize() {
+		return columnSize;
+	}
+
+	public int getBufferLength() {
+		return bufferLength;
+	}
+
+	public short getDecimalDigits() {
+		return decimalDigits;
+	}
+
+	@Override
+	public String toString() {
+		return "BestRowIdentifier [scope=" + scope + ", columnName="
+				+ columnName + ", typeName=" + typeName + ", dataType="
+				+ dataType + ", columnSize=" + columnSize + ", bufferLength="
+				+ bufferLength + ", decimalDigits=" + decimalDigits + "]";
+	}
+	
+	
+	
 	/*
 Each column description has the following columns:
 

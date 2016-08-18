@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ClientInfoProperty {
 	
 	public static enum Field{
@@ -13,6 +16,44 @@ public class ClientInfoProperty {
 	private String name,defaultValue,description;
 	@SuppressWarnings("unused")
 	private int maxLength;
+	
+	public ClientInfoProperty(ResultSet rs){
+		try{
+			name = rs.getString(Field.NAME.ordinal());
+			defaultValue = rs.getString(Field.DEFAULT_VALUE.ordinal());
+			description = rs.getString(Field.DESCRIPTION.ordinal());
+			maxLength = rs.getInt(Field.MAX_LEN.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public int getMaxLength() {
+		return maxLength;
+	}
+
+	@Override
+	public String toString() {
+		return "ClientInfoProperty [name=" + name + ", defaultValue="
+				+ defaultValue + ", description=" + description
+				+ ", maxLength=" + maxLength + "]";
+	}
+	
+	
+	
+
 	
 /*
 Retrieves a list of the client info properties that the driver supports. The result set contains the following columns

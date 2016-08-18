@@ -1,5 +1,8 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class PrimaryKey {
 	
 	public static enum Field{
@@ -11,6 +14,57 @@ public class PrimaryKey {
 		KEY_SEQ,
 		PK_NAME;		
 	}	
+	
+	private String tableCat,tableSchem,tableName,columnName,pkName;
+	private short keySeq;
+	
+	public PrimaryKey(ResultSet rs){
+		try{
+			tableCat = rs.getString(Field.TABLE_CAT.ordinal());
+			tableSchem = rs.getString(Field.TABLE_SCHEM.ordinal());
+			tableName = rs.getString(Field.TABLE_NAME.ordinal());
+			columnName = rs.getString(Field.COLUMN_NAME.ordinal());
+			pkName = rs.getString(Field.PK_NAME.ordinal());
+			keySeq = rs.getShort(Field.KEY_SEQ.ordinal());
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTableCat() {
+		return tableCat;
+	}
+
+	public String getTableSchem() {
+		return tableSchem;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getPkName() {
+		return pkName;
+	}
+
+	public short getKeySeq() {
+		return keySeq;
+	}
+
+	@Override
+	public String toString() {
+		return "PrimaryKey [tableCat=" + tableCat + ", tableSchem="
+				+ tableSchem + ", tableName=" + tableName + ", columnName="
+				+ columnName + ", pkName=" + pkName + ", keySeq=" + keySeq
+				+ "]";
+	}
+
+	
+	
 	
 /*
 Each primary key column description has the following columns:

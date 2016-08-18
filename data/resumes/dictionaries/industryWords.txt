@@ -1,0 +1,39 @@
+medical
+medicine
+health
+healthcare
+anthem
+bcbs
+blue's
+blue cross
+blue shield
+blues
+blueexchange
+bluemix
+carefirst
+drugs
+findlaw
+findlaw's
+hipaa
+hippa
+healthnet
+kaiser
+kaiser permanente
+medicare
+medication
+net's
+nexus
+nielsen
+pacificlife
+permanente
+pharmacy
+prescriptions
+wellpoint
+pharmaceutical
+triage
+validation
+validator
+visualization
+vss
+websites
+

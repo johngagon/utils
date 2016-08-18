@@ -1,0 +1,163 @@
+agile
+ajax
+all stages
+angular
+angularjs
+ant
+application server
+architected
+architectural
+architecture
+atlassian
+backbone
+backbonejs
+bamboo
+bi
+branding
+business intelligence
+cascading style sheets
+charts
+confluence
+controler
+crystal
+css
+css3
+csv
+cvs
+cube
+d3
+data mart
+data model
+data modeling
+data models
+data warehouse
+datamart
+datamarts
+deploy
+deployment
+deployment
+design patterns
+dhtml
+disciplined agile
+dry
+eclipse
+ecma
+ecmascript
+ejb
+encryption
+encryption
+end to end
+erd
+etl
+facade
+factory
+fixed width
+full stack
+git
+grails
+groovy
+gsp
+ha
+healthcare
+hibernate
+high availability
+hospital
+hql
+html
+in memory
+insurance
+j2ee
+jasper
+java
+javascript
+jboss
+jdbc
+jdbc
+jdk
+jee
+jira
+jpa
+jquery
+json
+jsp
+kanban
+lifecycle
+linux
+marketing
+maven
+mda
+medical
+medicine
+ms sql
+mssql
+mvc
+node
+node
+node.js
+node.js
+object oriented
+object-oriented
+oo
+ooa
+ood
+postgres
+postgresql
+primary care
+privacy
+product owner
+production
+public key
+qa
+qlik
+qliksense
+qlikview
+rails
+rational rose
+react
+reports
+rest
+rup
+sale
+sales
+scrum
+secret
+secure
+secure
+secured
+security
+security clearnace
+servlet
+servlet container
+singleton
+soap
+software development life cycle
+software development lifecycle
+spring
+sprint
+sql
+sql server
+sqlserver
+ssis
+stage
+staged
+stages
+stash
+struts
+svg
+tablibs
+tag library
+taglib
+testing
+tomcat
+uat
+uml
+unit test
+unit tests
+unix
+war file
+war files
+web services
+wsdl
+xhtml
+xml
+xp

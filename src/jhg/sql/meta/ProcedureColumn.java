@@ -1,18 +1,57 @@
 package jhg.sql.meta;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import jhg.sql.meta.Procedure.Type;
+
 public class ProcedureColumn {
-	
+	/*
+	procedureColumnUnknown - nobody knows
+	procedureColumnIn - IN parameter
+	procedureColumnInOut - INOUT parameter
+	procedureColumnOut - OUT parameter
+	procedureColumnReturn - procedure return value
+	procedureColumnResult - result column in ResultSet
+*/	
 	public static enum Type{
-/*
-		procedureColumnUnknown - nobody knows
-		procedureColumnIn - IN parameter
-		procedureColumnInOut - INOUT parameter
-		procedureColumnOut - OUT parameter
-		procedureColumnReturn - procedure return value
-		procedureColumnResult - result column in ResultSet
- */
+		procedureColumnUnknown(DatabaseMetaData.procedureColumnUnknown),
+		procedureColumnIn(DatabaseMetaData.procedureColumnIn),
+		procedureColumnInOut(DatabaseMetaData.procedureColumnInOut),
+		procedureColumnOut(DatabaseMetaData.procedureColumnOut),
+		procedureColumnReturn(DatabaseMetaData.procedureColumnReturn),
+		procedureColumnResult(DatabaseMetaData.procedureColumnResult);
+		private int code;
+		private Type(int c){
+			this.code = c;
+		}
+		public static Type from(int c){
+			for(Type n:Type.values()){
+				if(n.code == c){
+					return n;
+				}
+			}
+			return null;			
+		}
+
 	}
 	public static enum Nullable{
+		procedureNoNulls(DatabaseMetaData.procedureNoNulls),
+		procedureNullable(DatabaseMetaData.procedureNullable),
+		procedureNullableUnknown(DatabaseMetaData.procedureNullableUnknown);
+		private int code;
+		private Nullable(int c){
+			this.code = c;
+		}
+		public static Nullable from(int c){
+			for(Nullable n:Nullable.values()){
+				if(n.code == c){
+					return n;
+				}
+			}
+			return null;			
+		}		
 /*
 		procedureNoNulls - does not allow NULL values
 		procedureNullable - allows NULL values
@@ -20,6 +59,11 @@ public class ProcedureColumn {
 
  */
 	}
+
+	public static final String NULL = "NULL";
+	public static final String TRUNCATE = "TRUNCATE";
+	public static final String YES = "YES";
+	public static final String NO = "NO";
 	
 	public static enum Field{
 		NIL,
@@ -48,6 +92,148 @@ public class ProcedureColumn {
 
 	}	
 	
+	
+	private String procedureCat,procedureSchem,procedureName,columnName,typeName,remarks,isNullable,specificName;
+	private int dataType,precision,length,sqlDataType,sqlDatetimeSub,charOctetLength,ordinalPosition;
+	private short scale,radix;
+	private Type columnType;
+	private Nullable nullable;
+	
+	public ProcedureColumn(ResultSet rs){
+		try{
+			procedureCat = rs.getString(Field.PROCEDURE_CAT.ordinal());
+			procedureSchem = rs.getString(Field.PROCEDURE_SCHEM.ordinal());
+			procedureName = rs.getString(Field.PROCEDURE_NAME.ordinal());
+			columnName = rs.getString(Field.COLUMN_NAME.ordinal());
+			typeName = rs.getString(Field.TYPE_NAME.ordinal());
+			remarks = rs.getString(Field.REMARKS.ordinal());
+			isNullable = rs.getString(Field.IS_NULLABLE.ordinal());
+			specificName = rs.getString(Field.SPECIFIC_NAME.ordinal());
+			dataType = rs.getInt(Field.DATA_TYPE.ordinal());
+			precision = rs.getInt(Field.PRECISION.ordinal());
+			length = rs.getInt(Field.LENGTH.ordinal());
+			sqlDataType = rs.getInt(Field.SQL_DATA_TYPE.ordinal());
+			sqlDatetimeSub = rs.getInt(Field.SQL_DATETIME_SUB.ordinal());
+			charOctetLength = rs.getInt(Field.CHAR_OCTET_LENGTH.ordinal());
+			ordinalPosition = rs.getInt(Field.ORDINAL_POSITION.ordinal());
+			scale = rs.getShort(Field.SCALE.ordinal());
+			radix = rs.getShort(Field.RADIX.ordinal());
+			columnType = Type.from(rs.getInt(Field.COLUMN_TYPE.ordinal()));
+			nullable = Nullable.from(rs.getInt(Field.NULLABLE.ordinal()));
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public static String getNull() {
+		return NULL;
+	}
+
+	public static String getTruncate() {
+		return TRUNCATE;
+	}
+
+	public static String getYes() {
+		return YES;
+	}
+
+	public static String getNo() {
+		return NO;
+	}
+
+	public String getProcedureCat() {
+		return procedureCat;
+	}
+
+	public String getProcedureSchem() {
+		return procedureSchem;
+	}
+
+	public String getProcedureName() {
+		return procedureName;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public String getIsNullable() {
+		return isNullable;
+	}
+
+	public String getSpecificName() {
+		return specificName;
+	}
+
+	public int getDataType() {
+		return dataType;
+	}
+
+	public int getPrecision() {
+		return precision;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public int getSqlDataType() {
+		return sqlDataType;
+	}
+
+	public int getSqlDatetimeSub() {
+		return sqlDatetimeSub;
+	}
+
+	public int getCharOctetLength() {
+		return charOctetLength;
+	}
+
+	public int getOrdinalPosition() {
+		return ordinalPosition;
+	}
+
+	public short getScale() {
+		return scale;
+	}
+
+	public short getRadix() {
+		return radix;
+	}
+
+	public Type getColumnType() {
+		return columnType;
+	}
+
+	public Nullable getNullable() {
+		return nullable;
+	}
+
+	@Override
+	public String toString() {
+		return "ProcedureColumn [procedureCat=" + procedureCat
+				+ ", procedureSchem=" + procedureSchem + ", procedureName="
+				+ procedureName + ", columnName=" + columnName + ", typeName="
+				+ typeName + ", remarks=" + remarks + ", isNullable="
+				+ isNullable + ", specificName=" + specificName + ", dataType="
+				+ dataType + ", precision=" + precision + ", length=" + length
+				+ ", sqlDataType=" + sqlDataType + ", sqlDatetimeSub="
+				+ sqlDatetimeSub + ", charOctetLength=" + charOctetLength
+				+ ", ordinalPosition=" + ordinalPosition + ", scale=" + scale
+				+ ", radix=" + radix + ", columnType=" + columnType
+				+ ", nullable=" + nullable + "]";
+	}
+	
+	
+	
 /*
 Each row in the ResultSet is a parameter description or column description with the following fields:
 
@@ -74,9 +260,9 @@ procedureNullable - allows NULL values
 procedureNullableUnknown - nullability unknown
 REMARKS String => comment describing parameter/column
 COLUMN_DEF String => default value for the column, which should be interpreted as a string when the value is enclosed in single quotes (may be null)
-The string NULL (not enclosed in quotes) - if NULL was specified as the default value
-TRUNCATE (not enclosed in quotes) - if the specified default value cannot be represented without truncation
-NULL - if a default value was not specified
+	The string NULL (not enclosed in quotes) - if NULL was specified as the default value
+	TRUNCATE (not enclosed in quotes) - if the specified default value cannot be represented without truncation
+	NULL - if a default value was not specified
 SQL_DATA_TYPE int => reserved for future use
 SQL_DATETIME_SUB int => reserved for future use
 CHAR_OCTET_LENGTH int => the maximum length of binary and character based columns. For any other datatype the returned value is a NULL

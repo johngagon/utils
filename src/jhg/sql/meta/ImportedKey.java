@@ -1,5 +1,10 @@
 package jhg.sql.meta;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+//TODO (same as cross reference and exported key
+
 public class ImportedKey {
 	
 
@@ -20,7 +25,104 @@ public class ImportedKey {
 		PK_NAME,
 		DEFERRABILITY;//DeferType 		
 	}	
+	private String pkTableCat, pkTableSchem, pkTableName, pkColumnName, fkTableCat, fkTableSchem, fkTableName, fkColumnName, fkName, pkName;
+	private short keySeq;
+	private UpdateRule updateRule;
+	private DeleteRule deleteRule;
+	private DeferType deferrability;
+
+	public ImportedKey(ResultSet rs){
+		try{
+			 pkTableCat = rs.getString(Field.PKTABLE_CAT.ordinal());
+			 pkTableSchem = rs.getString(Field.PKTABLE_SCHEM.ordinal());
+			 pkTableName = rs.getString(Field.PKTABLE_NAME.ordinal());
+			 pkColumnName = rs.getString(Field.PKCOLUMN_NAME.ordinal());
+			 fkTableCat = rs.getString(Field.FKTABLE_CAT.ordinal()); 
+			 fkTableSchem = rs.getString(Field.FKTABLE_SCHEM.ordinal());
+			 fkTableName = rs.getString(Field.FKTABLE_NAME.ordinal());
+			 fkColumnName = rs.getString(Field.FKCOLUMN_NAME.ordinal());
+			 fkName = rs.getString(Field.FK_NAME.ordinal());
+			 pkName = rs.getString(Field.PK_NAME.ordinal());
+			 keySeq = rs.getShort(Field.KEY_SEQ.ordinal());
+			 updateRule = UpdateRule.from(rs.getInt(Field.UPDATE_RULE.ordinal()));
+			 deleteRule = DeleteRule.from(rs.getInt(Field.DELETE_RULE.ordinal()));
+			 deferrability = DeferType.from(rs.getInt(Field.DEFERRABILITY.ordinal()));
+			
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getPkTableCat() {
+		return pkTableCat;
+	}
+
+	public String getPkTableSchem() {
+		return pkTableSchem;
+	}
+
+	public String getPkTableName() {
+		return pkTableName;
+	}
+
+	public String getPkColumnName() {
+		return pkColumnName;
+	}
+
+	public String getFkTableCat() {
+		return fkTableCat;
+	}
+
+	public String getFkTableSchem() {
+		return fkTableSchem;
+	}
+
+	public String getFkTableName() {
+		return fkTableName;
+	}
+
+	public String getFkColumnName() {
+		return fkColumnName;
+	}
+
+	public String getFkName() {
+		return fkName;
+	}
+
+	public String getPkName() {
+		return pkName;
+	}
+
+	public short getKeySeq() {
+		return keySeq;
+	}
+
+	public UpdateRule getUpdateRule() {
+		return updateRule;
+	}
+
+	public DeleteRule getDeleteRule() {
+		return deleteRule;
+	}
+
+	public DeferType getDeferrability() {
+		return deferrability;
+	}
+
+	@Override
+	public String toString() {
+		return "CrossReference [pkTableCat=" + pkTableCat + ", pkTableSchem="
+				+ pkTableSchem + ", pkTableName=" + pkTableName
+				+ ", pkColumnName=" + pkColumnName + ", fkTableCat="
+				+ fkTableCat + ", fkTableSchem=" + fkTableSchem
+				+ ", fkTableName=" + fkTableName + ", fkColumnName="
+				+ fkColumnName + ", fkName=" + fkName + ", pkName=" + pkName
+				+ ", keySeq=" + keySeq + ", updateRule=" + updateRule
+				+ ", deleteRule=" + deleteRule + ", deferrability="
+				+ deferrability + "]";
+	}
 	
+			
 /*
 PKTABLE_CAT String => primary key table catalog being imported (may be null)
 PKTABLE_SCHEM String => primary key table schema being imported (may be null)

@@ -1,16 +1,53 @@
 package jhg.sql.meta;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+
 public class Type {
 	
 	public static enum Nullable{
+		typeNoNulls(DatabaseMetaData.typeNoNulls),
+		typeNullable(DatabaseMetaData.typeNullable),
+		typeNullableUnknown(DatabaseMetaData.typeNullableUnknown);			
 	/*
 		typeNoNulls - does not allow NULL values
 		typeNullable - allows NULL values
 		typeNullableUnknown - nullability unknown	
 	 */
+		private int code;
+		private Nullable(int c){
+			this.code = c;
+		}
+		public static Nullable from(int c){
+			for(Nullable n:Nullable.values()){
+				if(n.code == c){
+					return n;
+				}
+			}
+			return null;			
+		}		
 	}
 	
 	public static enum Searchable{
+		typePredNone(DatabaseMetaData.typePredNone),
+		typePredChar(DatabaseMetaData.typePredChar),
+		typePredBasic(DatabaseMetaData.typePredBasic),
+		typeSearchable(DatabaseMetaData.typeSearchable);		
+		private int code;
+		private Searchable(int c){
+			this.code = c;
+		}
+		public static Searchable from(int c){
+			for(Searchable n:Searchable.values()){
+				if(n.code == c){
+					return n;
+				}
+			}
+			return null;			
+		}		
 /*
 		typePredNone - No support
 		typePredChar - Only supported with WHERE .. LIKE
@@ -41,6 +78,131 @@ public class Type {
 		SQL_DATETIME_SUB,
 		NUM_PREC_RADIX;		
 	}	
+	
+	private String typeName,literalPrefix,literalSuffix,createParams,localTypeName;
+	private int dataType;
+	private int precision,sqlDataType,sqlDatetimeSub,numPrecRadix;
+	private short minimumScale,maximumScale;
+	private boolean caseSensitive,unsignedAttribute,fixedPrecScale,autoIncrement;
+	private Nullable nullable;
+	private Searchable searchable;
+	
+	public Type(ResultSet rs){
+		try{
+			typeName = rs.getString(Field.TYPE_NAME.ordinal());
+			literalPrefix = rs.getString(Field.LITERAL_PREFIX.ordinal());
+			literalSuffix = rs.getString(Field.LITERAL_SUFFIX.ordinal());
+			createParams = rs.getString(Field.CREATE_PARAMS.ordinal());
+			localTypeName = rs.getString(Field.LOCAL_TYPE_NAME.ordinal());
+			
+			dataType = rs.getInt(Field.DATA_TYPE.ordinal());
+			precision = rs.getInt(Field.PRECISION.ordinal());
+			sqlDataType = rs.getInt(Field.SQL_DATA_TYPE.ordinal());
+			sqlDatetimeSub = rs.getInt(Field.SQL_DATETIME_SUB.ordinal());
+			numPrecRadix = rs.getInt(Field.NUM_PREC_RADIX.ordinal());
+			
+			minimumScale = rs.getShort(Field.MINIMUM_SCALE.ordinal());
+			maximumScale = rs.getShort(Field.MAXIMUM_SCALE.ordinal());
+			
+			caseSensitive = rs.getBoolean(Field.CASE_SENSITIVE.ordinal());
+			unsignedAttribute = rs.getBoolean(Field.UNSIGNED_ATTRIBUTE.ordinal());
+			fixedPrecScale = rs.getBoolean(Field.FIXED_PREC_SCALE.ordinal());
+			autoIncrement = rs.getBoolean(Field.AUTO_INCREMENT.ordinal());
+			
+			nullable = Nullable.from(rs.getInt(Field.NULLABLE.ordinal()));
+			searchable = Searchable.from(rs.getInt(Field.SEARCHABLE.ordinal()));
+		}catch(SQLException sqle){
+			sqle.printStackTrace();
+		}
+	}
+
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public String getLiteralPrefix() {
+		return literalPrefix;
+	}
+
+	public String getLiteralSuffix() {
+		return literalSuffix;
+	}
+
+	public String getCreateParams() {
+		return createParams;
+	}
+
+	public String getLocalTypeName() {
+		return localTypeName;
+	}
+
+	public int getDataType() {
+		return dataType;
+	}
+
+	public int getPrecision() {
+		return precision;
+	}
+
+	public int getSqlDataType() {
+		return sqlDataType;
+	}
+
+	public int getSqlDatetimeSub() {
+		return sqlDatetimeSub;
+	}
+
+	public int getNumPrecRadix() {
+		return numPrecRadix;
+	}
+
+	public short getMinimumScale() {
+		return minimumScale;
+	}
+
+	public short getMaximumScale() {
+		return maximumScale;
+	}
+
+	public boolean isCaseSensitive() {
+		return caseSensitive;
+	}
+
+	public boolean isUnsignedAttribute() {
+		return unsignedAttribute;
+	}
+
+	public boolean isFixedPrecScale() {
+		return fixedPrecScale;
+	}
+
+	public boolean isAutoIncrement() {
+		return autoIncrement;
+	}
+
+	public Nullable getNullable() {
+		return nullable;
+	}
+
+	public Searchable getSearchable() {
+		return searchable;
+	}
+
+	@Override
+	public String toString() {
+		return "Type [typeName=" + typeName + ", literalPrefix="
+				+ literalPrefix + ", literalSuffix=" + literalSuffix
+				+ ", createParams=" + createParams + ", localTypeName="
+				+ localTypeName + ", dataType=" + dataType + ", precision="
+				+ precision + ", sqlDataType=" + sqlDataType
+				+ ", sqlDatetimeSub=" + sqlDatetimeSub + ", numPrecRadix="
+				+ numPrecRadix + ", minimumScale=" + minimumScale
+				+ ", maximumScale=" + maximumScale + ", caseSensitive="
+				+ caseSensitive + ", unsignedAttribute=" + unsignedAttribute
+				+ ", fixedPrecScale=" + fixedPrecScale + ", autoIncrement="
+				+ autoIncrement + ", nullable=" + nullable + ", searchable="
+				+ searchable + "]";
+	}
 	
 /*
 TYPE_NAME String => Type name
