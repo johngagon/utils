@@ -3,7 +3,7 @@ package jhg.sql.meta;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserDefinedTypes {
+public class UserDefinedType {
 	
 	public static enum Field{
 		NIL,
@@ -20,7 +20,7 @@ public class UserDefinedTypes {
 	private int dataType;
 	private short baseType;
 	
-	public UserDefinedTypes(ResultSet rs){
+	public UserDefinedType(ResultSet rs){
 		try{
 			typeCat = rs.getString(Field.TYPE_CAT.ordinal());
 			typeSchem = rs.getString(Field.TYPE_SCHEM.ordinal());
