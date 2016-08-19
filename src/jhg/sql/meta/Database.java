@@ -12,6 +12,10 @@ import static java.sql.Types.*;
  *
  */
 public class Database {
+	
+	/*
+	 * Link the objects together in a graph that has public methods. e.g.: Catalogs have Schemas which have Tables which have Indexes, Columns and Primary Keys and Privileges.
+	 */
 
 	private DatabaseMetaData dbmd;
 	private boolean loaded;
@@ -40,19 +44,23 @@ public class Database {
 		loadProperties();
 		loadClientInfoPropertyList();
 		loadCatalogList();
-		//TODO impl load schemaList,tableTypeList,typeList
+		loadSchemaList();
+		loadTableTypeList();
+		loadTypeList();
 		loaded = true;
 	}
-
 	
-	
-	
+	 
 	public void printClientInfoPropertyList(){
 		for(ClientInfoProperty cip:clientInfoPropertyList){
 			Log.println(cip.toString());
 		}
 	}
 	
+	
+	List<Catalog> getCatalogList(){
+		return this.catalogList;
+	}
 	List<Schema> getSchemaList(){
 		return this.schemaList;
 	}
@@ -68,151 +76,377 @@ public class Database {
 	Map<String,String> getProperties(){
 		return this.reportDatabaseProperties;
 	}
-	List<CrossReference> getCrossReferences(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable){
-		List<CrossReference> crossReferenceList = new ArrayList<CrossReference>();
+
+	
+	List<Schema> getSchemas(Catalog catalog, String schemaPattern){
+		List<Schema> list = new ArrayList<Schema>();
 		if(!loaded){
-			return crossReferenceList;
+			return list;
 		}
 		try {		
-			ResultSet rs = dbmd.getCrossReference(parentCatalog, parentSchema, parentTable, foreignCatalog, foreignSchema, foreignTable);
+			ResultSet rs = dbmd.getSchemas(catalog.getTableCatalog(), schemaPattern);
+			while(rs.next()){
+				Schema c = new Schema(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;		
+	}
+	List<Attribute> getAttributes(Catalog catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern)
+	{
+		List<Attribute> list = new ArrayList<Attribute>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getAttributes(catalog.getTableCatalog(), schemaPattern, typeNamePattern, attributeNamePattern);
+			while(rs.next()){
+				Attribute c = new Attribute(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;		
+	}//TODO refactor
+	List<Column> getColumns(Catalog catalog, String schemaPattern, String tableNamePattern, String columnNamePattern){
+		List<Column> list = new ArrayList<Column>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getColumns(catalog.getTableCatalog(), schemaPattern, tableNamePattern, columnNamePattern);
+			while(rs.next()){
+				Column c = new Column(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;	
+	}
+	List<PseudoColumn> getPseudoColumns(Catalog catalog, String schemaPattern, String tableNamePattern, String columnNamePattern){
+		List<PseudoColumn> list = new ArrayList<PseudoColumn>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getPseudoColumns(catalog.getTableCatalog(), schemaPattern, tableNamePattern, columnNamePattern);
+			while(rs.next()){
+				PseudoColumn c = new PseudoColumn(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<FunctionColumn> getFunctionColumns(Catalog catalog, String schemaPattern, String functionNamePattern, String columnNamePattern){
+		List<FunctionColumn> list = new ArrayList<FunctionColumn>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getFunctionColumns(catalog.getTableCatalog(), schemaPattern, functionNamePattern, columnNamePattern);
+			while(rs.next()){
+				FunctionColumn c = new FunctionColumn(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<Function> getFunctions(Catalog catalog, String schemaPattern, String functionNamePattern){
+		List<Function> list = new ArrayList<Function>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getFunctions(catalog.getTableCatalog(), schemaPattern, functionNamePattern);
+			while(rs.next()){
+				Function c = new Function(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<ProcedureColumn> getProcedureColumns(Catalog catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern){
+		List<ProcedureColumn> list = new ArrayList<ProcedureColumn>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getProcedureColumns(catalog.getTableCatalog(), schemaPattern, procedureNamePattern, columnNamePattern);
+			while(rs.next()){
+				ProcedureColumn c = new ProcedureColumn(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<Procedure> getProcedures(Catalog catalog, String schemaPattern, String procedureNamePattern){
+		List<Procedure> list = new ArrayList<Procedure>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getProcedures(catalog.getTableCatalog(), schemaPattern, procedureNamePattern);
+			while(rs.next()){
+				Procedure c = new Procedure(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<SuperTable> getSuperTables(Catalog catalog, String schemaPattern, String tableNamePattern){
+		List<SuperTable> list = new ArrayList<SuperTable>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getSuperTables(catalog.getTableCatalog(), schemaPattern, tableNamePattern);
+			while(rs.next()){
+				SuperTable c = new SuperTable(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<TablePrivilege> getTablePrivileges(Catalog catalog, String schemaPattern, String tableNamePattern){
+		List<TablePrivilege> list = new ArrayList<TablePrivilege>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getSuperTables(catalog.getTableCatalog(), schemaPattern, tableNamePattern);
+			while(rs.next()){
+				TablePrivilege c = new TablePrivilege(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<Table> getTables(Catalog catalog, String schemaPattern, String tableNamePattern, String[] types){
+		List<Table> list = new ArrayList<Table>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getTables(catalog.getTableCatalog(), schemaPattern, tableNamePattern, types);
+			while(rs.next()){
+				Table c = new Table(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<UserDefinedType> getUDTs(Catalog catalog, String schemaPattern, String typeNamePattern, int[] types){
+		List<UserDefinedType> list = new ArrayList<UserDefinedType>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getUDTs(catalog.getTableCatalog(), schemaPattern, typeNamePattern, types);
+			while(rs.next()){
+				UserDefinedType c = new UserDefinedType(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<ExportedKey> getExportedKeys(Catalog catalog, Schema schema, Table table){
+		List<ExportedKey> list = new ArrayList<ExportedKey>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getExportedKeys(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName());
+			while(rs.next()){
+				ExportedKey c = new ExportedKey(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<ImportedKey> getImportedKeys(Catalog catalog, Schema schema, Table table){
+		List<ImportedKey> list = new ArrayList<ImportedKey>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getImportedKeys(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName());
+			while(rs.next()){
+				ImportedKey c = new ImportedKey(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<PrimaryKey> getPrimaryKeys(Catalog catalog, Schema schema, Table table){
+		List<PrimaryKey> list = new ArrayList<PrimaryKey>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getPrimaryKeys(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName());
+			while(rs.next()){
+				PrimaryKey c = new PrimaryKey(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<VersionColumn> getVersionColumns(Catalog catalog, Schema schema, Table table){
+		List<VersionColumn> list = new ArrayList<VersionColumn>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getVersionColumns(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName());
+			while(rs.next()){
+				VersionColumn c = new VersionColumn(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<BestRowIdentifier> getBestRowIdentifier(Catalog catalog, Schema schema, Table table, int scope, boolean nullable){
+		List<BestRowIdentifier> list = new ArrayList<BestRowIdentifier>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getBestRowIdentifier(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName(),scope, nullable);
+			while(rs.next()){
+				BestRowIdentifier c = new BestRowIdentifier(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<ColumnPrivilege> getColumnPrivileges(Catalog catalog, Schema schema, Table table, String columnNamePattern){
+		List<ColumnPrivilege> list = new ArrayList<ColumnPrivilege>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getColumnPrivileges(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName(),columnNamePattern);
+			while(rs.next()){
+				ColumnPrivilege c = new ColumnPrivilege(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	List<Index> getIndexInfo(Catalog catalog, Schema schema, Table table, boolean unique, boolean approximate){
+		List<Index> list = new ArrayList<Index>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getIndexInfo(catalog.getTableCatalog(), schema.getTableSchem(), table.getTableName(),unique,approximate);
+			while(rs.next()){
+				Index c = new Index(rs);
+				if(c!=null){
+					list.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return list;
+	}
+	
+	List<CrossReference> getCrossReferences(Catalog parentCatalog, Schema parentSchema, Table parentTable, Catalog foreignCatalog, Schema foreignSchema, Table foreignTable){
+		List<CrossReference> list = new ArrayList<CrossReference>();
+		if(!loaded){
+			return list;
+		}
+		try {		
+			ResultSet rs = dbmd.getCrossReference(
+					parentCatalog.getTableCatalog(), 
+					parentSchema.getTableSchem(), 
+					parentTable.getTableName(), 
+					foreignCatalog.getTableCatalog(), 
+					foreignSchema.getTableSchem(), 
+					foreignTable.getTableName()
+					);
 			while(rs.next()){
 				CrossReference c = new CrossReference(rs);
 				if(c!=null){
-					crossReferenceList.add(c);
+					list.add(c);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-		return crossReferenceList;
+		return list;
 	}	
-	
-	private void loadCatalogList(){
-		try {		
-			ResultSet rs = dbmd.getCatalogs();
-			while(rs.next()){
-				Catalog c = new Catalog(rs);
-				if(c!=null){
-					catalogList.add(c);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-	}
-
-	private void loadClientInfoPropertyList(){
-		try {		
-			ResultSet rs = dbmd.getClientInfoProperties();
-			while(rs.next()){
-				ClientInfoProperty c = new ClientInfoProperty(rs);
-				if(c!=null){
-					clientInfoPropertyList.add(c);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void loadProperties(){
-		reportDatabaseProperties = reportDatabaseProperties(dbmd);
-	}	
-	
-	List<Schema> getSchemas(Catalog catalog, String schemaPattern){return null;}//TODO IMPL
-	List<Attribute> getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern){return null;}//TODO IMPL
-	List<Column> getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern){return null;}//TODO IMPL
-	List<PseudoColumn> getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern){return null;}//TODO IMPL
-	List<FunctionColumn> getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern){return null;}//TODO IMPL
-	List<Function> getFunctions(String catalog, String schemaPattern, String functionNamePattern){return null;}//TODO IMPL
-	List<ProcedureColumn> getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern){return null;}//TODO IMPL
-	List<Procedure> getProcedures(String catalog, String schemaPattern, String procedureNamePattern){return null;}//TODO IMPL
-	List<SuperTable> getSuperTables(String catalog, String schemaPattern, String tableNamePattern){return null;}//TODO IMPL
-	List<TablePrivilege> getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern){return null;}//TODO IMPL
-	List<Table> getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types){return null;}//TODO IMPL
-	List<UserDefinedType> getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types){return null;}//TODO IMPL
-	List<ExportedKey> getExportedKeys(String catalog, String schema, String table){return null;}//TODO IMPL
-	List<ImportedKey> getImportedKeys(String catalog, String schema, String table){return null;}//TODO IMPL
-	List<PrimaryKey> getPrimaryKeys(String catalog, String schema, String table){return null;}//TODO IMPL
-	List<VersionColumn> getVersionColumns(String catalog, String schema, String table){return null;}//TODO IMPL
-	List<BestRowIdentifier> getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable){return null;}//TODO IMPL
-	List<ColumnPrivilege> getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern){return null;}//TODO IMPL
-	List<Index> getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate){return null;}//TODO IMPL
-	/*
-	 * 
-
-	{return null;}//TODO IMPL
-
-<void>
-ClientInfoPropertiy		ResultSet	getClientInfoProperties()
-Catalog					ResultSet	getCatalogs()
-Schema					ResultSet	getSchemas()
-TableType				ResultSet	getTableTypes() 
-Type					ResultSet	getTypeInfo()	
-
-
-<catalog>
-Schema			ResultSet	getSchemas(String catalog, String schemaPattern)
-Attribute		ResultSet	getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern)
-Column			ResultSet	getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-PseudoColumn	ResultSet	getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
-FunctionColumn	ResultSet	getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern)
-Function		ResultSet	getFunctions(String catalog, String schemaPattern, String functionNamePattern)
-ProcedureColumn	ResultSet	getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern)
-Procedure		ResultSet	getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
-SuperTable		ResultSet	getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
-SuperType		ResultSet	getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
-TablePrivilege	ResultSet	getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
-Table			ResultSet	getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
-UserDefinedType ResultSet	getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
-
-<catalog,schema,table>
-
-ExportedKey			ResultSet	getExportedKeys(String catalog, String schema, String table)
-ImportedKey			ResultSet	getImportedKeys(String catalog, String schema, String table)
-PrimaryKey			ResultSet	getPrimaryKeys(String catalog, String schema, String table)
-VersionColumn		ResultSet	getVersionColumns(String catalog, String schema, String table)
-BestRowIdentifier	ResultSet	getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
-ColumnPrivilege		ResultSet	getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
-Index				ResultSet	getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
-
-<catalog,schema,table,catalog,schema,table>
-CrossReference		ResultSet	getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable)
-
-x Attribute
-x BestRowIdentifier
-x Catalog
-x ClientInfoProperty
-x Column
-x ColumnPrivilege
-x CrossReference
-x ExportedKey
-x FunctionColumn
-x ImportedKey
-x Index
-x PrimaryKey
-x Procedure
-x ProcedureColumn
-x PseudoColumn
-x Schema
-X SuperTable
-X SuperType
-x Table
-x TablePrivilege
-x TableType
-x Type
-x UserDefinedType
-x VersionColumn
-
-Database
-DeferType
-DeleteRule
-ImportRule
-UpdateRule
-TriFlag
-
-	*/	
-	
 
 	
 	@SuppressWarnings("unused")
@@ -464,7 +698,78 @@ TriFlag
 		return dbprops;
 	}
 		
-	
+	private void loadTypeList(){
+		try {		
+			ResultSet rs = dbmd.getTypeInfo();
+			while(rs.next()){
+				Type c = new Type(rs);
+				if(c!=null){
+					typeList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}	
+	private void loadTableTypeList(){
+		try {		
+			ResultSet rs = dbmd.getTableTypes();
+			while(rs.next()){
+				TableType c = new TableType(rs);
+				if(c!=null){
+					tableTypeList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}	
+	private void loadSchemaList(){
+		try {		
+			ResultSet rs = dbmd.getSchemas();
+			while(rs.next()){
+				Schema c = new Schema(rs);
+				if(c!=null){
+					schemaList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}	
+	private void loadCatalogList(){
+		try {		
+			ResultSet rs = dbmd.getCatalogs();
+			while(rs.next()){
+				Catalog c = new Catalog(rs);
+				if(c!=null){
+					catalogList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+	}
+
+	private void loadClientInfoPropertyList(){
+		try {		
+			ResultSet rs = dbmd.getClientInfoProperties();
+			while(rs.next()){
+				ClientInfoProperty c = new ClientInfoProperty(rs);
+				if(c!=null){
+					clientInfoPropertyList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	/*
+	 * TODO add schema, table type and type
+	 */
+	private void loadProperties(){
+		reportDatabaseProperties = reportDatabaseProperties(dbmd);
+	}		
 
 	
 	public static void main(String[] args){
@@ -489,3 +794,79 @@ dbprops.put("getMaxLogicalLobSize", String.valueOf(dbmd.getMaxLogicalLobSize()))
 			dbprops.put("XXX", dbmd.xxxxxx()?"Yes":"No");
 			dbprops.put("XXX", dbmd.xxxxxx());
 */
+
+/*
+ * 
+
+{return null;}//TODO IMPL
+
+<void>
+ClientInfoPropertiy		ResultSet	getClientInfoProperties()
+Catalog					ResultSet	getCatalogs()
+Schema					ResultSet	getSchemas()
+TableType				ResultSet	getTableTypes() 
+Type					ResultSet	getTypeInfo()	
+
+
+<catalog>
+Schema			ResultSet	getSchemas(String catalog, String schemaPattern)
+Attribute		ResultSet	getAttributes(String catalog, String schemaPattern, String typeNamePattern, String attributeNamePattern)
+Column			ResultSet	getColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
+PseudoColumn	ResultSet	getPseudoColumns(String catalog, String schemaPattern, String tableNamePattern, String columnNamePattern)
+FunctionColumn	ResultSet	getFunctionColumns(String catalog, String schemaPattern, String functionNamePattern, String columnNamePattern)
+Function		ResultSet	getFunctions(String catalog, String schemaPattern, String functionNamePattern)
+ProcedureColumn	ResultSet	getProcedureColumns(String catalog, String schemaPattern, String procedureNamePattern, String columnNamePattern)
+Procedure		ResultSet	getProcedures(String catalog, String schemaPattern, String procedureNamePattern)
+SuperTable		ResultSet	getSuperTables(String catalog, String schemaPattern, String tableNamePattern)
+SuperType		ResultSet	getSuperTypes(String catalog, String schemaPattern, String typeNamePattern)
+TablePrivilege	ResultSet	getTablePrivileges(String catalog, String schemaPattern, String tableNamePattern)
+Table			ResultSet	getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)
+UserDefinedType ResultSet	getUDTs(String catalog, String schemaPattern, String typeNamePattern, int[] types)
+
+<catalog,schema,table>
+
+ExportedKey			ResultSet	getExportedKeys(String catalog, String schema, String table)
+ImportedKey			ResultSet	getImportedKeys(String catalog, String schema, String table)
+PrimaryKey			ResultSet	getPrimaryKeys(String catalog, String schema, String table)
+VersionColumn		ResultSet	getVersionColumns(String catalog, String schema, String table)
+BestRowIdentifier	ResultSet	getBestRowIdentifier(String catalog, String schema, String table, int scope, boolean nullable)
+ColumnPrivilege		ResultSet	getColumnPrivileges(String catalog, String schema, String table, String columnNamePattern)
+Index				ResultSet	getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate)
+
+<catalog,schema,table,catalog,schema,table>
+CrossReference		ResultSet	getCrossReference(String parentCatalog, String parentSchema, String parentTable, String foreignCatalog, String foreignSchema, String foreignTable)
+
+x Attribute
+x BestRowIdentifier
+x Catalog
+x ClientInfoProperty
+x Column
+x ColumnPrivilege
+x CrossReference
+x ExportedKey
+x FunctionColumn
+x ImportedKey
+x Index
+x PrimaryKey
+x Procedure
+x ProcedureColumn
+x PseudoColumn
+x Schema
+X SuperTable
+X SuperType
+x Table
+x TablePrivilege
+x TableType
+x Type
+x UserDefinedType
+x VersionColumn
+
+Database
+DeferType
+DeleteRule
+ImportRule
+UpdateRule
+TriFlag
+
+*/	
+
