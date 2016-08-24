@@ -1,7 +1,7 @@
 package jhg.util;
 
 public class Table {
-
+	private static final boolean DEBUG = false;
 	/*
 	 * Variety of data formats for "tabular" data.
 	 * 
@@ -29,7 +29,9 @@ public class Table {
 		if(!isValid(d)){
 			throw new IllegalArgumentException(" String[][] d value was not valid.");
 		}else{
-			Log.println("Made table: "+d.length+"r "+d[0].length+"c \n\n");
+			if(DEBUG){
+				Log.println("Made table: "+d.length+"r "+d[0].length+"c \n\n");
+			}
 		}
 		this.data = d;
 	}
@@ -56,11 +58,15 @@ public class Table {
 	}
 	
 	public void print(){
+		System.out.print(formatted());
+	}
+	public String formatted(){
 		/*
 		 * 1. validate (nulls, dimensions)
 		 * 2. determine max length on each column
 		 * 3. create format 
 		 */
+		StringBuilder sb = new StringBuilder();
 		int[] colwidths = new int[data[0].length];
 		for(int i=0;i<colwidths.length;i++){
 			colwidths[i]=0;
@@ -75,17 +81,21 @@ public class Table {
 		
 		String formatString = getFormatString(colwidths);
 		for(int i=0;i<data.length;i++){
-			System.out.format(formatString,(Object[])data[i]);
-		}
+			sb.append(String.format(formatString,(Object[])data[i]));
+		}		
+		return sb.toString();
 	}
 	
 	private static String getFormatString(int[] colwidths) {
 		StringBuilder sb = new StringBuilder();
 		for(int i=0;i<colwidths.length;i++){
-			if(i==0){
+			//if(i==0){
+			//	sb.append("|");
+			//}
+			sb.append("%"+colwidths[i]+"s");//+"|"
+			if(i!=colwidths.length-1){
 				sb.append("|");
 			}
-			sb.append("%"+colwidths[i]+"s|");
 		}
 		sb.append("\n");
 		return sb.toString();

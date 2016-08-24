@@ -14,7 +14,10 @@ import static java.sql.Types.*;
 public class Database {
 	
 	/*
+	 * TODO continue impl
 	 * Link the objects together in a graph that has public methods. e.g.: Catalogs have Schemas which have Tables which have Indexes, Columns and Primary Keys and Privileges.
+	 * Test this out on a real database.
+	 * 
 	 */
 
 	private DatabaseMetaData dbmd;

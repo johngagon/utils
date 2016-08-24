@@ -1,4 +1,4 @@
-package jhg.log;
+package jhg.log.attic;
 
 public class Category {
 
