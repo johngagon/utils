@@ -8,7 +8,6 @@ package jhg.log.jdbc;
  * @author
  * @version 1.1
  */
-
 public class DebugLevel {
 
     //private constructor keeps all instances within class

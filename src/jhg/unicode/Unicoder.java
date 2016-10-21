@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Properties;
 
-import jhg.util.Log;
 import jhg.util.TextFile;
 
 public class Unicoder {

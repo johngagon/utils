@@ -1,7 +1,9 @@
 package jhg.log.attic;
 
+@SuppressWarnings("unused")
 public class Category {
 
+	
 	
 	private Category parent;
 	private String name;

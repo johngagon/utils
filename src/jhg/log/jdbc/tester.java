@@ -10,14 +10,14 @@ package jhg.log.jdbc;
  */
 
  import java.sql.*;
- import java.util.*;
 
  public class tester {
 
   public tester() {
   }
 
-  public static void main(String[] args) {
+ @SuppressWarnings("unused")
+public static void main(String[] args) {
     System.out.println("Hello World");
     String[] a=new String[0];
 

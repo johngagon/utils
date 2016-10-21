@@ -3,7 +3,6 @@ package jhg.monitoring;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.*;
 import java.util.logging.Level;
 
 import jhg.util.Log;

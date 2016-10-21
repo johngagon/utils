@@ -1,10 +1,12 @@
 package jhg.game.alchemist;
 
+@SuppressWarnings("unused")
 public class Mon {
 
 	
 	private Mon parentA;
 	private Mon parentB;
+	
 	private int level;
 	
 	private int hp;

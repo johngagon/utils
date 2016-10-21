@@ -84,13 +84,14 @@ public class EtlJob {
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
 		//etlMarketReports(true,"2014","2");
-		//etlNetworkCompare(true);
+		etlNetworkCompare(true);
 		//etlBenchmarkingShared(true);
 		//etlBenchmarkingMercer(true);
 		//etlTestEmployerSearch(true);
 		//etlEmployerSearch(true);
 		
-		etlBenchmarkingHewittDev("1019");
+		//etlBenchmarkingHewittDev("1019");
+		//etlMarketReports(true,"2015","1");
 	}
 	
 	//does this have the new tiered network in the table?
@@ -124,9 +125,14 @@ public class EtlJob {
 	}	
 	
 	/*
-	 * Add the new schema in advance. e.g.:select "valuequest"."create_partition_namespace"(2014,2)
+	 * Add the new schema in advance. e.g.:select "valuequest"."create_partition_namespace"(2015,1)
 	 * Change the year and upload in mapping file.
-	 * Insert into valuequest_2014u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2014,1,'2014-07-01','2015-06-30','2015-08-31','MY')
+	 * 
+	 * 
+	 * Insert into valuequest_2015u1.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2015,1,'2015-01-01','2015-12-31','2016-02-28','CY')
+	 * Insert into valuequest_2015u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2015,2,'2015-07-01','2016-06-30','2016-08-31','MY')
+	 * 
+	 * 
 	 */
 	public static void etlMarketReports(boolean cleanTarget, String year, String upload){
 		etl(cleanTarget,Database.DW,Database.DMFDEV,"market_reports",year,upload);

@@ -1,3 +1,7 @@
+package jhg.log.jdbc;
+
+import java.sql.*;
+
 
 /**
  * Title:        <p>
@@ -7,10 +11,6 @@
  * @author       Troy Thompson, Bob Byron
  * @version 1.1
  */
-package jhg.log.jdbc;
-
-import java.sql.*;
-
 public class StatementFactory {
 
     /* Default debug level */

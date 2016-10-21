@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jhg.util.Log;
+import jhg.util.TextFile;
 
 @SuppressWarnings("boxing")
 public class CacheTest {
@@ -58,7 +59,52 @@ public class CacheTest {
 	 * @param args
 	 */
 	public static void main(String[] args){
-		/* FIXME : use a concurrent hash map
+		int length = 5*1024*1024;//5MB
+		byte[] x = new byte[length];
+		for(int i=0;i<length;i++){
+			x[i] = (byte)5;
+		}
+		timeMem(x);
+		timeFile(x);
+	}
+	private static void timeMem(byte[] x){
+		Map<String,String> map = new Hashtable<String,String>();
+		
+		String key = "key";
+		
+		System.out.println("Write Mem...");
+		long start = System.currentTimeMillis();
+		map.put(key,new String(x));
+		long end = System.currentTimeMillis();
+		System.out.println("...Write Mem (ms): "+(end-start));
+		
+		System.out.println("Read Mem...");		
+		start = System.currentTimeMillis();
+		@SuppressWarnings("unused")
+		byte[] z = map.get(key).getBytes();
+		end = System.currentTimeMillis();
+		System.out.println("...Read Mem (ms): "+(end-start));			
+	}
+	
+	@SuppressWarnings("unused")
+	private static void timeFile(byte[] x){
+		
+		String filename = "/key.txt";
+		System.out.println("Write File...");
+		long start = System.currentTimeMillis();
+		TextFile.write(filename, new String(x));
+		long end = System.currentTimeMillis();
+		System.out.println("...Write File (ms): "+(end-start));
+		
+		System.out.println("Read File...");		
+		start = System.currentTimeMillis();
+		byte[] z = new TextFile(filename).getText().getBytes();
+		end = System.currentTimeMillis();
+		System.out.println("...Read File (ms): "+(end-start));			
+	}
+	@SuppressWarnings("unused")
+	private static void exec(){
+		/* 
 		 * 
 		 * Years: 2012-2, 2013-1, 2013-2
 		 */
@@ -140,7 +186,7 @@ public class CacheTest {
 				db.query("select count(*) from "+table.getName()+" where cq_year = '"+year+"' and upload = '"+upload+"' ");
 				
 				if(db.haveResult()){
-					@SuppressWarnings("unused")
+					//@SuppressWarnings("unused")
 					ResultSet rs = db.getResult();
 					cds.setTableCount(table,db.getResult());
 					db.closeRs();
@@ -181,9 +227,9 @@ public class CacheTest {
 		 * 4. wait for either a report of the memory in cache used or a CacheFullException 
 		 * 5. add timer
 		 */
-		
+				
 	}
-
+	
 	@SuppressWarnings("unused")
 	private static void debug(CachedDataStore cds) {
 		for(Table table:cds.getTables()){

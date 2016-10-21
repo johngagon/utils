@@ -1,19 +1,16 @@
-
-/**
- * Title:        <p>
- * Description:  <p>
- * Copyright:    Copyright (c) Troy Thompson, Bob Byron<p>
- * Company:      JavaUnderground<p>
- * @author       Troy Thompson, Bob Byron
- * @version 1.1
- */
 package jhg.log.jdbc;
 
 import java.sql.*;
 
 /**
  * Base class for all database Formatters such as OracleFormatter.
- */
+ * Title:        <p>
+ * Description:  <p>
+ * Copyright:    Copyright (c) Troy Thompson, Bob Byron<p>
+ * Company:      JavaUnderground<p>
+ * @author       Troy Thompson, Bob Byron
+ * @version 1.1
+ */  
 public abstract class SqlFormatter {
 
 

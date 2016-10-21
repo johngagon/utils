@@ -100,6 +100,28 @@ public class DeployTool {
 	 */
 	public static void main(String[] args){
 		
+		/* 
+		 * Do this: before the transfer:
+		 * Add the new schema in advance. e.g.:select "valuequest"."create_partition_namespace"(2014,2)
+		 * Change the year and upload in mapping file.
+		 * 
+		 * Then this after the transfer:
+		 * Insert into valuequest_2015u1.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2015,1,'2015-01-01','2015-12-31','2016-02-28','CY')
+		 * (or) 
+		 * Insert into valuequest_2015u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2015,2,'2015-07-01','2016-06-30','2016-08-31','MY')
+		 * 
+		 * Then check the data type on the market table
+		 *   
+		 	update valuequest.market m set m.data_type = 'A' where m.data_type = '"A    "';
+			update valuequest.market m set m.data_type = 'H' where m.data_type = '"H"';
+			update valuequest.market m set m.data_type = 'AP' where m.data_type = '"AP   "';
+			update valuequest.market m set m.data_type = 'HP' where m.data_type = '"HP   "';
+			update valuequest.market m set m.data_type = 'A' where m.data_type = '"A"';
+			update valuequest.market m set m.data_type = 'H' where m.data_type = '"H"';
+			update valuequest.market m set m.data_type = 'AP' where m.data_type = '"AP"';
+			update valuequest.market m set m.data_type = 'HP' where m.data_type = '"HP"'	;
+		 */ 		
+		//mrPRD("2015u1");
 		//handleArgs(args);
 		
 		//esUAT2PRD();
@@ -213,7 +235,7 @@ public class DeployTool {
 	/*
 	 * Market Reports
 	 * 		Need the specific dataset for this one
-	 * 		Need to create new table manually.
+	 * 		Need to create new table manually.               jhg. 2016.10.06: what table(s)?
 	 * 		Need to update valuequest partition manually.
 	 */
 	public static void mrUAT(String dataset){

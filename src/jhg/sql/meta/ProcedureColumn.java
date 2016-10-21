@@ -4,8 +4,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import jhg.sql.meta.Procedure.Type;
-
 public class ProcedureColumn {
 	/*
 	procedureColumnUnknown - nobody knows

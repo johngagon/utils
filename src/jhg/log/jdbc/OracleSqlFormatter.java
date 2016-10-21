@@ -10,8 +10,6 @@
 package jhg.log.jdbc;
 
 import java.util.Calendar;
-import java.math.BigDecimal;
-import java.io.*;
 import java.sql.*;
 
 /**

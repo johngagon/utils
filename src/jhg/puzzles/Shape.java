@@ -2,7 +2,7 @@ package jhg.puzzles;
 
 public interface Shape {
 
-	public static final Double PI = 3.1415;
+	public static final Double PI = new Double(3.1415);
 	
 	public static class Square{
 		private int h = 1;

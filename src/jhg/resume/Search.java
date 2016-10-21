@@ -2,8 +2,6 @@ package jhg.resume;
 
 import java.util.*;
 
-import chp.dbutil.Log;
-
 public class Search {
 
 	

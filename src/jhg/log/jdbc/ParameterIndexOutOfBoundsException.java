@@ -13,7 +13,12 @@ import java.sql.SQLException;
 
 public class ParameterIndexOutOfBoundsException extends SQLException {
 
-    public ParameterIndexOutOfBoundsException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1824047458693513361L;
+
+	public ParameterIndexOutOfBoundsException() {
         super();
     }
 

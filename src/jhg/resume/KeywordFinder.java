@@ -20,9 +20,9 @@ public class KeywordFinder {
 
 	public void analzye(Resume r) {
 		counts = new int[dictionaries.size()];
-		for(int c:counts){
-			c=0;
-		}
+		//for(int c:counts){
+		//	c=0;
+		//}
 		Set<String> contentWords = r.getWords();
 		Set<String> copiedContentWords = new HashSet<String>(contentWords);
 		if(contentWords.size()>0){

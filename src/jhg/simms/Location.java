@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Location {
 	
+	@SuppressWarnings("unused")
 	private String name;
 
 	private List<Character> characters;

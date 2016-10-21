@@ -1,7 +1,5 @@
 package jhg.log;
 
-import static java.lang.System.out;
-
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
