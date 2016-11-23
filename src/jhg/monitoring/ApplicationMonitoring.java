@@ -25,9 +25,12 @@ public class ApplicationMonitoring {
 	
 	public static void main(String[] args){
 		try {
-			new ApplicationMonitoring()
-			//.devApplicatonCheck();
-			.productionApplicatonCheck();
+			
+			ApplicationMonitoring monitor = new ApplicationMonitoring();
+			monitor.productionApplicatonCheck();
+			//monitor.stageApplicatonCheck();com.gargoylesoftware.htmlunit.ElementNotFoundException: elementName=[form] attributeName=[name] attributeValue=[lform]
+			//monitor.devApplicatonCheck();//[com.gargoylesoftware.htmlunit.ScriptException]			com.gargoylesoftware.htmlunit.ScriptException: ReferenceError: "getTabElements" is not defined.
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,19 +134,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);		    		
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
 		    		break;
 		    
 		    	case "Stage":
@@ -153,19 +156,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);		    		
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
 		    		break;
 		    	case "Production":
 		    		
@@ -176,19 +179,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName);	
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);	
 				  break;
 				  default:break;
 		    }
@@ -202,13 +205,13 @@ public class ApplicationMonitoring {
 		    
 		    webClient.close();
 		    //Log.println(form2.asXml());
-		    Log.println("Done");
+		    Log.println("\n\nDone");
 	    //}
 	}
 
 	private void testApplication(final WebClient webClient, String appPageName,
 			String applicationPage, String verificationTag,
-			String formName) throws IOException, MalformedURLException {
+			String formName, String testName) throws IOException, MalformedURLException {
 		
 	    //TODO add a test here for page 2 being the home page.
 		
@@ -217,7 +220,7 @@ public class ApplicationMonitoring {
 		
 		
 		webClient.waitForBackgroundJavaScript(10000);
-		Log.println("\n\n"+appPageName+" page loaded.");	
+		Log.println("\n\n"+testName+"."+appPageName+" page loaded.");	
 		
 		//Log.println(page3.asXml());
 		

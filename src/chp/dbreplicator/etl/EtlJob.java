@@ -22,6 +22,9 @@ import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Index;
 import chp.dbreplicator.Log;
+import chp.dbreplicator.ProgressReporter;
+import chp.dbreplicator.SimpleProgressListener;
+import chp.dbreplicator.ProgressReporter.Marker;
 
 public class EtlJob {
 
@@ -84,32 +87,33 @@ public class EtlJob {
 		//also need to insert into a row into the dataset.
 		//etlBlueSolutionsCatalog(true);
 		//etlMarketReports(true,"2014","2");
-		etlNetworkCompare(true);
+		//etlNetworkCompare(true);
 		//etlBenchmarkingShared(true);
 		//etlBenchmarkingMercer(true);
 		//etlTestEmployerSearch(true);
 		//etlEmployerSearch(true);
-		
-		//etlBenchmarkingHewittDev("1019");
+		etlBenchmarkingHewitt("1011");
+		//etlBenchmarkingHewitt("1011");
 		//etlMarketReports(true,"2015","1");
 	}
 	
 	//does this have the new tiered network in the table?
 
 	public static void etlBenchmarkingHewittDev(String dataSet){
-		etl(dataSet,Database.DWDEV,Database.DMDEVNEW,"benchmarking_hewitt");
+		etlByDataSet(dataSet,Database.DWDEV,Database.DMDEVNEW,"benchmarking_hewitt");
 	}	
 	
 	public static void etlBenchmarkingHewitt(String dataSet){
-		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_hewitt");
+		//etl(dataSet,Database.DW,Database. DMPRODNEW DMTESTNEW DMDEVNEW ,"benchmarking_hewitt");
+		etlByDataSet(dataSet,Database.DW,Database.DMPRODNEW,"benchmarking_hewitt");
 	}	
 	
 	public static void etlBenchmarkingTowers(String dataSet){
-		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_towers");
+		etlByDataSet(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_towers");
 	}
 	
 	public static void etlBenchmarkingMercer(String dataSet){
-		etl(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_mercer");
+		etlByDataSet(dataSet,Database.DW,Database.DMDEVNEW,"benchmarking_mercer");
 	}
 	
 	/*
@@ -135,7 +139,8 @@ public class EtlJob {
 	 * 
 	 */
 	public static void etlMarketReports(boolean cleanTarget, String year, String upload){
-		etl(cleanTarget,Database.DW,Database.DMFDEV,"market_reports",year,upload);
+		etlByUpload(cleanTarget,Database.DW,Database.DMFUAT,"market_reports",year,upload);
+		//etl(cleanTarget,Database.DW,Database.DMFPRD,"market_reports",year,upload); 
 		//getCounts(Database.DMFDEV,"valuequest_2014u1","2014","1");
 	}
 	
@@ -156,9 +161,11 @@ public class EtlJob {
 		etl(cleanTarget,Database.DW,Database.DMDEVNEW,"blue_solutions_catalog");
 	}
 	
+	
 	@SuppressWarnings("unused")
-	private static void getCounts(Database db,String schema){
+	private static int getCounts(Database db,String schema){
 		Log.pl("\n\nStarting Verification of "+db.name()+" on "+new java.util.Date());
+		int totalCount = 0;
 		DatabaseManager database = new DatabaseManager(db);
 		database.connect();
 		boolean connected = database.test();
@@ -166,7 +173,7 @@ public class EtlJob {
 		if(!connected){
 			Log.pl(EXIT_FAIL_MSG);
 			database.close();
-			return;
+			return -1;
 		}
 		
 		List<String> tables = database.getTables(schema);
@@ -174,19 +181,41 @@ public class EtlJob {
 			String sql = "select count(*) from "+schema+"."+table;
 			database.query(sql);
 			int count = database.getCountResult();
+			totalCount += count;
 			Log.pl(table+":"+count+"\n");
 		}
 		Log.pl(" ");
 		database.close();
-		Log.pl("\n\nFinished on "+new java.util.Date()+"!");	
+		Log.pl("\n\nFinished on "+new java.util.Date()+"!");
+		return totalCount;
 	}
 	
+	private static int getTableCount(DatabaseManager database,String sourceRelation){
+		Log.pl("\n\nStarting Count of "+database.getDatabase().name()+" for table:"+sourceRelation);
+		int count = 0;
+		String sql = "select count(*) from "+sourceRelation+"";
+		database.query(sql);
+		count = database.getCountResult();
+		Log.pl("\n\nFinished Count of "+database.getDatabase().name()+"-"+sourceRelation+":"+count+"\n");
+		return count;
+	}	
+	
+	private static int getTableCountDataSet(DatabaseManager database,String sourceRelation, String dataSet){
+		//Log.pl("\n\nStarting Count of "+database.getDatabase().name()+" for table:"+sourceRelation);
+		int count = 0;
+		String sql = "select count(*) from "+sourceRelation+" where data_set = "+dataSet+"";
+		database.query(sql);
+		count = database.getCountResult();
+		//Log.pl("\n\nFinished Count of "+database.getDatabase().name()+"-"+sourceRelation+":"+count+"\n");
+		return count;
+	}		
+	
 	private static void etl(boolean cleanTarget,Database source, Database target, String filename){
-		etl(cleanTarget,source,target,filename,"","");
+		etlByUpload(cleanTarget,source,target,filename,"","");
 	}
 	
 	//@SuppressWarnings("boxing")
-	private static void etl(boolean cleanTarget,Database source, Database target, String filename, String year, String upload){
+	private static void etlByUpload(boolean cleanTarget,Database source, Database target, String filename, String year, String upload){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
@@ -217,15 +246,18 @@ public class EtlJob {
 
 		List<String> l = new ArrayList<String>(viewTableMapping.keySet());
 		Collections.reverse(l);
-		
+		int totalCount = 0;
 		for(String sourceRelation:l){
 			String destTable = viewTableMapping.get(sourceRelation);
-		
+			totalCount += getTableCount(sourceDatabase,sourceRelation);
 			if(cleanTarget){
 				cleanTable(targetDatabase,destTable);
 			}	
 		}
 		Log.pl("\n ");	
+		ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
+		pr.addListener(new SimpleProgressListener());
+		
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
 
@@ -247,7 +279,7 @@ public class EtlJob {
 			}				
 			
 			
-			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable, year, upload);
+			performCopyByUpload( pr, sourceDatabase, targetDatabase, sourceRelation, destTable, year, upload);
 			
 			
 			boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
@@ -272,7 +304,7 @@ public class EtlJob {
 		Log.pl("\n\nFinished on "+new java.util.Date()+"!");			
 	}		
 	
-	private static void etl(String dataSet,Database source, Database target, String filename){
+	private static void etlByDataSet(String dataSet,Database source, Database target, String filename){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source);
@@ -303,8 +335,13 @@ public class EtlJob {
 
 		List<String> listSourceTables = new ArrayList<String>(viewTableMapping.keySet());
 		Collections.reverse(listSourceTables);
+		int totalCount = 0;
+		for(String sourceRelation:listSourceTables){
+			totalCount += getTableCountDataSet(sourceDatabase,sourceRelation, dataSet);
+		}		
+		ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
+		pr.addListener(new SimpleProgressListener());
 		
-
 		Log.pl("\n ");	
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
@@ -330,7 +367,7 @@ public class EtlJob {
 			String deleteByDataSetDML = "delete from "+destTable+" where data_set = "+dataSet+"";
 			targetDatabase.execute(deleteByDataSetDML);
 			
-			performCopy( sourceDatabase, targetDatabase, sourceRelation, destTable, dataSet);
+			performCopy( pr, sourceDatabase, targetDatabase, sourceRelation, destTable, dataSet);
 			
 			
 			boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
@@ -356,7 +393,7 @@ public class EtlJob {
 	}		
 
 	//@SuppressWarnings("boxing")
-	private static void performCopy(DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+	private static void performCopyByUpload(ProgressReporter pr, DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
 			String sourceRelation, String destTable, 
 			String year, String upload) {
 		
@@ -406,6 +443,7 @@ public class EtlJob {
 					sb = new StringBuilder();
 				}
 				count++;
+				pr.completeWork();
 				//progrpt.completeWork();
 			}//while(rs.next())
 			
@@ -419,7 +457,7 @@ public class EtlJob {
 	}
 
 	//@SuppressWarnings("boxing")
-	private static void performCopy(DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+	private static void performCopy(ProgressReporter pr, DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
 			String sourceRelation, String destTable, 
 			String dataSet) {
 		
@@ -445,7 +483,7 @@ public class EtlJob {
 		
 		Log.pl("Source query: "+query);
 		int count=0;
-		ResultSet rs = sourceDatabase.queryLarge(query);
+		ResultSet rs = sourceDatabase.queryLarge(query);//sourceDatabase.queryLarge(query);
 
 
 		
@@ -466,13 +504,16 @@ public class EtlJob {
 					Log.pl(new Date()+" Copying data to target: "+destTable+" at count: "+count);
 					
 					copyPostgres(targetDatabase,destTable, sb.toString());
+					
 					sb = new StringBuilder();
 				}
 				count++;
+				pr.completeWork();
 				//progrpt.completeWork();
 			}//while(rs.next())
 			
 			copyPostgres(targetDatabase, destTable, sb.toString());
+			
 			sb = new StringBuilder();				
 			
 		}catch(Exception e){

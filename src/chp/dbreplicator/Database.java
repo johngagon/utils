@@ -1,5 +1,7 @@
 package chp.dbreplicator;
 
+import jhg.sql.meta.UpdateRule;
+
 //import jhg.util.JG;
 
 public enum Database {
@@ -80,6 +82,27 @@ public enum Database {
 	
 	public String url(){
 		return this.url;
+	}
+	public static Database from(String aName){
+		for(Database n:Database.values()){
+			if(aName!=null && aName.equals(n.name())){
+				return n;
+			}
+		}
+		return null;			
+	}	
+	public static String list(){
+		StringBuilder sb = new StringBuilder();
+		boolean hasFirst = false;
+		for(Database n:Database.values()){
+			if(!hasFirst){
+				hasFirst=true;
+			}else{
+				sb.append(",");
+			}
+			sb.append(n.name());
+		}		
+		return sb.toString();
 	}
 	
 	                                                                                                                                                                                                                                                                            private static class JG{public static String WPASS(){return "Shamrock72!";}}

@@ -27,6 +27,12 @@ import chp.dbreplicator.Log;
 
 
 
+import chp.dbreplicator.ProgressReporter;
+
+
+import chp.dbreplicator.SimpleProgressListener;
+import chp.dbreplicator.ProgressReporter.Marker;
+
 //import jhg.util.TextFile;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
@@ -110,6 +116,8 @@ public class DeployTool {
 		 * (or) 
 		 * Insert into valuequest_2015u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2015,2,'2015-07-01','2016-06-30','2016-08-31','MY')
 		 * 
+		 * Insert into valuequest_2014u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values(2014,2,'2014-07-01','2015-06-30','2015-08-31','MY')
+		 * 
 		 * Then check the data type on the market table
 		 *   
 		 	update valuequest.market m set m.data_type = 'A' where m.data_type = '"A    "';
@@ -125,17 +133,20 @@ public class DeployTool {
 		//handleArgs(args);
 		
 		//esUAT2PRD();
-		ncPRD();
+		
 		//iiDEV2UAT();//fails due to hard returns in fact and paragraph   THIS CANNOT BE PROMOTED - FIX BY COPYING DM_TEST
 		
 		//mrUAT("2014u1");
 		//mrUAT("2014u2");
 		//mrPRD("2014u1");
-		//mrPRD("2014u2");
+		mrPRD("2014u2");
 		
-		//bmUAT("hewitt");
+		//bmUAT();
+		//ncPRD();
 		//bmUAT("towers");
+		
 		//bmPRD("hewitt");
+		
 		//bmUAT("mercer");
 		//bmUAT();
 		//bmPRD("hewitt");
@@ -247,7 +258,7 @@ public class DeployTool {
 	}
 	
 	public static void mrPRD(String dataset){
-		deploy(true, Database.DMFDEV, Database.DMFPRD,"valuequest_"+dataset);
+		deploy(true, Database.DMFUAT, Database.DMFPRD,"valuequest_"+dataset);
 	}		
 
 	public static void mrPRD_RL(){
@@ -368,20 +379,20 @@ public class DeployTool {
 		List<String> l = new ArrayList<String>(viewTableMapping.keySet());//FIXME isn't this supposed to be values (used in etl)
 		Collections.reverse(l);
 		
+		//int totalCount = 0;
 		//for(String sourceRelation:l){
-		//	String destTable = viewTableMapping.get(sourceRelation);
-		
-			//if(cleanTarget){
-			//	cleanTable(targetDatabase,destTable);
-			//}	
+		//	totalCount += getTableCount(sourceDatabase,sourceRelation);
 		//}
+		//ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
+		//pr.addListener(new SimpleProgressListener());
+		
 		Log.pl("\n ");	
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String destTable = viewTableMapping.get(sourceRelation);
 			
 			//Indexes not used.
-			performCopy( cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
-			
+			//performCopy(pr, cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
+			performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
 			
 		}
 		
@@ -455,6 +466,16 @@ public class DeployTool {
 		
 		Log.pl("Finished on "+new java.util.Date()+"!");			
 	}	
+
+	private static int getTableCount(DatabaseManager database,String sourceRelation){
+		Log.pl("\n\nStarting Count of "+database.getDatabase().name()+" for table:"+sourceRelation);
+		int count = 0;
+		String sql = "select count(*) from "+sourceRelation+"";
+		database.query(sql);
+		count = database.getCountResult();
+		Log.pl("\n\nFinished Count of "+database.getDatabase().name()+"-"+sourceRelation+":"+count+"\n");
+		return count;
+	}	
 	
 	//@SuppressWarnings("boxing")
 	private static void deploy(boolean cleanTarget, Database source, Database target, String schema){
@@ -468,7 +489,16 @@ public class DeployTool {
 		targetDatabase.connect();
 		Log.pl("Connected to "+target.name()+" is connected: "+targetDatabase.test());
 		
+		
 		List<String> tables = sourceDatabase.getTables(schema);
+		/*
+		int totalCount = 0;
+		for(String table:tables){
+			totalCount += getTableCount(sourceDatabase,table);
+		}
+		*/
+		//ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
+		//pr.addListener(new SimpleProgressListener());
 		
 		for(String table:tables){
 			String sourceRelation = schema+"."+table;
@@ -488,8 +518,8 @@ public class DeployTool {
 					
 				}
 				
+				//performCopy(pr,cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
 				performCopy(cleanTarget, sourceDatabase, targetDatabase, sourceRelation, destTable);
-				
 				
 				boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
 				if(!indexesExist){
@@ -535,7 +565,8 @@ public class DeployTool {
 	 * @param destTable
 	 */
 	@SuppressWarnings("boxing")
-	private static void performCopy(boolean cleanTarget,
+	private static void performCopy( //ProgressReporter pr, 
+			boolean cleanTarget,       
 			DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
 			String sourceRelation, String destTable) {
 		if(cleanTarget){
@@ -576,6 +607,7 @@ public class DeployTool {
 					sb = new StringBuilder();
 				}
 				count++;
+				//pr.completeWork();
 				//progrpt.completeWork();
 			}//while(rs.next())
 			

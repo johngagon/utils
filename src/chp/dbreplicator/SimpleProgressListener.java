@@ -8,7 +8,7 @@ public class SimpleProgressListener implements ProgressListener {
 		
 	}
 	public void notify(int progress, int counter){
-		Log.println("PROGRESS: "+progress+"%  i:"+counter);
+		Log.println("\n## PROGRESS: "+progress+"%  i:"+counter+"\n");
 	}
 
 }

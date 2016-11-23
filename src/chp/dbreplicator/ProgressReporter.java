@@ -40,11 +40,12 @@ public class ProgressReporter {
 	private List<ProgressListener> listeners;
 	
 	public ProgressReporter(int totalWork, Marker marker){
+		Log.println("ProgressReporter :: total: "+totalWork+"  , marker: "+marker.name()+" .");
 		this.totalCount = totalWork;
 		this.increment = marker.value;
 		this.counter = 0; 
 		this.listeners = new ArrayList<ProgressListener>();
-		this.listeners.add(new SimpleProgressListener());
+		//this.listeners.add(new SimpleProgressListener());
 		this.progress = -1;
 		this.timeEstimate = 0L;
 		this.timeElapsed = 0L;
@@ -84,7 +85,11 @@ public class ProgressReporter {
 		}
 		
 	}
-	
+	public void completeWork(int chunk){
+		for(int i=0;i<chunk;i++){
+			completeWork();
+		}
+	}	
 	private void notifyListeners() {
 		for(ProgressListener pl:listeners){
 			pl.notify(progress, counter);

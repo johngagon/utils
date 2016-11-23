@@ -5,6 +5,23 @@ import java.util.*;
 public class TestWorkflow {
 
 	
+	/* Design #2:
+	 * passive workflow system working in conjunction with a role based operation security system.
+	 * an adapter interface for security is provide as well as adapter model interfaces. a default simple implementation is provided.
+	 * another adaptor provides various response actions to triggers for say email, timers, timers with email nags, or an automated task/call, asynchronous call etc. 
+	 * 
+	 * - Observe state on database on definitions.
+	 * - Upon a state change, a trigger can :
+	 *     -perform a notification 
+	 *     -change the security state of objects to the notified parties 
+	 *     -grant new privileges to the notified parties 
+	 *     -start a tickler.
+	 * - Perform call tracking to prevent infinite cycle triggering without explicit recursive conditions and declaration.
+	 * 
+	 * Design: create triggers on tables with a call to function. Function can simplify state changes in special workflow table observed by an app.
+	 * 
+	 * 
+	 */
 	
 	
 	@SuppressWarnings("unused")
