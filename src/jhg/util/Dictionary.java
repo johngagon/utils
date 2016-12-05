@@ -20,7 +20,12 @@ public class Dictionary {
 		d.load(filename);
 		return d;
 	}
+
 	
+	@Override
+	public String toString() {
+		return "Dictionary [words.size=" + words.size() + "]";
+	}
 	public void load(String fileName){
 		String wordList = new TextFile(fileName).getText();
 		String[] wordStrings = wordList.split("\n");

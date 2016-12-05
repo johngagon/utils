@@ -3,7 +3,9 @@ package chp.dbreplicator;
 import java.util.ArrayList;
 import java.util.List;
 
-import jhg.util.Log;
+import static java.lang.System.out;
+
+//import jhg.util.Log;
 
 public class ProgressReporter {
 
@@ -28,19 +30,20 @@ public class ProgressReporter {
 		}
 		
 	}
-	private int counter;
+	private long counter;
 	private int increment;
-	private int totalCount;
-	private int progress;
+	private long totalCount;
+	private long progress;
 	private long time1;
 	private long time2;
 	private long timeDiff;
 	private long timeEstimate;
 	private long timeElapsed;
+	private long startTime;
 	private List<ProgressListener> listeners;
 	
 	public ProgressReporter(int totalWork, Marker marker){
-		Log.println("ProgressReporter :: total: "+totalWork+"  , marker: "+marker.name()+" .");
+		out.println("ProgressReporter :: total: "+totalWork+"  , marker: "+marker.name()+" .");
 		this.totalCount = totalWork;
 		this.increment = marker.value;
 		this.counter = 0; 
@@ -49,6 +52,8 @@ public class ProgressReporter {
 		this.progress = -1;
 		this.timeEstimate = 0L;
 		this.timeElapsed = 0L;
+		this.timeDiff = 0L;
+		this.startTime = System.currentTimeMillis();
 	}
 	
 	public long getEstimate(){
@@ -59,22 +64,25 @@ public class ProgressReporter {
 		return timeElapsed;
 	}
 	
-	public int getTotalCount(){
+	public long getTotalCount(){
 		return totalCount;
 	}
 	public void report(){
 		counter++;
 		logProgress(counter);
 	}
+
 	public void completeWork(){
 		counter++;
 		reportProgress(counter);
 		if(progress!=-1){
 			notifyListeners();
 		}
+		
 		if(counter==1){
 			time1 = System.currentTimeMillis();
 		}
+		/*
 		if(counter==2){
 			time2 = System.currentTimeMillis();
 			timeDiff = time2-time1;
@@ -83,6 +91,7 @@ public class ProgressReporter {
 		if(timeEstimate!=0L){
 			timeElapsed = counter*timeEstimate;
 		}
+		*/
 		
 	}
 	public void completeWork(int chunk){
@@ -92,12 +101,12 @@ public class ProgressReporter {
 	}	
 	private void notifyListeners() {
 		for(ProgressListener pl:listeners){
-			pl.notify(progress, counter);
+			pl.notify(progress, counter, totalCount, startTime, timeEstimate);
 		}
 	}
 
 
-	public void reportProgress(int index) {
+	public void reportProgress(long index) {
 		int factor = (int)(100/increment);                          
 		while(factor>totalCount){
 			switch(increment){
@@ -113,23 +122,31 @@ public class ProgressReporter {
 			}
 			factor = (int)(100/increment);
 		}
-		int topCount = totalCount - (totalCount%factor);
+		long topCount = totalCount - (totalCount%factor);
 		
 		int countFactor = (int)topCount/factor;
 
-		int pct = -1;
+		long pct = -1;
 		if(index%countFactor==0 && !(index>topCount)){   //   when rowCount is 5,10,15 or 20
 			
 			pct = (100*index)/topCount;
-			
+			time2 = System.currentTimeMillis();
+			timeDiff = time2-time1;
+			long currentEstimate = timeDiff * factor;
+			if(timeEstimate==0L){
+				timeEstimate = currentEstimate; 
+			}else{
+				timeEstimate = (timeEstimate + currentEstimate)/2; //take average
+			}
+			time1 = time2;
 		}
 
 		this.progress = pct;		
 	}
 	
-	public void logProgress(int i){
+	public void logProgress(long i){
 		if(progress!=-1){
-			Log.println(progress+"%  i:"+i);
+			out.println(progress+"%  i:"+i);
 		}			
 	}
 
@@ -137,14 +154,19 @@ public class ProgressReporter {
 		ProgressReporter pr = new ProgressReporter(3423,Marker.TICKS);
 		pr.addListener(new SimpleProgressListener());
 		
-		Log.println("Starting");
+		out.println("Starting");
 		for(int i=1;i<=pr.getTotalCount();i++){
 			pr.completeWork();
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			//pr.logProgress(i);
 		}
-		Log.println("Finished");	
+		out.println("Finished");	
 	}
-	int getProgress(){
+	long getProgress(){
 		return this.progress;
 	}
 	
@@ -167,15 +189,16 @@ public class ProgressReporter {
 	private static void statictest(){
 		int workCount = 3423;
 		int milestone = 5;
-		Log.println("Starting");
-		for(int i=1;i<=workCount;i++){
-			int progress=reportProgress(i,workCount,milestone);
+		out.println("Starting");
+		for(long i=1;i<=workCount;i++){
+			long progress=reportProgress(i,workCount,milestone);
 			if(progress!=-1){
-				Log.println(progress+"%");
+				out.println(progress+"%");
 			}
 		}
-		Log.println("Finished");		
+		out.println("Finished");		
 	}
+	
 	/**
 	 * Returns a progress value if the rowIndex hits a milestone based on the increment and total count given.
 	 * 
@@ -184,7 +207,7 @@ public class ProgressReporter {
 	 * @param increment   Valid values: 1,2,4,5,10,20,25,50,100
 	 * @return  -1 if not at increment, a multiple of increment i if progress milestone hit.
 	 */
-	public static int reportProgress(int index, int totalCount, int increment) {
+	public static long reportProgress(long index, long totalCount, int increment) {
 		int[] valid = {1,2,4,5,10,20,25,50,100};
 		boolean found = false;
 		for(int v:valid){
@@ -196,8 +219,8 @@ public class ProgressReporter {
 			throw new IllegalArgumentException("Valid values for i are: 1,2,4,5,10,20,25,50,100");
 		}
 		
-		//Log.print("-increment(original):"+increment);
-		int factor = (int)(100/increment);                          
+		//out.print("-increment(original):"+increment);
+		long factor = (long)(100/increment);                          
 		while(factor>totalCount){
 			switch(increment){
 				case 1: increment=2;break;
@@ -212,21 +235,21 @@ public class ProgressReporter {
 			}
 			factor = (int)(100/increment);
 		}
-		int topCount = totalCount - (totalCount%factor);
+		long topCount = totalCount - (totalCount%factor);
 		
-		int countFactor = (int)topCount/factor;
+		long countFactor = (int)topCount/factor;
 		/*
-		Log.print(" -increment:"+increment);
-		Log.print(" -Factor:"+factor);
-		Log.print(" -Top count:"+topCount);
-		Log.print(" -Count factor:"+countFactor);
-		Log.println(" -RowIndex:"+rowIndex);
+		out.print(" -increment:"+increment);
+		out.print(" -Factor:"+factor);
+		out.print(" -Top count:"+topCount);
+		out.print(" -Count factor:"+countFactor);
+		out.println(" -RowIndex:"+rowIndex);
 		*/
-		int pct = -1;
+		long pct = -1;
 		if(index%countFactor==0 && !(index>topCount)){   //   when rowCount is 5,10,15 or 20
 			
 			pct = (100*index)/topCount;
-			//Log.println(pct+"%");
+			//out.println(pct+"%");
 		}
 		
 		/*

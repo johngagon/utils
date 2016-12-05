@@ -1,28 +1,27 @@
 package chp.dbreplicator.etl;
 
-import java.util.*;
+import static java.lang.System.out;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-
-
-
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 import org.postgresql.copy.CopyIn;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 
 import chp.dbreplicator.ColumnDefinition;
-/*
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.HelpFormatter;
-*/
 import chp.dbreplicator.Database;
 import chp.dbreplicator.DatabaseManager;
 import chp.dbreplicator.Index;
@@ -30,9 +29,9 @@ import chp.dbreplicator.ProgressReporter;
 import chp.dbreplicator.Rdbms;
 import chp.dbreplicator.SimpleProgressListener;
 import chp.dbreplicator.ProgressReporter.Marker;
-import static java.lang.System.out;
 
-public class MarketReportsDeploy {
+
+public class EmployerSearchDeploy {
 
 	
 	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
@@ -45,28 +44,24 @@ public class MarketReportsDeploy {
 	
 	public static final String LOG_DIR = "C:\\deploy\\logs\\";//"K:\\Foundation\\ETLAndDeploymentLogs\\";
 
-	public static final String CONFIG = "mr_table_config.txt";
+	public static final String CONFIG = "es_table_config.txt";
 
 	public static void main(String[] args){
 		Cli cli = new Cli(args).parse();
 		
-		transfer(!cli.append,cli.from,cli.to,cli.year,cli.upload);
-		/*
-		 * FIXME create the file if it doesn't exist.
-		 * FIXME the database manager needs to have the log set.
-		 * FIXME the progress reporter should use System.out.println
-		 */
+		transfer(!cli.append,cli.from,cli.to);
+	
 	}
-	public static String getFilename(String source, String dest, int year, int upload){
+	public static String getFilename(String source, String dest){
 		String U="_";
 		SimpleDateFormat ymdFormatter = new SimpleDateFormat("yyyyMMdd");
 		Date now = new Date();
 		String ymd = ymdFormatter.format(now);
-		return "MarketReports" + U + ymd + U + source + "to" + dest + "_"+year+"u"+upload+".txt";
+		return "EmployerSearch" + U + ymd + U + source + "to" + dest +".txt";
 	}
 	
-	private static void transfer(boolean cleanTarget,Database source, Database target, int year, int upload){
-		String filename = LOG_DIR + getFilename(source.name(),target.name(),year,upload);
+	private static void transfer(boolean cleanTarget,Database source, Database target){
+		String filename = LOG_DIR + getFilename(source.name(),target.name());
 		TextLog log = new TextLog(filename);
 		log.print("Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date());
 		log.print("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
@@ -93,15 +88,6 @@ public class MarketReportsDeploy {
 		}
 		
 		//DEBUG-TESTME
-		boolean schemaExists= targetDatabase.doesSchemaExist(getSchema(year, upload));
-		if(!schemaExists){
-			String createPartitionDDL = getPartitionFunction(year, upload);
-			log.print("DDL: "+createPartitionDDL);
-			targetDatabase.execute(createPartitionDDL);
-			String insertDataSetTx = getDataSetInsert(year, upload);
-			log.print("SQL: "+insertDataSetTx);
-			targetDatabase.execute(insertDataSetTx);
-		}
 		
 		TextFile f = new TextFile(CONFIG);
 		Map<String,String> viewTableMapping = f.getMapping();
@@ -114,12 +100,12 @@ public class MarketReportsDeploy {
 		for(String sourceRelation:l){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "market_reports."+sourceRelation;
+				sourceTable = "employer."+sourceRelation;
 			}else{
-				sourceTable = getSchema(year, upload)+"."+sourceRelation;
+				sourceTable = "employer."+sourceRelation;
 			}			
-			String destTable = getSchema(year, upload)+"."+viewTableMapping.get(sourceRelation);
-			totalCount += getTableCount(log, sourceDatabase,sourceTable, year, upload);
+			String destTable = "employer."+viewTableMapping.get(sourceRelation);
+			totalCount += getTableCount(log, sourceDatabase,sourceTable);
 			if(cleanTarget){
 				cleanTable(targetDatabase,destTable);
 			}	
@@ -133,11 +119,11 @@ public class MarketReportsDeploy {
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "market_reports."+sourceRelation;
+				sourceTable = "employer."+sourceRelation;
 			}else{
-				sourceTable = getSchema(year, upload)+"."+sourceRelation;
+				sourceTable = "employer."+sourceRelation;
 			}
-			String destTable = getSchema(year, upload)+"."+viewTableMapping.get(sourceRelation);
+			String destTable = "employer."+viewTableMapping.get(sourceRelation);
 
 			String schema = destTable.substring(0,destTable.indexOf('.')); 
 			String table = "";
@@ -156,7 +142,7 @@ public class MarketReportsDeploy {
 			}				
 			
 			
-			performCopyByUpload(log, pr, sourceDatabase, targetDatabase, sourceTable, destTable, year, upload);
+			performCopy(log, pr, sourceDatabase, targetDatabase, sourceTable, destTable);
 			
 			//Restore indexes
 			boolean indexesExist = targetDatabase.doesAnyIndexExist(schema, table);
@@ -177,11 +163,7 @@ public class MarketReportsDeploy {
 			
 		}//for each sourceRelation
 		
-		List<String> updatePatches = getMarketDataSetUpdateStatements();
-		for(String updateTx:updatePatches){
-			log.print("SQL: "+updateTx);
-			targetDatabase.execute(updateTx);
-		}
+
 		
 		sourceDatabase.close();
 		targetDatabase.close();
@@ -191,10 +173,10 @@ public class MarketReportsDeploy {
 	
 	
 	
-	private static int getTableCount(TextLog log, DatabaseManager database,String sourceRelation, int year, int upload){
+	private static int getTableCount(TextLog log, DatabaseManager database,String sourceRelation){
 		log.print("\n\nStarting Count of "+database.getDatabase().name()+" for table:"+sourceRelation);
 		int count = 0;
-		String sql = "select count(*) from "+sourceRelation+" where cq_year="+year+" and upload="+upload;
+		String sql = "select count(*) from "+sourceRelation;
 		database.query(sql);
 		count = database.getCountResult();
 		log.print("\n\nFinished Count of "+database.getDatabase().name()+"-"+sourceRelation+":"+count+"\n");
@@ -207,23 +189,20 @@ public class MarketReportsDeploy {
 	}
 	
 	
-	private static void performCopyByUpload(TextLog log, ProgressReporter pr, DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
-			String sourceRelation, String destTable, 
-			int year, int upload) {
+	private static void performCopy(TextLog log, ProgressReporter pr, DatabaseManager sourceDatabase, DatabaseManager targetDatabase,
+			String sourceRelation, String destTable) {
 		
 		
 		List<ColumnDefinition> cds = sourceDatabase.getColumnDefsFromDbMeta(sourceRelation);
 
 		String countQuery = "select count(*) from "+sourceRelation;
-		if(sourceRelation.startsWith("market_reports.")){
-			countQuery += " where cq_year="+year+" and upload="+upload;
-		}
+
 		
 		sourceDatabase.query(countQuery);
 		int countResult = sourceDatabase.getCountResult();
 		log.print("Source Result Size:"+countResult);
 		int max = getMagnitude(countResult);
-		String query = "select * from "+sourceRelation+" where cq_year="+year+" and upload="+upload;
+		String query = "select * from "+sourceRelation;
 		log.print("Source query: "+query);
 
 		int count=0;
@@ -345,61 +324,16 @@ public class MarketReportsDeploy {
 		return rv;
 	}		
 	
-	public static String getPartitionFunction(int year, int upload){
-		return "select \"valuequest\".\"create_partition_namespace\"("+year+","+upload+")";
-	}
-	
-	public static String getDataSetInsert(int year, int upload){
-		String rv = "";
-		switch(upload){
-			case 1: 
-				rv = "insert into valuequest_"+year+"u1.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values("+year+",1,'"+year+"-01-01','"+year+"-12-31','"+(year+1)+"-02-28','CY')";
-				break;
-			case 2:
-				rv = "insert into valuequest_"+year+"u2.data_set (cq_year,upload,incurred_start,incurred_end,paid,type)values("+year+",2,'"+year+"-07-01','"+(year+1)+"-06-30','"+(year+1)+"-08-31','MY')";
-				break;
-			default:
-		}
-		return rv;
-	}
-	
-	public static List<String> getMarketDataSetUpdateStatements(){
-		List<String> rv = new ArrayList<String>();
-		rv.add("update valuequest.market m set m.data_type = 'A' where m.data_type = '\"A    \"';");
-		rv.add("update valuequest.market m set m.data_type = 'H' where m.data_type = '\"H\"';");
-		rv.add("update valuequest.market m set m.data_type = 'AP' where m.data_type = '\"AP   \"';");
-		rv.add("update valuequest.market m set m.data_type = 'HP' where m.data_type = '\"HP   \"';");
-		rv.add("update valuequest.market m set m.data_type = 'A' where m.data_type = '\"A\"';");
-		rv.add("update valuequest.market m set m.data_type = 'H' where m.data_type = '\"H\"';");
-		rv.add("update valuequest.market m set m.data_type = 'AP' where m.data_type = '\"AP\"';");
-		rv.add("update valuequest.market m set m.data_type = 'HP' where m.data_type = '\"HP\"'      ;");
-		return rv;
-	}
-	
-	public static String getSchema(int year, int upload){
-		return "valuequest_"+year+"u"+upload;
-	}
-
-
-
-	
-
-	
 	public static class Cli {
 		
 		@Override
 		public String toString() {
-			return "Cli [year=" + year + ", upload=" + upload + ", from="
-					+ from + ", to=" + to + "]";
+			return "Cli [ from="+ from + ", to=" + to + "]";
 		}
 		private static final String HELP = "help";
 		private static final String TO = "to";
 		private static final String FROM = "from";
-		private static final String UPLOAD = "upload";
-		private static final String YEAR = "year";
 		
-		private int year = 0;
-		private int upload = 0;
 		private Database from = Database.DW;
 		private Database to = Database.DMFDEV;
 		private boolean append = false;
@@ -410,8 +344,6 @@ public class MarketReportsDeploy {
 		public Cli(String[] args){
 			this.args = args;
 			options.addOption(HELP,HELP,false,"Show help.");
-			options.addOption(YEAR,YEAR,true,"CQ year");
-			options.addOption(UPLOAD,UPLOAD,true,"Upload no.");
 			options.addOption(FROM,FROM,true,"From Source Server.");
 			options.addOption(TO,TO,true,"To Target Server.");
 			options.addOption("append","append",false,"Append, if present will not overwrite or clean.");
@@ -422,8 +354,6 @@ public class MarketReportsDeploy {
 			boolean needshelp = false;
 			try{
 				cmd = parser.parse(options,args);
-				needshelp = extractYearArg(cmd, needshelp);
-				needshelp = extractUploadArg(cmd, needshelp);				
 				needshelp = extractFromArg(cmd, needshelp);				
 				needshelp = extractToArg(cmd, needshelp);
 				if(cmd.hasOption("append")){
@@ -471,83 +401,11 @@ public class MarketReportsDeploy {
 			}
 			return needshelp;
 		}
-		private boolean extractUploadArg(CommandLine cmd, boolean needshelp) {
-			if(cmd.hasOption(UPLOAD)){
-				try{
-					this.upload = Integer.parseInt(cmd.getOptionValue(UPLOAD));
-					if(this.upload!=1 && this.upload!=2){
-						out.println("Command invalid. Upload '"+this.upload+"' must be either 1 or 2. ");
-						needshelp = true;
-					}
-				}catch(NumberFormatException nfe){
-					out.println("Command invalid. Upload required to be a number.");
-					needshelp = true;
-				}
-			}else{
-				out.println("Command invalid. Upload is required.");
-				needshelp = true;					
-			}
-			return needshelp;
-		}
-		private boolean extractYearArg(CommandLine cmd, boolean needshelp) {
-			if(cmd.hasOption(YEAR)){
-				try{
-					this.year = Integer.parseInt(cmd.getOptionValue(YEAR));
-					if(this.year<2000 || this.year >2999){
-						out.println("Command invalid. Year '"+year+"' must be in the 2000 millenia.");
-						needshelp = true;
-					}
-				}catch(NumberFormatException nfe){
-					out.println("Command invalid. Year required to be a number.");
-					needshelp = true;
-				}
-			}else{
-				out.println("Command invalid. Year is required.");
-				needshelp = true;				
-			}
-			return needshelp;
-		}
+
 		private void help(){
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("mrdeploy", options);
 			System.exit(0);
 		}
 	}//Cli	
-	
 }
-
-
-
-
-/*
- * Requirements:
- * 
- * Execute from command line. CLI with options.
- * 
- * Note: should be safe. 
- *   If the source is DW, then the schema convention is not prefixed. If the source is a PG one, then it is.
- *   If the partition doesn't exist, fail nicely.
- *   If the destination tables do not exist, fail nicely. 
- * 
- * Reindex
- * 
- * Perform both ETL and Deploy intelligently. 
- * 
- * 
- * Opt to be able to copy from DW to DM each and every time? (but only if the IDSProd is guaranteed to be locked down)
- * 		Every update should be tagged.
- * 
- * Progress.
- * 
- * Format: MRyyyymmdd_E1toE2.txt
- * 
- * Progress tracked.
- * Readable and Minimal Logging
- * 
- * Table and data set granularity. 
- * 
- * Automate manual steps/verify issues.
- * 
- * Automate partition creation
- * 
- */

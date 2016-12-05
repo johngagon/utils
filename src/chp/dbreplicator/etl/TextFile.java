@@ -8,8 +8,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -104,7 +106,7 @@ public class TextFile {
 	}
 	
 	private static Map<String, String> parseMapping(String[] lines) {
-		Map<String,String> rv = new Hashtable<String,String>();
+		Map<String,String> rv = new LinkedHashMap<String,String>();
 		for(String line:lines){
 			
 			if(!line.startsWith("#") && line.contains(":")){
@@ -132,7 +134,7 @@ public class TextFile {
 		//Log.println(content);
 		int i=0;
 		for(String s:lines){
-			Log.print(i+":"+s);
+			Log.printt(i+":"+s);
 			i++;
 			
 		}		

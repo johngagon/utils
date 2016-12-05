@@ -1,0 +1,12 @@
+2:judgemental:proven,certainly,unquestionably,undeniably
+2:superlative:extremely,severely,revolutionary,new way,very very,worst,best,reasonable
+2:vagueauthority:popular,experts,it is said,has been known,many people,very very,skeptics,a new study,studies show
+3:polispek:far left,far right,liberals,conservatives
+2:agendizing:indoctrination,camps,brainwash,offensive,bigotry,hate,
+2:characterizing:dystopian,propaganda,draconian,puritanical
+2:appearances:appears,looks
+1:vague:some,most,somewhat,depends,varies,mostly
+1:noncommittal:may,might,could,often results,should,in theory,theoretically,can,probably,likely,virtually,as much as,help,like,believe,believes,possibly,almost,not advisable
+1:absolutes:always,never,can't happen
+-1:sure:certainly,confidence
+-2:objective:study,peer,error,review

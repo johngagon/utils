@@ -12,7 +12,7 @@ public class TestTool {
 	public static void testProd(){
 		Log.pl("\n\nTesting Prod Foundation.");
 		Database db = Database.DMFPRD;
-		DatabaseManager database = new DatabaseManager(db);
+		DatabaseManager database = new DatabaseManager(db,new Log());
 		database.connect();
 		boolean connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);
@@ -23,7 +23,7 @@ public class TestTool {
 		
 		Log.pl("Testing Prod New (Benchmarking).");
 		db = Database.DMPRODNEW;
-		database = new DatabaseManager(db);
+		database = new DatabaseManager(db,new Log());
 		database.connect();
 		connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);
@@ -37,7 +37,7 @@ public class TestTool {
 	public static void testUAT(){
 		Log.pl("\n\nTesting UAT Foundation.");
 		Database db = Database.DMFUAT;
-		DatabaseManager database = new DatabaseManager(db);
+		DatabaseManager database = new DatabaseManager(db,new Log());
 		database.connect();
 		boolean connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);
@@ -48,7 +48,7 @@ public class TestTool {
 		
 		Log.pl("Testing UAT New (Benchmarking).");
 		db = Database.DMTESTNEW;
-		database = new DatabaseManager(db);
+		database = new DatabaseManager(db,new Log());
 		database.connect();
 		connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);
@@ -61,7 +61,7 @@ public class TestTool {
 	public static void testDev(){
 		Log.pl("\n\nTesting Dev Foundation.");
 		Database db = Database.DMFDEV;
-		DatabaseManager database = new DatabaseManager(db);
+		DatabaseManager database = new DatabaseManager(db,new Log());
 		database.connect();
 		boolean connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);
@@ -72,7 +72,7 @@ public class TestTool {
 		
 		Log.pl("Testing Dev New (Benchmarking).");
 		db = Database.DMDEVNEW;
-		database = new DatabaseManager(db);
+		database = new DatabaseManager(db,new Log());
 		database.connect();
 		connected = database.test();
 		Log.pl("Connected to "+db.name()+" is connected: "+connected);

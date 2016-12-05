@@ -39,7 +39,7 @@ public class TableAnalyzer {
 	public static void testAnalysis(Database db, String schema, String table){
 		Log.pl("Starting Analysis of "+db.name()+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
-		DatabaseManager database = new DatabaseManager(db);
+		DatabaseManager database = new DatabaseManager(db,new Log());
 			
 		database.connect();
 		Log.pl("Connected to "+db.name()+" is connected: "+database.test());		

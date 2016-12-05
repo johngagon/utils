@@ -347,6 +347,7 @@ public class DeployTool {
 		Log.pl("Finished on "+new java.util.Date()+"!");			
 	}
 
+	//!!!! uses the config file for table granularity
 	private static void deployPartial(boolean cleanTarget,Database source, Database target, String filename){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with "+filename+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));

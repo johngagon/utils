@@ -56,8 +56,8 @@ public class TransitionTool {
 	private static void etlDirect(boolean cleanTarget,Database source, Database target, String schema){
 		Log.pl("Starting Copy of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
-		DatabaseManager sourceDatabase = new DatabaseManager(source);
-		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		DatabaseManager sourceDatabase = new DatabaseManager(source,new Log());
+		DatabaseManager targetDatabase = new DatabaseManager(target,new Log());	//	
 		sourceDatabase.connect();
 		Log.pl("Connected to "+source.name()+" is connected: "+sourceDatabase.test());
 	

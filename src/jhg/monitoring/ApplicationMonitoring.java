@@ -27,9 +27,15 @@ public class ApplicationMonitoring {
 		try {
 			
 			ApplicationMonitoring monitor = new ApplicationMonitoring();
-			monitor.productionApplicatonCheck();
+			boolean pass = monitor.productionApplicatonCheck();
 			//monitor.stageApplicatonCheck();com.gargoylesoftware.htmlunit.ElementNotFoundException: elementName=[form] attributeName=[name] attributeValue=[lform]
 			//monitor.devApplicatonCheck();//[com.gargoylesoftware.htmlunit.ScriptException]			com.gargoylesoftware.htmlunit.ScriptException: ReferenceError: "getTabElements" is not defined.
+			if(!pass){
+				Emailer.emailSimple("donotreply@chpmail.com", "jgagon@chpmail.com", "PRODUCTION FAIL", "One or more production applications are offline.");
+			}else{
+				Emailer.emailSimple("donotreply@chpmail.com", "jgagon@chpmail.com", "PRODUCTION OK", "The major applications appear to be online.");
+			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,42 +44,41 @@ public class ApplicationMonitoring {
 	
 	
 	@Test
-	public void devApplicatonCheck() throws Exception {
+	public boolean devApplicatonCheck() throws Exception {
 		//https://chp-pidspdev01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://ssodev.chpinfo.com
-		applicatonCheck("https://chp-pidspdev01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://ssodev.chpinfo.com&TargetResource=https%3A%2F%2Ftest.chpmarketquest.com%2Fportal%2FSSOServlet",
+		return applicatonCheck("https://chp-pidspdev01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://ssodev.chpinfo.com&TargetResource=https%3A%2F%2Ftest.chpmarketquest.com%2Fportal%2FSSOServlet",
 				"test.chpmarketquest.com", "Dev");
 	}
 	
 	
 	
 	@Test
-	public void stageApplicatonCheck() throws Exception {
-		applicatonCheck("https://stage.chpmarketquest.com/portal/server.pt?open=512&objID=312&PageID=150852&cached=true&mode=2&userID=2203", 
+	public boolean stageApplicatonCheck() throws Exception {
+		return applicatonCheck("https://stage.chpmarketquest.com/portal/server.pt?open=512&objID=312&PageID=150852&cached=true&mode=2&userID=2203", 
 				"stage.chpmarketquest.com", "Stage");
 	}
 	
 	
 	@Test
-	public void productionApplicatonCheck() throws Exception {
-		applicatonCheck("https://chp-pidprod01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://sso.chpinfo.com&TargetResource=https%3A%2F%2Fwww.chpmarketquest.com%2Fportal%2FSSOServlet", 
+	public boolean productionApplicatonCheck() throws Exception {
+		return applicatonCheck("https://chp-pidprod01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://sso.chpinfo.com&TargetResource=https%3A%2F%2Fwww.chpmarketquest.com%2Fportal%2FSSOServlet", 
 				"www.chpmarketquest.com", "Production");
 		//"chp-pidprod01"
 	}	
 	
 	
 	@Test
-	public void applicatonCheck(String server, String internServer, String testName) throws Exception {
-		
-		 LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+	public boolean applicatonCheck(String server, String internServer, String testName) throws Exception {
 
-		 java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF); 
-		 java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
-		 final WebClient webClient = new WebClient();
+		boolean pass = false;
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+
+		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit").setLevel(Level.OFF); 
+		java.util.logging.Logger.getLogger("org.apache.commons.httpclient").setLevel(Level.OFF);
+		final WebClient webClient = new WebClient();
 		 
 
 		java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(Level.OFF); 
-	    
-		
 		
 		Log.println(testName+" - submittingForm()");
 		
@@ -134,19 +139,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass = testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
 		    		break;
 		    
 		    	case "Stage":
@@ -156,19 +161,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass =   testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);		    		
 		    		break;
 		    	case "Production":
 		    		
@@ -179,19 +184,19 @@ public class ApplicationMonitoring {
 				    verificationTag        = "Total Discount Detail";
 				    appFormName            = "hewittReport";
 				    
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass =  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 				    
 				    appPageName = "Employer Search";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=251&PageID=151176&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Benefit Sponsor Report";
 				    appFormName            = "EmployerSearch";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    pass = pass & testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
 		
 				    appPageName = "Market Reports";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);	
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);	
 				  break;
 				  default:break;
 		    }
@@ -207,12 +212,14 @@ public class ApplicationMonitoring {
 		    //Log.println(form2.asXml());
 		    Log.println("\n\nDone");
 	    //}
+		   
+		return pass;
 	}
 
-	private void testApplication(final WebClient webClient, String appPageName,
+	private boolean testApplication(final WebClient webClient, String appPageName,
 			String applicationPage, String verificationTag,
 			String formName, String testName) throws IOException, MalformedURLException {
-		
+		boolean pass = false;
 	    //TODO add a test here for page 2 being the home page.
 		
 		final HtmlPage page3 = webClient.getPage(applicationPage);
@@ -228,9 +235,11 @@ public class ApplicationMonitoring {
 		
 		if(form2.asText().indexOf(verificationTag)!=-1){
 			Log.println("PASS");
+			pass = true;
 		}else{
 			Log.println("FAIL - Could not find verification tag: "+verificationTag);
 		}
+		return pass;
 	}	
 	
 

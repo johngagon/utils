@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-public class Log {
+public class Log implements Logging {
 	public static boolean STACKS = false;
 	
 	private static final int LIM = 500;
@@ -48,9 +48,15 @@ public class Log {
 	
 	public static void hr(int length,String c){
 		for(int i=0;i<length;i++){
-			print(c);
+			printt(c);
 		}
 		cr();
+	}
+	public void print(String s){
+		out.println(s);
+	}
+	public void pp(String s){
+		out.print(s);
 	}
 	
 	public static void pl(String s){
@@ -124,7 +130,7 @@ public class Log {
 		
 	}
 	
-	public static void print(String s){
+	public static void printt(String s){
 		out.print(s);
 	}
 	
@@ -159,6 +165,13 @@ public class Log {
 		 * indent
 		 * push error messages.
 		 */
+	}
+
+	public static void printt(List<Object> data) {
+		for(Object o:data){
+			pl(o.toString());
+		}
+		
 	}
 	
 

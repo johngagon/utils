@@ -46,7 +46,7 @@ public class TestRas {
 	
 	public static void testConnection(){
 		System.out.println("Starting testConnection.");
-		DatabaseManager db = new DatabaseManager(Database.DMFMR);
+		DatabaseManager db = new DatabaseManager(Database.DMFMR, new Log());
 		db.connect();
 		if(db.isConnected()){
 			//"select * from valuequest.vq_carrier"

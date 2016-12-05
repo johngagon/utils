@@ -70,8 +70,8 @@ public class SchemaCompare {
 		
 		Mapping[] mappings = {employeeCount};//,benefitRange,company,companyBranch,companySic,duEmployeeCounts,employeeCount,fortuneRank};
 	
-		DatabaseManager standardDb = new DatabaseManager(Database.DMPRODOLD);
-		DatabaseManager trialDb = new DatabaseManager(Database.DMCUST);	
+		DatabaseManager standardDb = new DatabaseManager(Database.DMPRODOLD,new Log());
+		DatabaseManager trialDb = new DatabaseManager(Database.DMCUST,new Log());	
 		boolean standardConnected = standardDb.isConnected();
 		boolean trialConnected = trialDb.isConnected();
 		Log.pl("  Source Connected:"+standardConnected);
@@ -143,8 +143,8 @@ public class SchemaCompare {
 		 * Test Connection
 		 */
 		Log.pl("Testing connections:\n");
-		DatabaseManager sourceDatabase = new DatabaseManager(source);
-		DatabaseManager targetDatabase = new DatabaseManager(target);	
+		DatabaseManager sourceDatabase = new DatabaseManager(source,new Log());
+		DatabaseManager targetDatabase = new DatabaseManager(target,new Log());	
 		sourceDatabase.connect();
 		targetDatabase.connect();
 		boolean sourceConnected = sourceDatabase.isConnected();
@@ -321,18 +321,18 @@ public class SchemaCompare {
 		cloneB.removeAll(a);
 		
 		if(!cloneA.isEmpty() || !cloneB.isEmpty()){
-			Log.print(count+": "+cloneA.size()+":"+cloneB.size());
-			Log.print("'"+a+"'");//.get(0)
-			Log.print("  -- doesn't match -- ");
-			Log.print("'"+b+"'");
+			Log.printt(count+": "+cloneA.size()+":"+cloneB.size());
+			Log.printt("'"+a+"'");//.get(0)
+			Log.printt("  -- doesn't match -- ");
+			Log.printt("'"+b+"'");
 			Log.cr();
 			rv = 1;
 		}else{
 			if(false){
-			Log.print(count+": "+cloneA.size()+":"+cloneB.size());
-			Log.print("'"+a+"'");//.get(0)
-			Log.print("  -- matches -- ");
-			Log.print("'"+b+"'");
+			Log.printt(count+": "+cloneA.size()+":"+cloneB.size());
+			Log.printt("'"+a+"'");//.get(0)
+			Log.printt("  -- matches -- ");
+			Log.printt("'"+b+"'");
 			Log.cr();
 			}
 		}
@@ -368,8 +368,8 @@ public class SchemaCompare {
 	
 	//@SuppressWarnings("boxing")
 	private static void test(Database source, Database target){
-		DatabaseManager sourceDatabase = new DatabaseManager(source);
-		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		DatabaseManager sourceDatabase = new DatabaseManager(source,new Log());
+		DatabaseManager targetDatabase = new DatabaseManager(target,new Log());	//	
 		sourceDatabase.connect();
 		Log.pl("Connected to source: "+source.name()+" is connected: "+sourceDatabase.test()+"\n");
 	
@@ -385,8 +385,8 @@ public class SchemaCompare {
 	private static void compareSchemasStandalone(Database source, Database target, String schema){
 		Log.pl("Starting Compare of "+source.name()+" to "+target.name()+" with schema: "+schema+" on "+new java.util.Date());
 		Log.pl("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
-		DatabaseManager sourceDatabase = new DatabaseManager(source);
-		DatabaseManager targetDatabase = new DatabaseManager(target);	//	
+		DatabaseManager sourceDatabase = new DatabaseManager(source,new Log());
+		DatabaseManager targetDatabase = new DatabaseManager(target,new Log());	//	
 		sourceDatabase.connect();
 		Log.pl("Connected to "+source.name()+" is connected: "+sourceDatabase.test());
 	
