@@ -2,9 +2,29 @@ package chp.datareceiving;
 
 public class ReceiverDaemon {
 
+	public enum Status{
+		RECEIVED,
+		IDENTIFYING,
+		IDENTIFIED,
+		UNIDENTIFIED,
+		SCANNING,
+		SCANNING_PASS,
+		SCANNING_FAIL,
+		LOAD_READY;
+	}
+	
 	
 	
 	public static void main(String[] args){
+		
+		/*
+		 * Directory to watch.
+		 * 
+		 * Identification
+		 * 
+		 * 
+		 */
+		
 		/*
 		 * 
 		 * Load all rules files. (change of rules means restart program)

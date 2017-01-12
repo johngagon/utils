@@ -21,21 +21,30 @@ import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 
 public class ApplicationMonitoring {
 
-	
+	StringBuffer buf;
+	private boolean isDev;
+	ApplicationMonitoring(boolean aFlag){
+		super();
+		buf = new StringBuffer();
+		buf.append("\n\n");
+		isDev = aFlag;
+	}
 	
 	public static void main(String[] args){
 		try {
-			
-			ApplicationMonitoring monitor = new ApplicationMonitoring();
+			final boolean DEV = false;
+			ApplicationMonitoring monitor = new ApplicationMonitoring(DEV);
 			boolean pass = monitor.productionApplicatonCheck();
 			//monitor.stageApplicatonCheck();com.gargoylesoftware.htmlunit.ElementNotFoundException: elementName=[form] attributeName=[name] attributeValue=[lform]
 			//monitor.devApplicatonCheck();//[com.gargoylesoftware.htmlunit.ScriptException]			com.gargoylesoftware.htmlunit.ScriptException: ReferenceError: "getTabElements" is not defined.
-			if(!pass){
-				Emailer.emailSimple("donotreply@chpmail.com", "jgagon@chpmail.com", "PRODUCTION FAIL", "One or more production applications are offline.");
-			}else{
-				Emailer.emailSimple("donotreply@chpmail.com", "jgagon@chpmail.com", "PRODUCTION OK", "The major applications appear to be online.");
+			String[] to = {"jgagon@chpmail.com","lauren.colbourn@chpmail.com","skhodab@chpmail.com"};
+			if(!DEV){
+				if(!pass){
+					Emailer.emailGrpSimple("donotreply@chpmail.com", to, "PRODUCTION FAIL", "One or more production applications are offline."+monitor.getBuffer());
+				}else{
+					Emailer.emailGrpSimple("donotreply@chpmail.com", to, "PRODUCTION OK", "The following applications were found by the monitor to be ONLINE:"+monitor.getBuffer());
+				}
 			}
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,7 +186,12 @@ public class ApplicationMonitoring {
 		    		break;
 		    	case "Production":
 		    		
-
+				    appPageName = "Network Compare";
+				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=248&PageID=150472&cached=true&mode=2&userID=2169";
+				    verificationTag        = "Summary by Geography";
+				    appFormName            = "ncInputs";
+				    testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);	
+				    
 				    //TODO softcode
 				    appPageName = "Benchmarking";
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=312&PageID=150861&cached=true&mode=2&userID=2169";
@@ -196,7 +210,11 @@ public class ApplicationMonitoring {
 				    applicationPage        = "https://"+internServer+"/portal/server.pt?open=512&objID=363&PageID=151443&cached=true&mode=2&userID=2169";
 				    verificationTag        = "Cost Model";
 				    appFormName            = "reportForm";
-				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);	
+				    pass = pass &  testApplication(webClient, appPageName, applicationPage, verificationTag, appFormName, testName);
+				    
+	    
+				    
+				    
 				  break;
 				  default:break;
 		    }
@@ -215,16 +233,21 @@ public class ApplicationMonitoring {
 		   
 		return pass;
 	}
-
+	public String getBuffer(){
+		return buf.toString();
+	}
 	private boolean testApplication(final WebClient webClient, String appPageName,
 			String applicationPage, String verificationTag,
 			String formName, String testName) throws IOException, MalformedURLException {
 		boolean pass = false;
 	    //TODO add a test here for page 2 being the home page.
-		
+		if("Network Compare".equals(appPageName)){
+			webClient.getOptions().setJavaScriptEnabled(true);
+			webClient.getOptions().setThrowExceptionOnScriptError(false);
+			webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);		
+		}		
 		final HtmlPage page3 = webClient.getPage(applicationPage);
-		
-		
+
 		
 		webClient.waitForBackgroundJavaScript(10000);
 		Log.println("\n\n"+testName+"."+appPageName+" page loaded.");	
@@ -232,13 +255,19 @@ public class ApplicationMonitoring {
 		//Log.println(page3.asXml());
 		
 		final HtmlForm form2 = page3.getFormByName(formName);
-		
+		String outmsg = "";
 		if(form2.asText().indexOf(verificationTag)!=-1){
-			Log.println("PASS");
+			outmsg = appPageName+":: PASS \n\t Form element loaded with first option tag: <option>"+verificationTag+"</option> as child element of expected form: <form name='"+formName+"'>\n"; 
 			pass = true;
 		}else{
-			Log.println("FAIL - Could not find verification tag: "+verificationTag);
+			outmsg = appPageName+":: FAIL  \n\t Could not find verification tag: "+verificationTag+"' as child element in form named: '"+formName+"'\n";
 		}
+		Log.println(outmsg);
+		buf.append(outmsg+"\n");
+		if(isDev){
+			Log.println(form2.asXml());
+		}
+
 		return pass;
 	}	
 	

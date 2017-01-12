@@ -408,9 +408,7 @@ public class BenchmarkingDeploy {
 				if(cmd.hasOption("append")){
 					append = true;
 				}
-				if(cmd.hasOption("append")){
-					append = true;
-				}				
+				
 				if(cmd.hasOption(HELP) || needshelp){
 					help();
 				}

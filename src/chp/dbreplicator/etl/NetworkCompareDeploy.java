@@ -2,6 +2,8 @@ package chp.dbreplicator.etl;
 
 import static java.lang.System.out;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -34,13 +36,16 @@ import chp.dbreplicator.ProgressReporter.Marker;
 public class NetworkCompareDeploy {
 
 	
+	private static final String NETWORK_COMPARE = "network_compare.";
+	
 	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
 	private static final String D = "\t";
 	private static final String noq = "";
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private static String Q = noq;	
 	
-
+	private static String WHS_VIEWER = "";
+	private static String STAGE_PREFIX = "";
 	
 	public static final String LOG_DIR = "C:\\deploy\\logs\\";//"K:\\Foundation\\ETLAndDeploymentLogs\\";
 
@@ -49,7 +54,7 @@ public class NetworkCompareDeploy {
 	public static void main(String[] args){
 		Cli cli = new Cli(args).parse();
 		
-		transfer(!cli.append,cli.from,cli.to);
+		transfer(!cli.append,cli.from,cli.to,cli.promote);
 	
 	}
 	public static String getFilename(String source, String dest){
@@ -60,10 +65,12 @@ public class NetworkCompareDeploy {
 		return "NetworkCompare" + U + ymd + U + source + "to" + dest +".txt";
 	}
 	
-	private static void transfer(boolean cleanTarget,Database source, Database target){
+	private static void transfer(boolean cleanTarget,Database source, Database target, boolean promote){
 		String filename = LOG_DIR + getFilename(source.name(),target.name());
 		TextLog log = new TextLog(filename);
-		log.print("Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date());
+		String s = "Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date(); 
+		log.print(s);
+		System.out.println(s);
 		log.print("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source,log);
 		DatabaseManager targetDatabase = new DatabaseManager(target,log);	//	
@@ -87,6 +94,24 @@ public class NetworkCompareDeploy {
 			return;
 		}
 		
+		WHS_VIEWER = (promote)?"whs_viewer_stage.":"whs_viewer.";
+		
+		/*
+		 * in the case of etl, 
+		 * 
+		 * promote = false   database not prod: true: no prefix.
+		 * 
+		 * in the case of promote and prod
+		 * 
+		 * promote = true - database is not prod: false -> blank prefix (_stage. schema has no prefix).
+		 * 
+		 * in the case of no promote and prod
+		 * 
+		 * promote = false, database is not prod false, use stage prefix.
+		 * 
+		 */
+		STAGE_PREFIX = (promote || (!Database.DMFPRD.equals(target)))?"":"stage_";
+		
 		//DEBUG-TESTME
 		
 		TextFile f = new TextFile(CONFIG);
@@ -100,30 +125,31 @@ public class NetworkCompareDeploy {
 		for(String sourceRelation:l){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "network_compare."+sourceRelation;
+				sourceTable = NETWORK_COMPARE+sourceRelation;
 			}else{
-				sourceTable = "whs_user."+sourceRelation;
+				sourceTable = "whs_viewer."+sourceRelation;
 			}			
-			String destTable = "whs_user."+viewTableMapping.get(sourceRelation);
+			String destTable = WHS_VIEWER+STAGE_PREFIX+viewTableMapping.get(sourceRelation);
 			totalCount += getTableCount(log, sourceDatabase,sourceTable);
 			if(cleanTarget){
 				cleanTable(targetDatabase,destTable);
 			}	
 		}
 		log.print("\n ");
-		
-		ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
+		log.print("Total Count: "+totalCount);
+		ProgressReporter pr = new ProgressReporter(totalCount,Marker.PERCENT);
 		pr.addListener(new SimpleProgressListener());
 		
+		log.print("STARTING COPY!!!");
 		//Perform transfer
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "network_compare."+sourceRelation;
+				sourceTable = NETWORK_COMPARE+sourceRelation;
 			}else{
-				sourceTable = "whs_user."+sourceRelation;
+				sourceTable = "whs_viewer."+sourceRelation;
 			}
-			String destTable = "whs_user."+viewTableMapping.get(sourceRelation);
+			String destTable = WHS_VIEWER+STAGE_PREFIX+viewTableMapping.get(sourceRelation);
 
 			String schema = destTable.substring(0,destTable.indexOf('.')); 
 			String table = "";
@@ -234,7 +260,10 @@ public class NetworkCompareDeploy {
 			sb = new StringBuilder();				
 			
 		}catch(Exception e){
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			log.print(sw.toString());//;e.printStackTrace();
 		}//trycatch
 		log.print("Finished copying "+destTable+".\n\n");
 	}
@@ -328,14 +357,16 @@ public class NetworkCompareDeploy {
 		
 		@Override
 		public String toString() {
-			return "Cli [ from="+ from + ", to=" + to + "]";
+			return "Cli [ from="+ from + ", to=" + to+ ", promote=" + promote + "]";
 		}
 		private static final String HELP = "help";
 		private static final String TO = "to";
 		private static final String FROM = "from";
-		
+		private static final String PROMOTE = "promote";
+		private static final String APPEND = "append";
 		private Database from = Database.DW;
 		private Database to = Database.DMFDEV;
+		private boolean promote = true;
 		private boolean append = false;
 		//private boolean all = false; TODO, use file or just do all tables flag.
 		
@@ -346,7 +377,8 @@ public class NetworkCompareDeploy {
 			options.addOption(HELP,HELP,false,"Show help.");
 			options.addOption(FROM,FROM,true,"From Source Server.");
 			options.addOption(TO,TO,true,"To Target Server.");
-			options.addOption("append","append",false,"Append, if present will not overwrite or clean.");
+			options.addOption(PROMOTE,PROMOTE,false,"Promote, if present means for promoting the whs_viewer_stage.");
+			options.addOption(APPEND,APPEND,false,"Append, if present will not overwrite or clean.");
 		}
 		public Cli parse() {
 			CommandLineParser parser = new DefaultParser();
@@ -356,12 +388,10 @@ public class NetworkCompareDeploy {
 				cmd = parser.parse(options,args);
 				needshelp = extractFromArg(cmd, needshelp);				
 				needshelp = extractToArg(cmd, needshelp);
-				if(cmd.hasOption("append")){
+				if(cmd.hasOption(APPEND)){
 					append = true;
 				}
-				if(cmd.hasOption("append")){
-					append = true;
-				}				
+				promote = cmd.hasOption(PROMOTE);
 				if(cmd.hasOption(HELP) || needshelp){
 					help();
 				}

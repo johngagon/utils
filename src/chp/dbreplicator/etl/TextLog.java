@@ -3,6 +3,8 @@ package chp.dbreplicator.etl;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import chp.dbreplicator.Logging;
 
@@ -38,4 +40,10 @@ public class TextLog implements Logging {
 	public void print(String data) {
 		pp(data+"\n");
 	}	
+	public void printException(Exception e) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		print(sw.toString());
+	}		
 }

@@ -33,6 +33,7 @@ import chp.dbreplicator.ProgressReporter.Marker;
 
 public class EmployerSearchDeploy {
 
+	private static final String EMPLOYER = "employer.";
 	
 	private static final String EXIT_FAIL_MSG = "Exit due to premature failure.";
 	private static final String D = "\t";
@@ -40,7 +41,8 @@ public class EmployerSearchDeploy {
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 	private static String Q = noq;	
 	
-
+	private static String PROD_PREFIX = "";
+	private static String STAGE_PREFIX = "";
 	
 	public static final String LOG_DIR = "C:\\deploy\\logs\\";//"K:\\Foundation\\ETLAndDeploymentLogs\\";
 
@@ -49,7 +51,7 @@ public class EmployerSearchDeploy {
 	public static void main(String[] args){
 		Cli cli = new Cli(args).parse();
 		
-		transfer(!cli.append,cli.from,cli.to);
+		transfer(!cli.append,cli.from,cli.to,cli.promote);
 	
 	}
 	public static String getFilename(String source, String dest){
@@ -60,10 +62,12 @@ public class EmployerSearchDeploy {
 		return "EmployerSearch" + U + ymd + U + source + "to" + dest +".txt";
 	}
 	
-	private static void transfer(boolean cleanTarget,Database source, Database target){
+	private static void transfer(boolean cleanTarget,Database source, Database target, boolean promote){
 		String filename = LOG_DIR + getFilename(source.name(),target.name());
 		TextLog log = new TextLog(filename);
-		log.print("Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date());
+		String s = "Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date(); 
+		log.print(s);
+		System.out.println(s);
 		log.print("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source,log);
 		DatabaseManager targetDatabase = new DatabaseManager(target,log);	//	
@@ -87,6 +91,9 @@ public class EmployerSearchDeploy {
 			return;
 		}
 		
+		PROD_PREFIX = (promote)?"employer_stage.":"employer.";
+		STAGE_PREFIX = (promote || (!Database.DMFPRD.equals(target)))?"":"stage_";
+		
 		//DEBUG-TESTME
 		
 		TextFile f = new TextFile(CONFIG);
@@ -100,30 +107,31 @@ public class EmployerSearchDeploy {
 		for(String sourceRelation:l){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "employer."+sourceRelation;
+				sourceTable = EMPLOYER+sourceRelation;
 			}else{
 				sourceTable = "employer."+sourceRelation;
 			}			
-			String destTable = "employer."+viewTableMapping.get(sourceRelation);
+			String destTable = PROD_PREFIX+STAGE_PREFIX+viewTableMapping.get(sourceRelation);
 			totalCount += getTableCount(log, sourceDatabase,sourceTable);
 			if(cleanTarget){
 				cleanTable(targetDatabase,destTable);
 			}	
 		}
 		log.print("\n ");
-		
+		log.print("Total Count: "+totalCount);
 		ProgressReporter pr = new ProgressReporter(totalCount,Marker.TICKS);
 		pr.addListener(new SimpleProgressListener());
 		
+		log.print("STARTING COPY!!!");
 		//Perform transfer
 		for(String sourceRelation:viewTableMapping.keySet()){
 			String sourceTable = "";
 			if( Rdbms.SQLSERVER.equals(source.rdbms())){
-				sourceTable = "employer."+sourceRelation;
+				sourceTable = EMPLOYER+sourceRelation;
 			}else{
 				sourceTable = "employer."+sourceRelation;
 			}
-			String destTable = "employer."+viewTableMapping.get(sourceRelation);
+			String destTable = PROD_PREFIX+STAGE_PREFIX+viewTableMapping.get(sourceRelation);
 
 			String schema = destTable.substring(0,destTable.indexOf('.')); 
 			String table = "";
@@ -328,14 +336,16 @@ public class EmployerSearchDeploy {
 		
 		@Override
 		public String toString() {
-			return "Cli [ from="+ from + ", to=" + to + "]";
+			return "Cli [ from="+ from + ", to=" + to + ", promote=" + promote + "]";
 		}
 		private static final String HELP = "help";
 		private static final String TO = "to";
 		private static final String FROM = "from";
-		
+		private static final String PROMOTE = "promote";
+		private static final String APPEND = "append";
 		private Database from = Database.DW;
 		private Database to = Database.DMFDEV;
+		private boolean promote = true;
 		private boolean append = false;
 		//private boolean all = false; TODO, use file or just do all tables flag.
 		
@@ -346,6 +356,7 @@ public class EmployerSearchDeploy {
 			options.addOption(HELP,HELP,false,"Show help.");
 			options.addOption(FROM,FROM,true,"From Source Server.");
 			options.addOption(TO,TO,true,"To Target Server.");
+			options.addOption(PROMOTE,PROMOTE,false,"Promote, if present means for promoting the employer_stage.");
 			options.addOption("append","append",false,"Append, if present will not overwrite or clean.");
 		}
 		public Cli parse() {
@@ -356,12 +367,10 @@ public class EmployerSearchDeploy {
 				cmd = parser.parse(options,args);
 				needshelp = extractFromArg(cmd, needshelp);				
 				needshelp = extractToArg(cmd, needshelp);
-				if(cmd.hasOption("append")){
+				if(cmd.hasOption(APPEND)){
 					append = true;
 				}
-				if(cmd.hasOption("append")){
-					append = true;
-				}				
+				promote = cmd.hasOption(PROMOTE);
 				if(cmd.hasOption(HELP) || needshelp){
 					help();
 				}

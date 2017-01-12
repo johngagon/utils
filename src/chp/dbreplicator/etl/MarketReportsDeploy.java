@@ -66,9 +66,12 @@ public class MarketReportsDeploy {
 	}
 	
 	private static void transfer(boolean cleanTarget,Database source, Database target, int year, int upload){
+		
 		String filename = LOG_DIR + getFilename(source.name(),target.name(),year,upload);
 		TextLog log = new TextLog(filename);
-		log.print("Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date());
+		String s = new String("Starting Copy of "+source.name()+" to "+target.name()+" with "+CONFIG+" on "+new java.util.Date());
+		log.print(s);
+		System.out.println(s);
 		log.print("java.lib.path -- Be sure to copy lib/sqljdbc_auth.dll here: "+System.getProperty("java.library.path"));
 		DatabaseManager sourceDatabase = new DatabaseManager(source,log);
 		DatabaseManager targetDatabase = new DatabaseManager(target,log);	//	
@@ -429,9 +432,6 @@ public class MarketReportsDeploy {
 				if(cmd.hasOption("append")){
 					append = true;
 				}
-				if(cmd.hasOption("append")){
-					append = true;
-				}				
 				if(cmd.hasOption(HELP) || needshelp){
 					help();
 				}

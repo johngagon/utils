@@ -5,7 +5,25 @@ import org.apache.commons.mail.*;
 
 public class Emailer {
 
-	
+
+	public static void emailGrpSimple(String from, String[] to, String subject, String message){
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom(from);
+			email.setSubject(subject);
+			email.setMsg(message);
+			for(String s:to){
+				email.addTo(s);
+			}
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}		
+	}	
 	
 	public static void emailSimple(String from, String to, String subject, String message){
 		try{
