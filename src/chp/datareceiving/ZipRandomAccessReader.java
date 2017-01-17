@@ -146,9 +146,23 @@ public class ZipRandomAccessReader {
 	private static void processLine(int lineNo,byte[] s){
 		System.out.println(lineNo+":"+new String(s));
 	}	
+	private static int count(String s, char token){
+		int count = 0;
+		for( int i=0; i<s.length(); i++ ) {
+		    if( s.charAt(i) == token ) {
+		        count++;
+		    } 
+		}
+		return count+1;
+	}
 	
 	private static void processLine(int lineNo,String s){
-		System.out.println(lineNo+":"+s);
+		int fieldCount = 157;
+		int actual = count(s,'\t');
+		if(actual!=fieldCount){
+			System.out.println(lineNo+": expect 156 not "+actual);
+		}
+		//System.out.println(lineNo+":"+s);
 		//System.out.println(Runtime.getRuntime().freeMemory()+":"+s);
 	}
 	/*

@@ -1,5 +1,9 @@
 package chp.datareceiving;
 
-public class ScanRule {
+public abstract class ScanRule {
+
+	public abstract boolean check(String s);
+
+	public abstract String describe();
 
 }
