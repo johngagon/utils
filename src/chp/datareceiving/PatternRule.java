@@ -1,13 +1,60 @@
-package jhg.util;
+package chp.datareceiving;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
-public class RegexUtil {
+public class PatternRule extends ScanRule {
 
-	private RegexUtil() {
+	int[] indexes;
+	Pattern pattern;
+	
+	public PatternRule(int[] iarr, String aPattern){
 		super();
+		this.indexes = iarr;
+		this.pattern = Pattern.compile(aPattern);
 	}
+	
+
+
+	@Override
+	public boolean[] fieldCheck(String s) {
+		String[] fieldvalues = s.split("\\t",-1);
+		boolean[] rv = new boolean[indexes.length];
+		int i=0;
+		for(int index:indexes){
+			if(index>=fieldvalues.length){
+				System.out.println("!! Warning - split error "+fieldvalues.length+" with line '"+s+"'");
+				rv[i] = false;
+			}else{
+				String test = fieldvalues[index];
+				Matcher m = pattern.matcher(test);
+				rv[i] = m.matches();
+			}
+			i++;
+		}
+		return rv;
+	}
+
+	@Override
+	public String describe() {
+		return "Field should match rule: '"+pattern.pattern()+"'";
+	}
+
+	
+	
+	@Override
+	public boolean doFieldCheck() {
+		return true;
+	}
+
+	@Override
+	public int[] getIndexes() {
+		return indexes;
+	}
+
+	@Override
+	public boolean check(String s) {
+		return true;
+	}	
 	
 	public static final String NUMBER = "^[0-9]+$";
 	
@@ -79,82 +126,6 @@ public class RegexUtil {
 	public static final String FILEPATH = "";
 	
 	public static final String URL = "/^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$/";
-	
-	public static final String BOOL1 = "/^(true|false)$/";
-	
-	public static final String NULLVAL1 = "/^(null)$/";
-	
-	public static Pattern getPattern(String s){
-		return Pattern.compile(s);
-	}
-	
-	public static boolean match(Pattern pattern, String toTest){
-		Matcher matcher = pattern.matcher(toTest);
-		return matcher.matches();
-	}
-	public static boolean match(String patternString, String toTest){
-		Pattern pattern = getPattern(patternString);
-		Matcher matcher = pattern.matcher(toTest);
-		boolean rv = matcher.matches();
-		return rv;
-	}
-	
-	public static void test2(){
-		String bad = "abcdefghijklmonpqrs";
-		String good = "mkyong_2002";                      //no uppercase
-		boolean pass1= (match(USERNAME,bad) == false);
-		boolean pass2= (match(USERNAME,good)== true);
-		Log.println(" Pass1:"+pass1);
-		Log.println(" Pass2:"+pass2);
-	}
-	private static void doSimpleTest(String name,String passCase, String failCase, String regex){
-		boolean r1 = passCase.matches(regex);
-		boolean r2 = failCase.matches(regex);
-		Log.println("Testing: '"+name+"' - Pass case '"+passCase+"' passed as expected?:"+r1+", and fail case '"+failCase+"' failed as expected?:"+(!r2)+"  with regex: '"+regex+"'");
 		
-	}
-	public static void testISBN10(){
-		String passCase = "ISBN 1-56389-668-0";
-		String failCase = "ISBN 9-87654321-2";
-		doSimpleTest("ISBN10", passCase,failCase,ISBN10);
-	}
-	public static void main(String[] args){
-		testISBN10();
-		
-	}
+	
 }
-/*
-Decimals input
-
-Positive Integers  ^\d+$
-
-Negative Integers  ^-\d+$
-
-Integer ^-?\d+$
-
-Positive Number ^\d*\.?\d+$
-
-Negative Number  ^-\d*\.?\d+$
-
-Positive Number or Negative Number  ^-?\d*\.?\d+$
-
-Phone number ^\+?[\d\s]{3,}$
-
-Phone with code  ^\+?[\d\s]+\(?[\d\s]{10,}$
-
-Year 1900-2099  ^(19|20)\d{2}$
-
-Date (dd mm yyyy, d/m/yyyy, etc.)
-
-^([1-9]|0[1-9]|[12][0-9]|3[01])\D([1-9]|0[1-9]|1[012])\D(19[0-9][0-9]|20[0-9][0-9])$ IP v4 --- ^(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]).(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]){3}$
-
-Alphabetic input
-
-Personal Name ^[\w.']{2,}(\s[\w.']{2,})+$
-Username  ^[\w\d_.]{4,}$
-Password at least 6 symbols  ^.{6,}$
-Password or empty input  ^.{6,}$|^$
-email ^[_]*([a-z0-9]+(\.|_*)?)+@([a-z][a-z0-9-]+(\.|-*\.))+[a-z]{2,6}$
-domain ^([a-z][a-z0-9-]+(\.|-*\.))+[a-z]{2,6}$
-Other regular expressions - Match no input  ^$ - Match blank input ^\s\t*$ - Match New line [\r\n]|$ - Match white Space  ^\s+$ - Match Url = ^http\:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$
- */

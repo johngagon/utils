@@ -10,6 +10,9 @@ public class FileIdentity {
 	private List<ScanRule> rules;
 	private DataLayout layout;
 	private String name;
+	private boolean hasHeader;
+	private String[] headers;
+	private String header;
 	
 	public FileIdentity(String s){
 		super();
@@ -17,6 +20,8 @@ public class FileIdentity {
 		isZip = false;
 		this.rules = new ArrayList<ScanRule>();
 		this.layout = DataLayout.CSV;
+		this.hasHeader = true;
+		
 	}
 	public String toString(){
 		return this.name;
@@ -25,7 +30,12 @@ public class FileIdentity {
 	public Boolean isZip() {
 		return this.isZip;
 	}
-
+	public boolean hasHeader(){
+		return this.hasHeader;
+	}
+	public void noHeader(){
+		this.hasHeader = false;
+	}
 	public List<ScanRule> getRules() {
 		return this.rules;
 	}
@@ -52,5 +62,15 @@ public class FileIdentity {
 
 	public void add(ScanRule rule) {
 		this.rules.add(rule);
+	}
+	public void addHeader(String s) {
+		this.header = s;
+		this.headers = s.split("\\t");
+	}
+	public String header(){
+		return this.header;
+	}
+	public String[] headers(){
+		return this.headers;
 	}
 }

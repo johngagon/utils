@@ -28,6 +28,21 @@ public class FieldCountRule extends ScanRule{
 	@Override
 	public String describe() {
 		return "Field count expected to be "+fieldCount;
+	}
+
+	@Override
+	public boolean[] fieldCheck(String s) {
+		
+		return new boolean[1];
 	}	
+	
+	public boolean doFieldCheck(){
+		return false;
+	}
+
+	@Override
+	public int[] getIndexes() {
+		return new int[1];
+	}
 	
 }

@@ -24,6 +24,18 @@ public class ScanReport {
 		this.totalErrors++;
 		
 	}
+
+	public void recordFail(int lineNo, int i, String fieldName, ScanRule rule) {
+		if(totalErrors < errorMax){
+			String msg = "  Line "+lineNo+" and column "+fieldName+"("+i+") failed to abide rule: "+rule.describe()+"\n"; 
+			System.out.print(msg);
+			sb.append(msg);
+		}
+		pass = false;
+		this.totalErrors++;
+	}	
+	
+	
 	public int getTotalErrors(){
 		return this.totalErrors;
 	}
@@ -32,6 +44,10 @@ public class ScanReport {
 		return pass;
 	}
 
+	public String detailString(){
+		return "\n  Scan Report\n"+sb.toString()+"\n  Total Errors: "+this.totalErrors+"\n  End Scan";
+	}
+	
 	public void print(){
 		System.out.println("\n  Scan Report");
 		String z = sb.toString();
@@ -58,4 +74,5 @@ public class ScanReport {
 	public String shortString() {
 		return (pass)?"ScanReport-PASS":"ScanReport-FAIL("+this.totalErrors+")";
 	}
+
 }

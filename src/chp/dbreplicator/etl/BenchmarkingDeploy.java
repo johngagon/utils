@@ -104,11 +104,11 @@ public class BenchmarkingDeploy {
 			if(!"benchmarking.request_log".equals(destTable)){
 				String deleteByDataSetDML = "";
 				if("benchmarking.data_sets".equals(destTable)){
-					if(dataset!=0){
-						deleteByDataSetDML = "delete from "+destTable+" where id = "+dataset;
-					}else{
-						deleteByDataSetDML = "delete from "+destTable+"";
-					}
+					//if(dataset!=0){
+						deleteByDataSetDML = "delete from "+destTable+getDataSetWhereDS(dataset);
+					//}else{
+					//	deleteByDataSetDML = "delete from "+destTable+"";
+					//}
 				}else{
 					 deleteByDataSetDML = "delete from "+destTable+getDataSetWhere(dataset);
 				}
@@ -182,6 +182,10 @@ public class BenchmarkingDeploy {
 		return ( (dataset==0)?"":(" where data_set = "+dataset) );
 	}
 	
+	public static String getDataSetWhereDS(int dataset){
+		return ( (dataset==0)?"":(" where id = "+dataset) );
+	}	
+	
 	private static int getTableCount(TextLog log, DatabaseManager database,String sourceRelation, int dataset){
 		log.print("\n\nStarting Count of "+database.getDatabase().name()+" for table:"+sourceRelation);
 		int count = 0;
@@ -210,7 +214,7 @@ public class BenchmarkingDeploy {
 		String countQuery = "";
 		
 		if("benchmarking.data_sets".equals(sourceRelation)){
-			countQuery = "select count(*) from "+sourceRelation + " where id = "+dataset;
+			countQuery = "select count(*) from "+sourceRelation + getDataSetWhereDS(dataset);
 		}else{
 			countQuery = "select count(*) from "+sourceRelation + getDataSetWhere(dataset);
 		}	
@@ -223,7 +227,7 @@ public class BenchmarkingDeploy {
 		
 		String query = "";
 		if("benchmarking.data_sets".equals(sourceRelation)){
-			query = "select * from "+sourceRelation + " where id = "+dataset;
+			query = "select * from "+sourceRelation + getDataSetWhereDS(dataset);
 		}else{
 			query = "select * from "+sourceRelation + getDataSetWhere(dataset);
 		}		

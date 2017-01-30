@@ -17,6 +17,8 @@ public class FileScanner {
 	private List<ScanRule> rules;
 	private DataLayout layout;
 	
+	static final int ERROR_LIMIT = 100;
+	
 	FileScanner(FileEntry anEntry){
 		this.report = new ScanReport();
 		this.entry = anEntry;
@@ -56,6 +58,7 @@ public class FileScanner {
 			zipFile = new ZipFile(zipname);
 			for(Enumeration e = zipFile.entries(); e.hasMoreElements();){
 				ZipEntry entry = (ZipEntry)e.nextElement();
+				System.out.println("    Zip Entry: '"+entry.getName()+"'");
 				if(!entry.isDirectory()){
 					if(FilenameUtils.getExtension(entry.getName()).equals("txt")){
 						long start = System.currentTimeMillis();
@@ -92,8 +95,9 @@ public class FileScanner {
 		String line;
 		
 		int lineNo = 1;
+		
 		try {
-		    while ((line = reader.readLine()) != null && (lineLimit==-1 || lineNo <= lineLimit)) {
+		    while ((line = reader.readLine()) != null && (lineLimit==-1 || lineNo <= lineLimit) && report.getTotalErrors()<ERROR_LIMIT) {
 		        processLine(lineNo,line);
 		        lineNo++;
 		    }
@@ -103,10 +107,41 @@ public class FileScanner {
 		}
 	}	
 	private void processLine(int lineNo,String s){
+		
+		//System.out.println("Processing line: "+lineNo);
+		if(identity.hasHeader() && lineNo==1){
+			//System.out.println("Header:'"+s+"'");
+			return;//TODO optionally check header names against a standard list.
+		}
 		for(ScanRule rule:rules){
 			boolean pass = rule.check(s);
+			boolean passesField = true;
+			
 			if(!pass){
 				report.recordFail(lineNo,rule);
+				
+			}
+			if(pass && rule.doFieldCheck()){
+				boolean[] passes = rule.fieldCheck(s);
+				int i = 0;
+				int[] indexes = rule.getIndexes();
+				//int x = passes.length;
+				//int y = indexes.length;
+				for(boolean b:passes){
+					passesField = passesField && b;
+					if(!b){
+						int index = indexes[i];
+						int headersSize = identity.headers().length;
+						report.recordFail(lineNo,index,identity.headers()[index],rule);
+					}
+					i++;
+				}
+				if(!passesField){
+					
+					System.out.println("  Failed "+lineNo+":"+s);
+				}else{
+					//System.out.println("  Passed "+lineNo);
+				}
 			}
 		}
 	}

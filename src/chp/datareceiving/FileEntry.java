@@ -2,18 +2,29 @@ package chp.datareceiving;
 
 import java.nio.file.Path;
 
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.SimpleEmail;
+
 public class FileEntry {
 
 	private FileStatus status;
 	private FileIdentity identity;
 	private Path fullpath;
 	private ScanReport report;
+	private StringBuilder errors;
 	
 	public FileEntry(Path aPath, FileStatus received) {
 		this.fullpath = aPath;
 		this.status = received;
+		this.errors = new StringBuilder();
+		notifyListeners();
 	}
 
+	public void addError(String s){
+		errors.append(s+"\n");
+	}
+	
+	
 	public void identify(FileIdentity fileIdentity) {
 		this.identity = fileIdentity;
 		System.out.println("    File Identification Found: "+fileIdentity.toString());
@@ -61,6 +72,99 @@ public class FileEntry {
 	public void notifyListeners(){
 		//TODO implement Listeners
 		System.out.println("    Status Change: "+this.status.name());
+		switch(status){
+			case RECEIVED: emailReceieved();break;
+			case UNIDENTIFIED: emailUnidentified();break;
+			case SCANNING_PASS: emailScanPass();break;
+			case SCANNING_FAIL: emailScanFail();break;
+			case ERROR: emailError();break;
+			default:break;
+		}
+	}
+
+	private void emailScanFail() {
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom("john.gagon@gmail.com");
+			email.setSubject("Scan Failed for '"+this.fullpath.getFileName().toString()+"'");
+			email.setMsg(this.getReport().detailString());
+			email.addTo("jgagon@chpmail.com");
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void emailError() {
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom("john.gagon@gmail.com");
+			email.setSubject("Errors found for '"+this.fullpath.getFileName().toString()+"'");
+			email.setMsg(errors.toString());
+			email.addTo("jgagon@chpmail.com");
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void emailScanPass() {
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom("john.gagon@gmail.com");
+			email.setSubject("Scan passed for '"+this.fullpath.getFileName().toString()+"'");
+			email.setMsg(this.getReport().shortString());
+			email.addTo("jgagon@chpmail.com");
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void emailReceieved() {
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom("john.gagon@gmail.com");
+			email.setSubject("New File received: '"+this.fullpath.getFileName().toString()+"'");
+			email.setMsg("New File received: '"+this.fullpath.getFileName().toString()+"'");//TODO add sizes
+			email.addTo("jgagon@chpmail.com");
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void emailUnidentified() {
+		try{
+			Email email = new SimpleEmail();
+			email.setHostName("exchange.chpmail.com");
+			email.setSmtpPort(25);
+			//email.setAuthenticator(new DefaultAuthenticator("username", "password"));
+			//email.setSSLOnConnect(true);
+			email.setFrom("john.gagon@gmail.com");
+			email.setSubject("New File could not be identified: '"+this.fullpath.getFileName().toString()+"'");
+			email.setMsg("Unidentified: '"+this.fullpath.getFileName().toString()+"'");//TODO add sizes
+			email.addTo("jgagon@chpmail.com");
+			email.send();	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void setReport(ScanReport rpt) {
