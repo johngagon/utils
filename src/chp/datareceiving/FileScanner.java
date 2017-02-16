@@ -20,8 +20,9 @@ public class FileScanner {
 	static final int ERROR_LIMIT = 100;
 	
 	FileScanner(FileEntry anEntry){
-		this.report = new ScanReport();
+		
 		this.entry = anEntry;
+		this.report = anEntry.getReport();
 		this.identity  = entry.getIdentity();
 		this.rules = identity.getRules();
 		this.layout = identity.getLayout();		
@@ -33,8 +34,7 @@ public class FileScanner {
 
 	
 	public void scan(){
-		
-
+		entry.setScanStart(new Date());
 		if(DataLayout.CSV.equals(layout)){
 			System.out.println("    Scan Start: CSV");
 			readCSVFile();
@@ -46,8 +46,10 @@ public class FileScanner {
 			//TODO handle lack of data layout.
 			System.out.println("Data Layout not provided.");
 		}
-		
+		entry.setScanEnd(new Date());
 	}
+	
+	
 	@SuppressWarnings("rawtypes")
 	private void readCSVFile(){
 		
@@ -140,6 +142,7 @@ public class FileScanner {
 					
 					System.out.println("  Failed "+lineNo+":"+s);
 				}else{
+					report.recordPass();
 					//System.out.println("  Passed "+lineNo);
 				}
 			}

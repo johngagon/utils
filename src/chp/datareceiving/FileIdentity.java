@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class FileIdentity {
-	
+	public static final FileIdentity UNKNOWN = new FileIdentity("Unknown");
 	private Pattern nameMatchRule;
 	private Boolean isZip;
 	private List<ScanRule> rules;
@@ -14,6 +14,7 @@ public class FileIdentity {
 	private String[] headers;
 	private String header;
 	
+	@SuppressWarnings("boxing")
 	public FileIdentity(String s){
 		super();
 		this.name = s;

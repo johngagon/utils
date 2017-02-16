@@ -69,9 +69,16 @@ public class ApplicationMonitoring {
 	
 	
 	@Test
-	public boolean productionApplicatonCheck() throws Exception {
-		return applicatonCheck("https://chp-pidprod01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://sso.chpinfo.com&TargetResource=https%3A%2F%2Fwww.chpmarketquest.com%2Fportal%2FSSOServlet", 
+	public boolean productionApplicatonCheck() {
+		boolean rv = false;
+		try{
+			rv = applicatonCheck("https://chp-pidprod01.corp.chpinfo.com/idp/startSSO.ping?PartnerSpId=https://sso.chpinfo.com&TargetResource=https%3A%2F%2Fwww.chpmarketquest.com%2Fportal%2FSSOServlet", 
 				"www.chpmarketquest.com", "Production");
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		return rv;
 		//"chp-pidprod01"
 	}	
 	

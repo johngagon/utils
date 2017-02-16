@@ -6,6 +6,8 @@ public class ScanReport {
 	private StringBuilder sb;
 	private int totalErrors;
 	private int errorMax;
+	private boolean init;
+	private boolean identified;
 	
 	//TODO add progress reporting, add a total lines scanned number.
 	public ScanReport(){
@@ -14,6 +16,16 @@ public class ScanReport {
 		this.pass = true;
 		this.totalErrors = 0;
 		this.errorMax = 100;//TODO finish - (default, use overload to set different later)
+		this.identified = false;
+	}
+	public void identify(){
+		this.identified = true;
+	}
+	
+	public void recordFail(){
+		pass = false;
+		init = true;
+		totalErrors ++;
 	}
 	
 	public void recordFail(int lineNo, ScanRule rule) {
@@ -21,10 +33,14 @@ public class ScanReport {
 			sb.append("Line "+lineNo+" failed to abide rule: "+rule.describe()+"\n");
 		}
 		pass = false;
+		init = true;
 		this.totalErrors++;
 		
 	}
-
+	public void recordPass(){
+		init = true;
+	}
+			
 	public void recordFail(int lineNo, int i, String fieldName, ScanRule rule) {
 		if(totalErrors < errorMax){
 			String msg = "  Line "+lineNo+" and column "+fieldName+"("+i+") failed to abide rule: "+rule.describe()+"\n"; 
@@ -32,6 +48,7 @@ public class ScanReport {
 			sb.append(msg);
 		}
 		pass = false;
+		init = true;
 		this.totalErrors++;
 	}	
 	
@@ -72,7 +89,20 @@ public class ScanReport {
 	 */
 
 	public String shortString() {
-		return (pass)?"ScanReport-PASS":"ScanReport-FAIL("+this.totalErrors+")";
+		if(init){
+			if(identified){
+				return (pass)?"ScanReport-PASS":"ScanReport-FAIL("+this.totalErrors+")";
+			}else{
+				return "Waiting for identification.";
+			}
+		}else{
+			if(identified){
+				return "Waiting for scan.";
+			}else{
+				return "Waiting for identification.";//FIXME promote branch out/unnest
+			}
+			
+		}
 	}
 
 }

@@ -109,7 +109,7 @@ public class ReceiverDaemon {
                 
                 onNewFileFound(child); //FIXME also put this in a thread.
                 
-                directory.print();
+                //directory.print();
                 
                 System.out.println("\n\nResuming Directory Watch Daemon.");
                 // if directory is created, and watching recursively, then
@@ -144,12 +144,14 @@ public class ReceiverDaemon {
 		processEvents();
 	}
 	
+	//NOTE: File entry has the triggered email.
 	@SuppressWarnings("boxing")
 	private void onNewFileFound(Path filename){
 		//TODO cleanup output.
 		////System.out.println("Found file: "+filename.toUri().toASCIIString());
 		
-		FileEntry entry = new FileEntry(filename,FileStatus.RECEIVED);
+		FileEntry entry = new FileEntry(directory,filename.getFileName().toString(),filename);
+		entry.notifyListeners();
 		directory.add(entry);
 		
 		FileIdentity fileIdentity = examineFile(filename);//TODO add checks for file extension.
@@ -237,7 +239,14 @@ public class ReceiverDaemon {
 	 */
 	public static void main(String[] args){
 		System.out.println("Starting Directory Watch Daemon\n");//TODO refactor name of app: Directory Watch Daemon
+		
+		
+		
 		String path = "C:\\intake\\";
+		
+		 
+		
+		
 		int interval = 50;//ms
 		ReceiverDaemon daemon = ReceiverDaemon.newInstance(path, interval);//50ms check
 		if(daemon!=null){
@@ -260,7 +269,7 @@ public class ReceiverDaemon {
 
 			int[] numericIndexes = {0};
 			ScanRule numericRule = new PatternRule(numericIndexes,PatternRule.NUMBER);
-			
+			//TODO add size limits
 			
 			String header = "KeyID\tCompanyName\tAddress1\tAddress2\tAddress3\tCity\tStateOrProvinceAbbrev\tPostalCode\tCounty\tCountryName\tCountryISO2\tPhone\tFax\tPrimaryURL\tEmployees\tIndustryGroupName\tIndustrySectorName\tOS2010IndustryName\tPrimaryNAIC\tPrimaryNAICDesc\tPrimaryUSSIC\tPrimaryUSSICDesc\tPrimaryUK2007SIC\tPrimaryUK2007SICDesc\tPrimaryNAICS2012\tPrimaryNAICS2012Desc\tCurrencyISO3\tCurrencyName\tSalesUSD\tSalesGBP\tSalesEUR\tSales\tAssetsUSD\tAssetsGBP\tAssetsEUR\tAssets\tOwnershipType\tEntityType\tBusinessDescription\tParentKeyID\tParentName\tParentCountry\tParentCountryID\tParentDuns\tUltimateParentKeyID\tUltimateParentName\tUltimateParentCountry\tUltimateParentCountryID\tUltimateParentDuns\tTickerExchange\tTickerSymbol\tAbiNumber\tRegNo\tCreditRatingUS\tCreditNumericScoreUS\tCreditLimitUS\tCreditFlagUS\tCreditLimitUK\tCreditLimitCurrency\tCreditLimitDate\tCreditRatingDate\tCreditRatingUK\tCreditRatingUKIndex\tCreditRatingDescr\tSales1YearGrowth\tTotalAssets1YrGrowth\tNetIncome1YrGrowth\tPreTaxProfit\tPreTaxProfitUSD\tPreTaxProfitGBP\tPreTaxProfitEUR\tNetIncome\tOperatingMargin\tWorkingCapital\tCurrentAssets\tFixedAssets\tCurrentLiabilities\tTotalLiabilities\tTotalLiabilitiesUSD\tTotalLiabilitiesGBP\tTotalLiabilitiesEUR\tLongTermDebt\tYearFounded\tMonthFounded\tDayFounded\tFortune1000Ranking\tDomesticUltimateParentKeyID\tDomesticUltimateParentCompanyName\tDomesticUltimateParentCountry\tDomesticUltimateParentDuns\tPercentSalesGrowth3Year\tPercentSalesGrowth5Year\tPercentEmployeesGrowth3Year\tPercentEmployeesGrowth5Year\tEmployeesHereCount\tParentEmployeeCount\tUltimateParentEmployeeCount\tCompanyLinkedIn\tInactiveCompanyFlag\tDunsNumber\tDedupID1\tFirstName1\tMiddleName1\tLastName1\tPrefix1\tSuffix1\tExecutiveTitle1\tOSFunctionIDs1\tOSFunctionNames1\tLevelName1\tEmail1\tDedupID2\tFirstName2\tMiddleName2\tLastName2\tPrefix2\tSuffix2\tExecutiveTitle2\tOSFunctionIDs2\tOSFunctionNames2\tLevelName2\tEmail2\tDedupID3\tFirstName3\tMiddleName3\tLastName3\tPrefix3\tSuffix3\tExecutiveTitle3\tOSFunctionIDs3\tOSFunctionNames3\tLevelName3\tEmail3\tDedupID4\tFirstName4\tMiddleName4\tLastName4\tPrefix4\tSuffix4\tExecutiveTitle4\tOSFunctionIDs4\tOSFunctionNames4\tLevelName4\tEmail4\tDedupID5\tFirstName5\tMiddleName5\tLastName5\tPrefix5\tSuffix5\tExecutiveTitle5\tOSFunctionIDs5\tOSFunctionNames5\tLevelName5\tEmail5\tAV_affiliateID1\tAV_Affiliatetype1";
 			//TODO Email report: should describe each test run.
@@ -270,7 +279,49 @@ public class ReceiverDaemon {
 			aventionIdentity.add(numericRule);
 			aventionIdentity.addHeader(header);
 			
+			FileEntry mock = null;
+			FileIntakeDirectory directory = daemon.getDirectory();
+			ScanReport mockFailReport = new ScanReport();
+			mockFailReport.recordFail();
+			//ScanReport mockUnidentifiedReport = new ScanReport();
+			//mockUnidentifiedReport = new ScanReport();
+			//mockUnidentifiedReport.i
 			
+			//#2
+			mock = new FileEntry(directory,"VQClaims2016Fall.txt",null);
+			mock.setReport(mockFailReport);
+			mock.identify(new FileIdentity("Valuequest"));
+			mock.setStatus(FileStatus.SCANNING_FAIL);
+			mock.mockScan(79325);
+			directory.add(mock);
+			
+			//#3
+			mock = new FileEntry(directory,"VQClaims2016Spring.txt",null);
+			mock.setReport(mockFailReport);
+			mock.identify(new FileIdentity("Valuequest"));
+			mock.setStatus(FileStatus.SCANNING_FAIL);
+			mock.mockScan(13520);
+			directory.add(mock);
+	
+			//#4
+			mock = new FileEntry(directory,"Avention2017.zip",null);
+			mock.identify(new FileIdentity("Avention"));
+			directory.add(mock);			
+
+			//#5
+			mock = new FileEntry(directory,"VQClaims2015Fall.txt",null);
+			mock.identify(new FileIdentity("Valuequest"));
+			directory.add(mock);
+			
+			//#6
+			mock = new FileEntry(directory,"MILL2017Fall.txt",null);
+			mock.identify(FileIdentity.UNKNOWN);
+			directory.add(mock);
+			
+			//#7
+			mock = new FileEntry(directory,"MILL2017Spring.txt",null);
+			mock.identify(FileIdentity.UNKNOWN);
+			directory.add(mock);			
 			
 			daemon.registerFileIdentity(aventionIdentity);
 			
@@ -283,6 +334,66 @@ public class ReceiverDaemon {
 
 	
 }
+/*
+ * Instead of Scan Report Pass.
+ * 
+ * 
+ * Just Finished SCANNING_PASS
+ * 
+ * File   Type       Received  Last Update  Status
+ * 
+ * 
+ * Unfinished (not at Scanning passed)
+ * 
+ * File   Type       Received  Last Update  Status
+ * 
+ *                                          UNIDENTIFIED    Remove, fix, create definition, touch and/or re-upload
+ *                                          SCANNING_FAIL   Correct errors
+ *                                          ERROR           Get support and either have fixed or removed.
+ * 
+ * a...   Avention   20161202  20170129     RECEIVED     
+ * n...   NC         20161202  20170129     SCANNING
+ * 
+	ERROR,
+	IDENTIFIED,
+	UNIDENTIFIED,
+	SCANNING,
+	SCANNING_PASS,
+	SCANNING_FAIL,
+ * 
+ * 
+ * For any report scan fail. the above plus:
+ * 
+* Just Finished SCANNING_PASS
+ * 
+ * New Statuses - Just Finished - Passed
+ * 
+ * File   Type       Received  Last Update  Status
+ * 
+ * 
+ * 
+ * Previously Finished - Requires Attention
+ *  * 
+ * File   Type       Received  Last Update  Status
+ * 
+ *                                          UNIDENTIFIED    Remove, fix, create definition, touch and/or re-upload
+ *                                          SCANNING_FAIL   Correct errors
+ *                                          ERROR           Get support and either have fixed or removed.
+ * 
+ * Unfinished - In Progress
+ * 
+ * a...   Avention   20161202  20170129     RECEIVED     
+ * n...   NC         20161202  20170129     SCANNING
+ * 
+ * 
+ * Finished - Ready for loading.
+ * 
+ * 
+ */
+
+
+
+
 /**
  * Register the given directory, and all its sub-directories, with the
  * WatchService.

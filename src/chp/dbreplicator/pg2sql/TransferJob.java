@@ -10,7 +10,7 @@ import java.util.List;
 import jhg.util.TextFile;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.StringUtil;
+//import org.jsoup.helper.StringUtil;
 
 import chp.dbreplicator.ColumnDefinition;
 import chp.dbreplicator.Database;
@@ -280,7 +280,7 @@ cpt_pkey PRIMARY KEY(cpt_code, cq_year, upload)
 
 		}
 		if(doPK){
-			ddl+=" ,PRIMARY KEY("+StringUtil.join(table.pkCols,",")+")";
+			ddl+=" ,PRIMARY KEY("+StringUtils.join(table.pkCols,",")+")";
 		}		
 		ddl+=")";
 		Log.pl("  DDL:"+ddl);
